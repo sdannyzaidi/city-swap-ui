@@ -14,7 +14,9 @@ function override(config, env) {
 				'@pages': resolve(__dirname, 'src/pages/index.js'),
 				'@auth': resolve(__dirname, 'src/auth/index.js'),
 				'@helpers': resolve(__dirname, 'src/helpers/'),
-				'@hooks': resolve(__dirname, 'src/hooks/'),
+				'@hooks': resolve(__dirname, 'src/hooks/index.js'),
+				'@atoms': resolve(__dirname, 'src/recoil/atoms.js'),
+				'@selectors': resolve(__dirname, 'src/recoil/selectors.js'),
 			},
 		},
 	}

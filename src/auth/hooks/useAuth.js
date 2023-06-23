@@ -1,20 +1,20 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { useLazyFetch } from '@graphql/index'
-import { firebase } from '@auth/index'
-import graphqQLSchemas from '@helpers/graphQLSchemas'
-const useAuth = ({ setLoading = () => {}, setAuthorized, setAlert, userAtom, authSelector, reroute }) => {
+import { notification } from 'antd'
+import { AUTH_EVENTS } from '../helpers/enums'
+const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const setUserAtom = useSetRecoilState(userAtom)
-	const [authenticateUser, loading] = useLazyFetch({ schema: graphqQLSchemas.User, storageKey: 'user' })
 	const userAuth = useRecoilValue(authSelector())
+	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
 	const { action } = useParams()
 	const { pathname } = useLocation()
 
 	useEffect(() => {
 		if (!loading && userAuth) {
+			console.log({ userAuth })
 			if (userAuth?.user === 'no user') {
 				setAlert({
 					type: 'error',
@@ -24,7 +24,6 @@ const useAuth = ({ setLoading = () => {}, setAuthorized, setAlert, userAtom, aut
 				localStorage.setItem('user', JSON.stringify(null))
 			} else if (userAuth?.authorized === false) {
 				setLoading(false)
-				setAuthorized(false)
 				setUserAtom(null)
 				localStorage.setItem('user', JSON.stringify(null))
 			} else if (userAuth?.authorized === true && pathname.includes('auth') && action === 'login') {
@@ -36,66 +35,96 @@ const useAuth = ({ setLoading = () => {}, setAuthorized, setAlert, userAtom, aut
 		}
 	}, [userAuth, loading]) // eslint-disable-line
 
-	const signInWithEmailAndPassword = async (email, password) => {
-		const userCredential = await firebase.auth.signInWithEmailAndPassword(email, password)
-		if (userCredential) {
-			const token = await firebase.auth.currentUser?.getIdToken()
-			localStorage.setItem('token', JSON.stringify({ token }))
-			authenticateUser({ variables: { _id: userCredential?.user?.uid } })
-		}
-	}
-
-	const resetPassword = async (email) => {
-		await firebase.auth.sendPasswordResetEmail(email)
-		setLoading(false)
-		return 'success'
-	}
-
-	const logout = () => {
-		if (userAuth) {
-			firebase.auth.signOut()
-			localStorage.setItem('user', JSON.stringify(null))
-			localStorage.setItem('token', JSON.stringify(null))
-			window.location.href = '/'
-		}
-	}
-
-	const authorization = async (forgotPassword, email, password) => {
-		setLoading(true)
+	const signInWithEmailAndPassword = async ({ email, password }) => {
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/login`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify({ email, password }),
+		})
+		console.log(response)
 		try {
-			if (!forgotPassword) {
-				await signInWithEmailAndPassword(email, password)
-			} else {
-				const result = await resetPassword(email)
-				if (result === 'success') {
-					setAlert({
-						type: 'success',
-						message: 'Reset link has been sent to your email.',
-					})
+			if (response.status === 200) {
+				const result = await response.json()
+				if (result.user) {
+					const token = result.token
+					localStorage.setItem('user', JSON.stringify(result.user))
+					localStorage.setItem('token', JSON.stringify({ token }))
 				}
-			}
-		} catch (error) {
-			setLoading(false)
-			if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password') {
+			} else {
 				setAlert({
 					type: 'error',
 					message: 'Email address or password is incorrect.',
 				})
-			} else if (error.code === 'auth/user-not-found') {
-				setAlert({
-					type: 'error',
-					message: 'No user record for this email address.',
-				})
-			} else {
-				setAlert({
-					type: 'error',
-					message: 'Please check your internet connection.',
-				})
 			}
+			setLoading(false)
+		} catch (err) {
+			console.log(err)
+			setLoading(false)
 		}
 	}
 
-	return { authorization, logout }
+	const resetPassword = async (email) => {
+		// await firebase.auth.sendPasswordResetEmail(email)
+		return 'success'
+	}
+	const signUp = async (values) => {
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/signUp`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
+		})
+		if (response.status === 200) {
+			notification['success']({
+				message: 'User created successfully',
+				duration: 5,
+				onClick: () => {
+					notification.close()
+				},
+			})
+			navigate('/auth/login')
+			setLoading(false)
+		} else {
+			console.log(response)
+			setAlert({
+				type: 'error',
+				message: 'Email address or password is incorrect.',
+			})
+			setLoading(false)
+		}
+	}
+	const logout = () => {
+		if (userAuth) {
+			// firebase.auth.signOut()
+			// localStorage.setItem('user', JSON.stringify(null))
+			// localStorage.setItem('token', JSON.stringify(null))
+			// window.location.href = '/'
+		}
+	}
+	const dispatch = useCallback((event) => {
+		setLoading(true)
+		try {
+			switch (event.type) {
+				case AUTH_EVENTS.LOGIN:
+					signInWithEmailAndPassword(event.payload)
+					break
+				case AUTH_EVENTS.SIGNUP:
+					signUp(event.payload)
+					break
+				case AUTH_EVENTS.LOGOUT:
+					logout()
+					break
+				case AUTH_EVENTS.RESET_PASSWORD:
+					resetPassword(event.payload)
+					break
+				default:
+					break
+			}
+		} catch (err) {
+			console.log(err)
+		}
+	})
+
+	return [dispatch, loading]
 }
 
 export default useAuth

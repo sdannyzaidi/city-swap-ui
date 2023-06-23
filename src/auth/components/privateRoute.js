@@ -2,9 +2,9 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import useRecoilStateCallback from '@hooks/useRecoilStateCallback'
-import { userAtom } from '@/recoil/atoms'
-import { authSelector } from '@/recoil/selectors'
+import { useRecoilStateCallback } from '@hooks'
+import { userAtom } from '@atoms'
+import { authSelector } from '@selectors'
 
 const PrivateRoute = (props) => {
 	const [loading, setLoading] = useState(true)
