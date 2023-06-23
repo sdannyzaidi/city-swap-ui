@@ -1,38 +1,42 @@
-.App {
-  text-align: center;
-}
+@import '../node_modules/antd/dist/reset.css';;
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+
+
+
+
+  .input-field {
+    @apply h-11 rounded-lg border border-solid;
+    @apply leading-6 text-[16px] font-[400] text-[#667085];
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  .ant-input-affix-wrapper.ant-input-password.input-field {
+    @apply h-11 rounded-lg border border-solid;
+    @apply leading-6 text-[16px] font-[400] text-[#667085];
   }
-  to {
-    transform: rotate(360deg);
+
+  .btn-primary {
+    @apply h-11 rounded-lg bg-[#9B83CB];
+    @apply leading-6 text-[16px] font-[600] text-white;
   }
-}
+
+  .btn-primary:hover {
+    @apply !text-[white] border-none bg-[#b3a1d7]
+  }
+  .btn-primary:disabled {
+    @apply !text-[#ffffffae] border-none bg-[#dcd3ee]
+  }
+
+  .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+    display: none !important;
+  }
+  .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
+    display: inline-block;
+    content: '*';
+    color: #344054;
+    margin-left: 2px;
+    margin-bottom: 4px;
+  }

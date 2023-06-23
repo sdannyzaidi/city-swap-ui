@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "target": "ES6",
+        "module": "commonjs",
+        "allowSyntheticDefaultImports": true,
+        "paths": {
+            "@":["../src/*"],
+            "@assets":["./assets/index.js"],
+            "@components":["./components/index.js"],
+            "@pages":["./pages/index.js"],
+            "@auth/*":["./auth/*"],
+            "@helpers/*":["./helpers/*"],
+            "@hooks/*":["./hooks/*"]
+        },
+    },
+}
