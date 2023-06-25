@@ -68,27 +68,32 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		return 'success'
 	}
 	const signUp = async (values) => {
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/signUp`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
-		})
-		if (response.status === 200) {
-			notification['success']({
-				message: 'User created successfully',
-				duration: 5,
-				onClick: () => {
-					notification.close()
-				},
+		try {
+			const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/signUp`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
 			})
-			navigate('/auth/login')
-			setLoading(false)
-		} else {
-			console.log(response)
-			setAlert({
-				type: 'error',
-				message: 'Email address or password is incorrect.',
-			})
+			if (response.status === 200) {
+				notification['success']({
+					message: 'User created successfully',
+					duration: 5,
+					onClick: () => {
+						notification.close()
+					},
+				})
+				navigate('/auth/login')
+				setLoading(false)
+			} else {
+				console.log(response)
+				setAlert({
+					type: 'error',
+					message: 'Email address or password is incorrect.',
+				})
+				setLoading(false)
+			}
+		} catch (err) {
+			console.log(err)
 			setLoading(false)
 		}
 	}
