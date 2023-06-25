@@ -1,0 +1,13 @@
+{
+	"projects": {
+		"staging": "cityswapp-55550"
+	},
+	"targets": {
+		"cityswapp-55550": {
+			"hosting": {
+				"staging": [ "cityswapp-dev" ]
+			}
+		}
+	
+	}
+}

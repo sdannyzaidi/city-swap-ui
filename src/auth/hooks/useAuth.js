@@ -45,10 +45,12 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		try {
 			if (response.status === 200) {
 				const result = await response.json()
+				console.log({ result })
 				if (result.user) {
 					const token = result.token
 					localStorage.setItem('user', JSON.stringify(result.user))
 					localStorage.setItem('token', JSON.stringify({ token }))
+					setUserAtom(result.user)
 				}
 			} else {
 				setAlert({

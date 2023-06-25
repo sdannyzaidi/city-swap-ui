@@ -1,12 +1,16 @@
 import { Button, Layout } from 'antd'
 import { HeaderLogo } from '@components'
 import HeroBackground from '../../assets/images/prague.webp'
+import ProfileLogo from '../../assets/images/profile.png'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Icon from '@mdi/react'
+import { mdiPlus } from '@mdi/js'
 const { Header } = Layout
 const Home = (props) => {
 	const navigator = useNavigate()
 	const homeRef = useRef(null)
+	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 	return (
 		<div className='overflow-y-scroll' ref={homeRef}>
 			<div className='flex flex-row justify-between items-center w-full bg-white border-b-4 border-[#9B83CB] px-8 py-4'>
@@ -14,19 +18,39 @@ const Home = (props) => {
 					<HeaderLogo />
 				</div>
 				<div className='flex flex-row justify-evenly items-center space-x-4'>
-					<div className='flex flex-row items-center space-x-6 mr-6 text-[#1B1B1B] font-semibold'>
-						<p className=' text-[16px]'>How It works</p>
-						<p className=' text-[16px]'>Pricing</p>
-						<p className=' text-[16px]'>FAQs</p>
-					</div>
-					<div className='flex flex-row items-center space-x-4'>
-						<Button className='rounded-lg border-2 border-[#9B83CB] text-[#9B83CB] font-[500] h-11  text-[16px]' onClick={() => navigator('/auth/login')}>
-							Login
-						</Button>
-						<Button className='rounded-lg bg-[#9B83CB] text-white font-[500] h-11  text-[16px] hover:text-white' onClick={() => navigator('/auth/signup')}>
-							Start Free Trial
-						</Button>
-					</div>
+					{loggedInUser?.id ? (
+						<div className='flex flex-row items-center space-x-6 mr-6 text-[#1B1B1B] font-semibold'>
+							<p className=' text-[16px]'>Home</p>
+							<p className=' text-[16px]'>Messages</p>
+							<p className=' text-[16px]'>Requests & Bookings</p>
+						</div>
+					) : (
+						<div className='flex flex-row items-center space-x-6 mr-6 text-[#1B1B1B] font-semibold'>
+							<p className=' text-[16px]'>How It works</p>
+							<p className=' text-[16px]'>Pricing</p>
+							<p className=' text-[16px]'>FAQs</p>
+						</div>
+					)}
+					{loggedInUser?.id ? (
+						<div className='flex flex-row items-center space-x-4'>
+							<Button className='flex flex-row items-center btn-primary hover:cursor-pointer' onClick={() => navigator('/auth/login')}>
+								<Icon path={mdiPlus} size={1} className='text-white' />
+								<p className='mx-2'>Add Listing</p>
+							</Button>
+							<div className='h-11 w-11 rounded-full border border-solid border-black-75'>
+								<img className='h-full w-full rounded-full bg-black-75' src={loggedInUser?.profilePicture || ProfileLogo} alt='' />
+							</div>
+						</div>
+					) : (
+						<div className='flex flex-row items-center space-x-4'>
+							<Button className='rounded-lg border-2 border-[#2e204b] text-[#9B83CB] font-[500] h-11  text-[16px]' onClick={() => navigator('/auth/login')}>
+								Login
+							</Button>
+							<Button className='btn-primary' onClick={() => navigator('/auth/signup')}>
+								Start Free Trial
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className='w-full h-[600px] overflow-y-clip'>
