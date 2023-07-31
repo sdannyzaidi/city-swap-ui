@@ -5,31 +5,168 @@
 @tailwind utilities;
 
 
+/******************************************** INPUT FIELDS ********************************************/
+
+/* select field */
+.select-field>.ant-select-selector {
+    @apply !h-11 !rounded-lg !border !border-solid;
+    @apply !leading-6 !text-[16px] !font-[400] !text-[#667085];
+}
+/* select search input */
+input.ant-select-selection-search-input{
+  @apply align-middle !h-11 !leading-10
+}
+/* placeholder and selected item */
+span.ant-select-selection-placeholder,span.ant-select-selection-item{
+  @apply !leading-10
+}
 
 
+/******************************************** SELECT FIELDS ********************************************/
 
-  .input-field {
-    @apply h-11 rounded-lg border border-solid;
-    @apply leading-6 text-[16px] font-[400] text-[#667085];
-  }
 
-  .ant-input-affix-wrapper.ant-input-password.input-field {
-    @apply h-11 rounded-lg border border-solid;
-    @apply leading-6 text-[16px] font-[400] text-[#667085];
-  }
+.input-field {
+  @apply h-11 rounded-lg border border-solid;
+  @apply leading-6 text-[16px] font-[400] text-[#667085];
+}
 
+.ant-input-affix-wrapper.ant-input-password.input-field {
+  @apply h-11 rounded-lg border border-solid;
+  @apply leading-6 text-[16px] font-[400] text-[#667085];
+}
+.input-field.add-on .ant-input-wrapper.ant-input-group {
+  @apply h-11 rounded-lg !border-none;
+}
+.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+  @apply h-11 !bg-white !border-0 !border-b !border-solid rounded-l-lg;
+}
+.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input {
+  @apply h-11 !bg-white  !border-0 !border-b !border-solid rounded-r-lg;
+  @apply leading-6 text-[16px] font-[400] text-[#667085];
+
+}
+/****************************************** PRIMARY BUTTON ********************************************/
   .btn-primary {
-    @apply h-11 rounded-lg bg-[#9B83CB];
-    @apply leading-6 text-[16px] font-[600] text-white;
+    @apply h-11 rounded-lg bg-[#9B83CB] border border-solid border-[#9B83CB];
+    @apply leading-6 text-[16px] font-[400] text-white;
   }
 
   .btn-primary:hover {
-    @apply !text-[white] border-none bg-[#b3a1d7]
+    @apply !text-[white] !border-[#9B83CB] bg-[#b3a1d7]
   }
   .btn-primary:disabled {
-    @apply !text-[#ffffffae] border-none bg-[#dcd3ee]
+    @apply !text-[#ffffffae] border-[#9B83CB] bg-[#dcd3ee]
+  }
+/****************************************** SECONDARY BUTTON ********************************************/
+
+  .btn-secondary {
+    @apply h-11 rounded-lg bg-[#F9F5FF] border-2 border-solid border-[#F9F5FF];
+    @apply leading-6 text-[16px] font-[400] text-[#664F94];
   }
 
+  .btn-secondary:hover {
+    @apply !text-[#bf9fff] !border-[#bda2f2] bg-[#fefefe] 
+  }
+  .btn-secondary:disabled {
+    @apply !text-[#ffffffae] border-[#dadada]
+  }
+
+/****************************************** DELETE BUTTON ********************************************/
+
+.btn-delete {
+  @apply h-11 rounded-lg border-2 border-solid border-[#FEF3F2];
+  @apply text-[#D92D20] bg-[#FEF3F2] leading-6 text-[16px] font-[400]
+
+}
+.btn-delete:hover {
+  @apply !text-[#D92D20] !border-[#e75c52] !bg-[#faf6f6]
+}
+.btn-delete:disabled {
+  @apply !text-[#ffffffae] border-[#dadada]
+}
+
+/***************************************** RADIO BUTTONS ********************************************/
+  
+  .btn-radio {
+    @apply  flex flex-row items-center h-[52px] px-4 rounded-xl border-2 border-solid
+  }
+  .radio-option-inner{
+    @apply absolute rounded-full !h-2 !w-2 right-0 left-0 top-0 bottom-0 my-auto mx-auto
+  }
+
+/************************************* RADIO BUTTONS - SELECTED ***************************************/
+
+  /* base */
+  .btn-radio-selected{
+    @apply border-[#9B83CB] bg-[#F9F5FF]
+  }
+  /* hover state */
+  .btn-radio-selected:hover{
+    @apply !border-[#9B83CB] bg-[#F9F5FF]
+  }
+  /* selected radio circle */
+  .btn-radio-selected .radio-option{
+    @apply relative rounded-full !h-4 !w-4 border border-solid border-[#9B83CB]
+  }
+  /* selected radio inner circle */
+  .btn-radio-selected .radio-option-inner{
+    @apply  bg-[#9B83CB]
+  }
+  /* text */
+  .btn-radio-selected p{
+    @apply text-[#53389E]
+  }
+
+/************************************* RADIO BUTTONS - UNSELECTED ***************************************/
+
+  /* base unselected */
+  .btn-radio-unselected{
+    @apply !border border-[#D0D5DD] bg-white
+  }
+  /* hover state */
+  .btn-radio-unselected:hover{
+    @apply !border !border-[#9B83CB] bg-white
+  }
+  /* unselected radio circle */
+  .btn-radio-unselected .radio-option{
+    @apply relative rounded-full !h-4 !w-4 border border-solid border-[#D0D5DD]
+  }
+  /* unselected radio circle hover */
+  .btn-radio-unselected:hover .radio-option{
+    @apply !border-[#9B83CB]
+  }
+  /* unselected radio circle inner */
+  .btn-radio-unselected .radio-option-inner{
+    @apply  !border-none
+  }
+  /* unselected text */
+  .btn-radio-unselected p{
+    @apply text-[#344054]
+  }
+  /* unselected text hover*/
+  .btn-radio-unselected:hover p{
+    @apply text-[#53389E]
+  }
+
+/******************************************** Switch ********************************************/
+.ant-switch-checked .ant-switch-inner {
+  @apply !bg-[#9B83CB];
+}
+.ant-switch-inner {
+  @apply bg-[#F2F4F7];
+}
+
+.ant-upload-list-item-container,.ant-upload.ant-upload-select{
+  @apply !h-[10.5rem] !w-[10.5rem] rounded-lg !m-3
+}
+.ant-upload-list-item{
+  @apply rounded-lg !p-1
+}
+.ant-upload-list-item-image{
+  @apply object-none
+}
+
+/******************************************** Form ********************************************/
   .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
     display: none !important;
   }
@@ -40,3 +177,26 @@
     margin-left: 2px;
     margin-bottom: 4px;
   }
+
+
+
+.hide-scroll-container {
+    overflow-x: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.hide-scroll-container::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+ul.slick-dots.slick-dots-bottom li {
+    @apply !bg-[#bcb7c6d7] !w-3 !h-3 rounded-full !mx-2;
+}  
+ul.slick-dots.slick-dots-bottom li.slick-active {
+  @apply  !bg-[#9b83cb];
+}
+ul.slick-dots.slick-dots-bottom li button {
+  @apply h-full !bg-inherit rounded-full;
+}  
+
+

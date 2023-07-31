@@ -1,8 +1,8 @@
 import React from 'react'
 import { Form, Input, Select, DatePicker, Upload, Divider, Radio, Cascader, Checkbox, Button, Image, Tooltip } from 'antd'
-import { PaperClipOutlined, CaretDownOutlined, MinusCircleTwoTone } from '@ant-design/icons'
+import { PlusOutlined, CaretDownOutlined, MinusCircleTwoTone } from '@ant-design/icons'
 
-// import { storage } from '@auth/firebase/config'
+import { firebase } from '@auth'
 import Icon from '@mdi/react'
 import { mdiPlus } from '@mdi/js'
 import { renderSchema } from './renderSchema'
@@ -14,30 +14,30 @@ const normFile = (e) => {
 	return e && e.fileList
 }
 export const renderFormItem = (field) => {
-	// const DocumentUpload = async ({ file, onProgress, onSuccess, onError }) => {
-	// 	field.setLoading && field.setLoading(true)
-	// 	const response = storage.ref().child(`public/images/${field.collection}/${field.uploadLink}-${file.name}`).put(file)
-	// 	response.on(
-	// 		'state_changed',
-	// 		(snapshot) => onProgress({ percent: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 }),
-	// 		(error) => onError(error),
-	// 		() => onSuccess(null, response.metadata_)
-	// 	)
-	// }
+	const DocumentUpload = async ({ file, onProgress, onSuccess, onError }) => {
+		field.setLoading && field.setLoading(true)
+		const response = firebase.storage.ref().child(`public/images/${field.collection}/${field.uploadLink}-${file.name}`).put(file)
+		response.on(
+			'state_changed',
+			(snapshot) => onProgress({ percent: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 }),
+			(error) => onError(error),
+			() => onSuccess(null, response.metadata_)
+		)
+	}
 
-	// const ChangeFileList = async ({ fileList }) => {
-	// 	if (fileList.length > 0) {
-	// 		fileList.forEach((file, index) => {
-	// 			if (!file.url && file.status === 'done') {
-	// 				const response = storage.ref().child(`public/images/${field.collection}/${field.uploadLink}-${file.name}`)
-	// 				response.getDownloadURL().then((result) => {
-	// 					fileList[index].url = result
-	// 					field.setLoading && field.setLoading(false)
-	// 				})
-	// 			}
-	// 		})
-	// 	}
-	// }
+	const ChangeFileList = async ({ fileList }) => {
+		if (fileList.length > 0) {
+			fileList.forEach((file, index) => {
+				if (!file.url && file.status === 'done') {
+					const response = firebase.storage.ref().child(`public/images/${field.collection}/${field.uploadLink}-${file.name}`)
+					response.getDownloadURL().then((result) => {
+						fileList[index].url = result
+						field.setLoading && field.setLoading(false)
+					})
+				}
+			})
+		}
+	}
 	if (field.type === 'text') {
 		return <div className={field.className}>{field.value}</div>
 	} else if (field.type === 'input') {
@@ -82,7 +82,7 @@ export const renderFormItem = (field) => {
 					<Input.TextArea className='InputField TextAreaField' rows={field.rows} />
 				) : (
 					<Input
-						className={field.elementClassName || 'input-field AddOn'}
+						className={field.elementClassName || 'input-field add-on'}
 						// type={field.inputType}
 						onInput={
 							field.inputType === 'number'
@@ -288,6 +288,37 @@ export const renderFormItem = (field) => {
 				<Input className={`${field.className || `InputField`} AddOn`} placeholder='e.g abc123' disabled={field.disabled} />
 			</Form.Item>
 		)
+	} else if (field.type === 'picture-upload') {
+		const UploadProps = {
+			listType: 'picture-card',
+			accept: 'image/png, image/jpg, image/jpeg',
+			customRequest: DocumentUpload,
+			onChange: ChangeFileList,
+		}
+		return (
+			<Form.Item
+				key={field.label}
+				label={field.label}
+				name={field.name}
+				rules={[{ required: field.required, message: field.message }]}
+				tooltip={field.tooltip}
+				valuePropName='fileList'
+				getValueFromEvent={normFile}
+			>
+				<Upload listType='picture-card' onChange={ChangeFileList}>
+					<div>
+						<PlusOutlined />
+						<div
+							style={{
+								marginTop: 8,
+							}}
+						>
+							Upload
+						</div>
+					</div>
+				</Upload>
+			</Form.Item>
+		)
 	}
 	// else if (field.type === 'upload') {
 	// 	const UploadProps = {
@@ -416,7 +447,7 @@ export const renderFormItem = (field) => {
 			>
 				<Select
 					style={{ width: '100%' }}
-					className={'SelectField ' + field.elementClassName || ''}
+					className={'select-field ' + field.elementClassName || ''}
 					suffixIcon={<CaretDownOutlined className={field.iconClassName} />}
 					mode={field.mode}
 					disabled={field.action === 'view' || field.disabled === true}

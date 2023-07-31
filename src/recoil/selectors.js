@@ -8,7 +8,6 @@ export const authSelector = selectorFamily({
 		({ get }) => {
 			const user = get(userAtom)
 			const authorized = true
-			console.log({ user, authorized })
 			return user ? { user: user, authorized } : undefined
 		},
 })

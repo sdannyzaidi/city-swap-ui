@@ -14,7 +14,6 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 
 	useEffect(() => {
 		if (!loading && userAuth) {
-			console.log({ userAuth })
 			if (userAuth?.user === 'no user') {
 				setAlert({
 					type: 'error',

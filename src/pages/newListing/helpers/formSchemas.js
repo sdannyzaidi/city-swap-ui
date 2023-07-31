@@ -1,0 +1,48 @@
+export const LocationDetailsSchema = [
+	{
+		type: 'input',
+		label: 'Description',
+		required: true,
+		message: 'Please enter an description',
+		name: ['description'],
+	},
+	{
+		type: 'select',
+		label: 'Country',
+		required: true,
+		message: 'Please select a country',
+		placeholder: 'e.g. Australia',
+		name: ['location', 'country'],
+		valueProperty: 'value',
+		showSearch: true,
+		displayProperty: 'label',
+		options: [
+			{ value: 'Australia', label: 'Australia' },
+			{ value: 'Canada', label: 'Canada' },
+			{ value: 'United States', label: 'United States' },
+		],
+	},
+	{
+		type: 'select',
+		label: 'City',
+		required: true,
+		message: 'Please select a city',
+		placeholder: 'e.g. Sydney',
+		name: ['location', 'city'],
+		valueProperty: 'value',
+		showSearch: true,
+		displayProperty: 'label',
+		options: [
+			{ value: 'Sydney', label: 'Sydney' },
+			{ value: 'Toronto', label: 'Toronto' },
+			{ value: 'New York', label: 'New York' },
+		],
+	},
+	{
+		type: 'input',
+		label: 'Address',
+		required: true,
+		message: 'Please enter an address',
+		name: ['location', 'address'],
+	},
+]
