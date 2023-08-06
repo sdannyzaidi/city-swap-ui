@@ -67,7 +67,7 @@ const About = () => {
 					</div>
 				</div>
 			</div>
-			<div className='w-full flex flex-row py-[4.5rem] px-[7rem] space-x-40 bg-[#F1F1F1]'>
+			<div className='w-full flex flex-row  py-[4.5rem] px-[7rem] space-x-40 bg-[#F1F1F1]'>
 				<div className='flex flex-col basis-1/2'>
 					<p className='text-[3.1rem] leading-[3.25rem] text-[#1A202C] font-bold pb-6'>Don’t wanna pay? Swap or Sublease your property instead!</p>
 					<p className='text-[20px] text-[#1A202C] font-[400] opacity-50'>

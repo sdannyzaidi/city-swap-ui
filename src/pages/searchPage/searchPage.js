@@ -1,37 +1,20 @@
-import { Loader } from '@components'
+import { Form, Loader } from '@components'
 import NoImage from '../../assets/images/icon-no-image.svg'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { listingsAtom } from '@atoms'
 import Icon from '@mdi/react'
 import { mdiFolderSearchOutline, mdiMapMarkerOutline } from '@mdi/js'
 import { BedroomSizeEnums } from '../newListing/helpers/enums'
+import { endpoints } from '../../helpers/enums'
 
 const SearchPage = () => {
 	const location = useLocation()
 	const navigator = useNavigate()
-	const [data, setData] = useRecoilState(listingsAtom)
-	const [loading, setLoading] = useState(false)
-	const fetchData = useCallback(async () => {
-		setLoading(true)
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}propertyInfo/`, {
-			method: 'GET',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-		})
-		if (response.status === 200) {
-			const data = await response.json()
-			console.log({ data })
-			setData(data)
-			setLoading(false)
-		} else {
-			console.log(response)
-			setLoading(false)
-		}
-	}, [])
-	useEffect(() => {
-		fetchData()
-	}, [])
+	const data = useRecoilValue(listingsAtom)
+	const { form, loading } = useOutletContext()
+
 	return (
 		<>
 			<div className='min-h-[70vh] w-[981px] py-8 h-fit bg-white mx-auto'>
@@ -52,7 +35,7 @@ const SearchPage = () => {
 										className='h-[306px] w-[279px] rounded-lg object-cover'
 									/>
 									<div className='py-4 '>
-										<p className='text-[#333333] text-lg font-[700] break-normal'>{listing.property.description}</p>
+										<p className='text-[#333333] text-lg font-[700] break-normal'>{listing.property.title || listing.property.description}</p>
 										<div className='flex flex-row items-center space-x-4 py-4'>
 											<div className='flex flex-row space-x-2 items-center'>
 												<img style={{ width: '16px', height: '16px' }} src={BedroomSizeEnums.noOfBedroom.icon} alt={'bedrooms'} />

@@ -2,8 +2,26 @@ import './App.css'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import { Home, Auth, NewListing, SearchPage, About, Listing, Profile, RequestsBookings, Chat } from '@/pages/index'
 import { PrivateRoute } from '@auth'
+import { useEffect } from 'react'
+import firebase from 'firebase/compat/app'
 
+const refreshToken = async () => {
+	const token = await firebase.auth().currentUser?.getIdToken()
+	console.log(token)
+	if (token) {
+		localStorage.setItem('token', JSON.stringify({ token }))
+	} else {
+		localStorage.setItem('user', JSON.stringify(null))
+	}
+}
 function App() {
+	const user = JSON.parse(localStorage.getItem('user'))
+	const token = JSON.parse(localStorage.getItem('token'))
+	useEffect(() => {
+		if (user && !token) {
+			refreshToken()
+		}
+	}, [])
 	return (
 		<Router>
 			<Routes>
@@ -12,10 +30,38 @@ function App() {
 					<Route path='about' element={<About />} />
 					<Route path='search' element={<SearchPage />} />
 				</Route>
-				<Route path='requests-bookings' element={<RequestsBookings />} />
-				<Route path='my-listings/:id/:action?' element={<Listing />} />
-				<Route path='chat/:id?' element={<Chat />} />
-				<Route path='profile' element={<Profile />} />
+				<Route
+					path='requests-bookings'
+					element={
+						<PrivateRoute redirect='/auth/login'>
+							<RequestsBookings />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='my-listings/:id/:action?'
+					element={
+						<PrivateRoute redirect='/auth/login'>
+							<Listing />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='chat/:id?'
+					element={
+						<PrivateRoute redirect='/auth/login'>
+							<Chat />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='profile'
+					element={
+						<PrivateRoute redirect='/auth/login'>
+							<Profile />
+						</PrivateRoute>
+					}
+				/>
 				<Route
 					path='new-listing'
 					element={

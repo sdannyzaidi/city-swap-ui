@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { listingByIdSelector } from './helpers/selectors'
+import { listingByIdSelector, listingByUserSelector } from './helpers/selectors'
 import { listingsAtom } from '@atoms'
 import { useParams } from 'react-router-dom'
 import { Form, Loader, PrimaryHeader } from '@components'
@@ -11,6 +11,7 @@ import UserCard from './components/userCard'
 import PictureCard from './components/pictureCard'
 import Testimonials from './components/testimonials'
 import PropertySelectionModal from './components/propertySelectionModal'
+import { endpoints } from '../../helpers/enums'
 
 const Listing = () => {
 	const { id, action } = useParams()
@@ -19,6 +20,7 @@ const Listing = () => {
 	const listing = useRecoilValue(listingByIdSelector({ id }))
 	const [form] = Form.useForm()
 	const setData = useSetRecoilState(listingsAtom)
+	const myListings = useRecoilValue(listingByUserSelector({ id: JSON.parse(localStorage.getItem('user'))?.id }))
 	const fetchData = useCallback(async () => {
 		setLoading(true)
 		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}propertyInfo/${id}`, {
@@ -34,17 +36,36 @@ const Listing = () => {
 			setLoading(false)
 		}
 	}, [])
+	const sendRequest = useCallback(async () => {
+		const values = form.getFieldsValue()
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify({
+				propertyId1: listing.property._id,
+				propertyId2: values?.swapPropertyId,
+				requestDates: [
+					{
+						startDate: '2024-01-04',
+
+						endDate: '2024-01-30',
+					},
+				],
+			}),
+		})
+		if (response.status === 200) {
+			const data = await response.json()
+			console.log({ data })
+		} else {
+			console.log(response)
+		}
+	}, [])
 
 	useEffect(() => {
+		document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })
 		fetchData()
 	}, [])
-	return loading ? (
-		<div className='flex flex-col justify-center items-center h-full'>
-			<div className='my-auto align-middle'>
-				<Loader />
-			</div>
-		</div>
-	) : (
+	return (
 		<Form form={form}>
 			<div className='flex flex-col'>
 				<PrimaryHeader />
@@ -79,7 +100,7 @@ const Listing = () => {
 					<Testimonials listing={listing} />
 				</div>
 				<div className='w-full bg-[#664F94] h-[280px]' />
-				<PropertySelectionModal visible={openModal} setVisible={setOpenModal} properties={[listing]} />
+				<PropertySelectionModal visible={openModal} setVisible={setOpenModal} properties={myListings} sendRequest={sendRequest} />
 			</div>
 		</Form>
 	)

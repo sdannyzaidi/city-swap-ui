@@ -1181,6 +1181,14 @@ video {
   width: 66.666667% !important;
 }
 
+.\!w-\[12rem\] {
+  width: 12rem !important;
+}
+
+.\!w-\[17rem\] {
+  width: 17rem !important;
+}
+
 .\!w-fit {
   width: -webkit-fit-content !important;
   width: -moz-fit-content !important;
@@ -1221,10 +1229,6 @@ video {
 
 .w-7 {
   width: 1.75rem;
-}
-
-.w-\[20rem\] {
-  width: 20rem;
 }
 
 .w-\[210px\] {
@@ -1779,6 +1783,10 @@ video {
   padding-bottom: 0.75rem;
 }
 
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
 }
@@ -2230,11 +2238,11 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item {
   border-radius: 0.5rem;
   border-width: 1px;
   border-style: solid;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(102 112 133 / var(--tw-text-opacity));
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5rem !important;
+  --tw-text-opacity: 1 !important;
+  color: rgb(102 112 133 / var(--tw-text-opacity)) !important;
 }
 
 .ant-input-affix-wrapper.ant-input-password.input-field {
@@ -2242,11 +2250,11 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item {
   border-radius: 0.5rem;
   border-width: 1px;
   border-style: solid;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(102 112 133 / var(--tw-text-opacity));
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5rem !important;
+  --tw-text-opacity: 1 !important;
+  color: rgb(102 112 133 / var(--tw-text-opacity)) !important;
 }
 
 .input-field.add-on .ant-input-wrapper.ant-input-group {
@@ -2275,11 +2283,19 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item {
   border-style: solid !important;
   --tw-bg-opacity: 1 !important;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5rem;
-  --tw-text-opacity: 1;
-  color: rgb(102 112 133 / var(--tw-text-opacity));
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5rem !important;
+  --tw-text-opacity: 1 !important;
+  color: rgb(102 112 133 / var(--tw-text-opacity)) !important;
+}
+
+.input-field.ant-picker .ant-picker-input input {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5rem !important;
+  --tw-text-opacity: 1 !important;
+  color: rgb(102 112 133 / var(--tw-text-opacity)) !important;
 }
 
 /****************************************** PRIMARY BUTTON ********************************************/
@@ -2519,6 +2535,44 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item {
 .btn-radio-unselected:hover p {
   --tw-text-opacity: 1;
   color: rgb(83 56 158 / var(--tw-text-opacity));
+}
+
+/******************************************** Range Picker ********************************************/
+
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-range-start
+  .ant-picker-cell-inner {
+  background-color: #9B83CB !important;
+}
+
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-range-end
+  .ant-picker-cell-inner {
+  background-color: #9B83CB !important;
+}
+
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-today
+  .ant-picker-cell-inner::before {
+  border-color: #b3a1d7 !important;
+}
+
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
+.range-picker
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before,
+.range-picker
+  .ant-picker-time-panel-column
+  > li.ant-picker-time-panel-cell-selected
+  .ant-picker-time-panel-cell-inner {
+  background: #b3a1d756 !important;
+}
+
+.range-picker .ant-btn-primary {
+  background-color: #b3a1d7 !important;
+  border-color: #b3a1d7 !important;
 }
 
 /******************************************** Switch ********************************************/

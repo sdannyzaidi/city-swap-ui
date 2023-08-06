@@ -6,6 +6,7 @@ import { firebase } from '@auth'
 import Icon from '@mdi/react'
 import { mdiPlus } from '@mdi/js'
 import { renderSchema } from './renderSchema'
+const { RangePicker } = DatePicker
 
 const PhoneNumberCode = ({ code }) => <div className='bg-secondaryBackground text-sm font-[400] text-black-400'>{code}</div>
 
@@ -423,7 +424,34 @@ export const renderFormItem = (field) => {
 				initialValue={field.initialValue}
 			>
 				<DatePicker
-					className={field.elementClassName || `InputField ${field.className}`}
+					style={{ width: '100%' }}
+					className={field.elementClassName || `input-field ${field.className}`}
+					disabled={field.disabled === true ? true : false}
+					disabledDate={field.disabledDate}
+					disabledTime={field.disabledTime}
+					format={field.format}
+					showNow={field.showNow}
+					defaultPickerValue={field.defaultPickerValue}
+					showTime={field.showTime !== false ? { defaultValue: field.defaultTimeValue } : false}
+				/>
+			</Form.Item>
+		)
+	} else if (field.type === 'dateRange') {
+		return (
+			<Form.Item
+				key={field.label}
+				label={field.label}
+				name={field.name}
+				rules={[{ required: field.required, message: field.message }]}
+				tooltip={field.tooltip}
+				className={field.itemClassName}
+				dependencies={field.dependencies}
+				initialValue={field.initialValue}
+			>
+				<RangePicker
+					style={{ width: '100%' }}
+					className={field.elementClassName || `input-field range-picker ${field.className}`}
+					dropdownClassName={'range-picker'}
 					disabled={field.disabled === true ? true : false}
 					disabledDate={field.disabledDate}
 					disabledTime={field.disabledTime}
@@ -444,6 +472,7 @@ export const renderFormItem = (field) => {
 				initialValue={field.initialValue}
 				tooltip={field.tooltip}
 				noStyle={field.noStyle}
+				className={field.itemClassName}
 			>
 				<Select
 					style={{ width: '100%' }}

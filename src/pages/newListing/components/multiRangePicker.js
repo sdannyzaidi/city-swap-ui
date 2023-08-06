@@ -168,7 +168,7 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 	const [currMonth, setCurrMonth] = useState(dayjs().month())
 	const [nextMonth, setNextMonth] = useState((dayjs().month() + 1) % 12)
 	const [nextMonthYear, setNextMonthYear] = useState(dayjs().month() === 11 ? dayjs().year() + 1 : dayjs().year())
-
+	console.log({ value })
 	const [currYear, setCurrYear] = useState(dayjs().year())
 	const months = useMemo(() => Object.values(CalendarEnums), [])
 	const handleSelect = (date) => {

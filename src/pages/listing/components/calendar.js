@@ -6,10 +6,9 @@ const Calendar = ({ listing }) => {
 		<div className='flex flex-col pl-44 pr-[34rem]'>
 			<p className='text-[30px] font-[700] text-[#333333] pb-6'>Calendar</p>
 			<MultiRangePicker
-				value={Object.values(listing?.associatedListings?.[0]?.availableDates || [])?.map((obj) => [
-					dayjs(obj.startDate).format('YYYY-MM-DD'),
-					dayjs(obj.endDate).format('YYYY-MM-DD'),
-				])}
+				value={Object.values(listing?.asscocitedListings?.[0]?.availableDates || listing?.associatedListings?.[0]?.availableDates || [])?.map((obj) => {
+					return [dayjs(obj.startDate).format('YYYY-MM-DD'), dayjs(obj.endDate).format('YYYY-MM-DD')]
+				})}
 				viewOnly={true}
 				quickNavigate={true}
 			/>

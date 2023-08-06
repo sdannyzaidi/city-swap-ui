@@ -1,11 +1,21 @@
 export const LocationDetailsSchema = [
 	{
 		type: 'input',
+		label: 'Title',
+		required: true,
+		message: 'Please enter a title',
+		name: ['title'],
+	},
+	{
+		type: 'input',
+		inputType: 'textArea',
+		lines: 5,
 		label: 'Description',
 		required: true,
 		message: 'Please enter an description',
 		name: ['description'],
 	},
+
 	{
 		type: 'select',
 		label: 'Country',

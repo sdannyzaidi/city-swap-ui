@@ -5,12 +5,14 @@ const useAddProperty = () => {
 
 	const addNewProperty = async (values) => {
 		setLoading(true)
+		const user = JSON.parse(localStorage.getItem('user'))
 		const finalValues = {
 			listing: {
 				listingType: values.listingType,
 				availableDates: values.availableDates.map((range) => ({ startDate: range[0], endDate: range[1] })),
 			},
 			property: {
+				title: values.title,
 				description: values.description,
 				...values.amenities,
 				...Object.entries(values.size)?.reduce((sizes, entry) => {
@@ -19,6 +21,7 @@ const useAddProperty = () => {
 						[`${entry[0]}`]: parseInt(entry[1]),
 					}
 				}, {}),
+				user: user?.id,
 				pictures: values.photos.map((photo) => photo.url),
 			},
 			location: {
@@ -26,6 +29,7 @@ const useAddProperty = () => {
 				coordinates: [37.7749, -122.4194],
 				address: values.location.address,
 				city: values.location.city,
+				country: values.location.country,
 			},
 		}
 

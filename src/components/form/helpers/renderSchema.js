@@ -19,7 +19,11 @@ export const rowRenderer = (fields, index, type) => {
 						{renderFormItem(field)}
 					</div>
 				) : (
-					<div key={field.name} className={`${index > 0 && 'ml-6'} ${field.className}`} style={{ width: `${100 / visibleFields.length}%` }}>
+					<div
+						key={field.name}
+						className={`${index > 0 && 'ml-6'} ${field.className}`}
+						style={field.customWidth ? {} : { width: `${100 / visibleFields.length}%` }}
+					>
 						{renderFormItem(field)}
 					</div>
 				)

@@ -13,3 +13,16 @@ export const listingByIdSelector = selectorFamily({
 			return listing
 		},
 })
+
+export const listingByUserSelector = selectorFamily({
+	key: 'listingByIdSelector',
+	get:
+		(props) =>
+		({ get }) => {
+			const { id } = props
+			const listings = get(listingsAtom)
+			console.log({ listings })
+			const filteredListings = listings?.filter((listing) => listing.user?._id === id)
+			return filteredListings
+		},
+})

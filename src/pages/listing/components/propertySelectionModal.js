@@ -10,7 +10,7 @@ const PropertyRadioCard = ({ properties, onChange, value }) => {
 	return (
 		<Radio.Group>
 			{properties?.map((listing, index) => (
-				<Radio key={`radio-swapPropertyId-${index}`} value={value} onChange={(e) => onChange(e.target.value)}>
+				<Radio key={`radio-swapPropertyId-${index}`} value={listing?.property?._id} onChange={(e) => onChange(listing?.property?._id)}>
 					<div
 						className={`flex flex-row py-4 w-full px-4 rounded-lg border border-solid border-[#dedede] hover:cursor-pointer`}
 						// onClick={() => navigator(`/listing/${listing.property._id}`)}
@@ -55,7 +55,7 @@ const PropertyRadioCard = ({ properties, onChange, value }) => {
 		</Radio.Group>
 	)
 }
-const PropertySelectionModal = ({ visible, setVisible, properties }) => {
+const PropertySelectionModal = ({ visible, setVisible, properties, sendRequest }) => {
 	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
 	return (
@@ -68,7 +68,18 @@ const PropertySelectionModal = ({ visible, setVisible, properties }) => {
 				<div className='w-full items-center justify-end flex flex-row' key='footer'>
 					{[
 						{ type: 'cancel', className: 'btn-delete', title: 'CANCEL', onClick: () => setVisible(false) },
-						{ type: 'submit', className: 'btn-primary', title: 'SUBMIT REQUEST', onClick: () => setVisible(false) },
+						{
+							type: 'submit',
+							className: 'btn-primary',
+							title: 'SUBMIT REQUEST',
+							onClick: () => {
+								setLoading(true)
+								sendRequest().then(() => {
+									setLoading(false)
+									setVisible(false)
+								})
+							},
+						},
 					]?.map((button, index) => {
 						return (
 							<Button id={button?.type} className={button?.className} style={{ height: 40 }} onClick={button?.onClick} key={'button-' + index} loading={loading}>

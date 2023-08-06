@@ -1,7 +1,7 @@
 import { AmenitiesEnums } from '../../newListing/helpers/enums'
 
 const Amenities = ({ listing }) => {
-	const amenities = Object.values(AmenitiesEnums).filter((amenity) => listing?.property && Object.keys(listing.property).includes(amenity.value))
+	const amenities = Object.values(AmenitiesEnums).filter((amenity) => listing?.property?.[amenity.value])
 
 	return (
 		<div className='flex flex-col pl-44  pr-96'>
