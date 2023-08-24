@@ -9,6 +9,13 @@ import dayjs from 'dayjs'
 const PropertyAvailability = () => {
 	const { form } = useContext(ListingContext)
 	const availableDates = Form.useWatch('availableDates', form)
+	const removeDateRange = (range) => {
+		const prevVals = form.getFieldsValue()
+		const newVals = {
+			availableDates: prevVals.availableDates.filter((dateRange) => !(range?.[0] === dateRange[0] && range?.[1] === dateRange[1])),
+		}
+		form.setFieldsValue(newVals)
+	}
 
 	return (
 		<div className='flex flex-col w-full'>
@@ -22,7 +29,7 @@ const PropertyAvailability = () => {
 								<p className='text-sm font-[600] text-[#344054] pr-2'>
 									{dayjs(range[0]).format('D MMM YY')}&nbsp;-&nbsp;{dayjs(range[1]).format('D MMM YY')}
 								</p>
-								<Icon path={mdiClose} size={0.7} className='text-[#344054]' />
+								<Icon path={mdiClose} size={0.7} className='text-[#344054] hover:cursor-pointer' onClick={() => removeDateRange(range)} />
 							</div>
 						))
 					) : (

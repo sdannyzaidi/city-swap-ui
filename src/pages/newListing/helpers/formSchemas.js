@@ -1,4 +1,6 @@
-export const LocationDetailsSchema = [
+import CountryEnum from '../../../helpers/countries'
+
+export const LocationDetailsSchema = (country) => [
 	{
 		type: 'input',
 		label: 'Title',
@@ -26,11 +28,7 @@ export const LocationDetailsSchema = [
 		valueProperty: 'value',
 		showSearch: true,
 		displayProperty: 'label',
-		options: [
-			{ value: 'Australia', label: 'Australia' },
-			{ value: 'Canada', label: 'Canada' },
-			{ value: 'United States', label: 'United States' },
-		],
+		options: Object.keys(CountryEnum).map((country) => ({ label: country, value: country })),
 	},
 	{
 		type: 'select',
@@ -42,11 +40,15 @@ export const LocationDetailsSchema = [
 		valueProperty: 'value',
 		showSearch: true,
 		displayProperty: 'label',
-		options: [
-			{ value: 'Sydney', label: 'Sydney' },
-			{ value: 'Toronto', label: 'Toronto' },
-			{ value: 'New York', label: 'New York' },
-		],
+		options: (
+			CountryEnum[country]?.cities ||
+			Object.values(CountryEnum)
+				.map((country) => country.cities)
+				.flat()
+		).map((city) => ({
+			label: city,
+			value: city,
+		})),
 	},
 	{
 		type: 'input',

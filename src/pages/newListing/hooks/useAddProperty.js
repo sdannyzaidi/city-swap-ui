@@ -25,7 +25,7 @@ const useAddProperty = () => {
 				pictures: values.photos.map((photo) => photo.url),
 			},
 			location: {
-				id: 1,
+				id: 901,
 				coordinates: [37.7749, -122.4194],
 				address: values.location.address,
 				city: values.location.city,

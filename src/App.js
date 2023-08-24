@@ -5,21 +5,12 @@ import { PrivateRoute } from '@auth'
 import { useEffect } from 'react'
 import firebase from 'firebase/compat/app'
 
-const refreshToken = async () => {
-	const token = await firebase.auth().currentUser?.getIdToken()
-	console.log(token)
-	if (token) {
-		localStorage.setItem('token', JSON.stringify({ token }))
-	} else {
-		localStorage.setItem('user', JSON.stringify(null))
-	}
-}
-function App() {
+const App = () => {
 	const user = JSON.parse(localStorage.getItem('user'))
 	const token = JSON.parse(localStorage.getItem('token'))
 	useEffect(() => {
 		if (user && !token) {
-			refreshToken()
+			const user = firebase.auth().currentUser
 		}
 	}, [])
 	return (

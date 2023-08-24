@@ -12,7 +12,7 @@ const PropertyDetails = (props) => {
 					<RadioButtonGroup
 						options={[
 							{ label: 'Available for Swap', value: 'swap' },
-							{ label: 'Available for Sublease', value: 'subLease' },
+							{ label: 'Available for Sublease', value: 'sublease' },
 						]}
 					/>
 				</Form.Item>

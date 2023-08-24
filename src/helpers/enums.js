@@ -3,4 +3,5 @@ export const endpoints = {
 	'swap-request': 'request/swap-request',
 	'mark-request-status': (id) => `request/requests/${id}`,
 	find: 'propertyInfo/find/',
+	'user-properties': (id) => `propertyInfo/user/${id}`,
 }

@@ -51,8 +51,8 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item{
 }
 /****************************************** PRIMARY BUTTON ********************************************/
   .btn-primary {
-    @apply h-11 rounded-lg bg-[#9B83CB] border border-solid border-[#9B83CB];
-    @apply leading-6 text-[16px] font-[400] text-white;
+    @apply h-11 max-sm:h-8 max-sm:px-2 rounded-lg bg-[#9B83CB] border border-solid border-[#9B83CB];
+    @apply leading-6 text-[16px] max-sm:text-sm sm:font-[500]  font-[400] text-white;
   }
 
   .btn-primary:hover {
@@ -98,6 +98,9 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item{
     @apply absolute rounded-full !h-2 !w-2 right-0 left-0 top-0 bottom-0 my-auto mx-auto
   }
 
+  
+
+
 /************************************* RADIO BUTTONS - SELECTED ***************************************/
 
   /* base */
@@ -119,6 +122,10 @@ span.ant-select-selection-placeholder,span.ant-select-selection-item{
   /* text */
   .btn-radio-selected p{
     @apply text-[#53389E]
+  }
+
+  .ant-radio-wrapper .ant-radio-checked .ant-radio-inner{
+    @apply !bg-[#9B83CB] !border-[#9B83CB]
   }
 
 /************************************* RADIO BUTTONS - UNSELECTED ***************************************/
@@ -241,3 +248,7 @@ ul.slick-dots.slick-dots-bottom li button {
 }  
 
 
+
+.EmojiPickerReact{
+  --epr-emoji-fullsize:40px
+}

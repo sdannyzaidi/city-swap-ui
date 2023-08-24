@@ -8,6 +8,7 @@ import { ListingContext } from './helpers/context'
 import PropertyAvailability from './components/propertyAvailability'
 import useAddProperty from './hooks/useAddProperty'
 import { useNavigate } from 'react-router-dom'
+import BG1 from '../../assets/drive-assets/brina-blum-nWX4pKwzLoE-unsplash.jpg'
 const NewListing = (props) => {
 	const homeRef = useRef(null)
 	const navigator = useNavigate()
@@ -48,8 +49,10 @@ const NewListing = (props) => {
 				preserve
 			>
 				<div className='w-full h-max flex flex-row'>
-					<div className="w-1/3 min-h-[100vh]  bg-cover bg-center bg-[url('/Users/adilaslam/Documents/personal/cityswap/src/assets/images/sofa.png')] hidden sm:block" />
-					<div className='w-2/3 h-max px-48 py-20 flex flex-col items-start'>
+					<div className='w-2/5 min-h-[100vh] hidden sm:block'>
+						<img src={BG1} alt='bg' className='w-full h-full object-cover' />
+					</div>
+					<div className='w-3/5 h-max px-48 py-20 flex flex-col items-start'>
 						<ListingContext.Provider value={{ form, setLoading: setOtherLoading }}>
 							{page === 0 ? <PropertyDetails /> : page === 1 ? <LocationDetails /> : page === 2 ? <PropertyPictures /> : <PropertyAvailability />}
 						</ListingContext.Provider>

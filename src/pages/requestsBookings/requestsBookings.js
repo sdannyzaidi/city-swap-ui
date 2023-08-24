@@ -40,7 +40,7 @@ const RequestBookings = () => {
 		<div className='overflow-y-scroll'>
 			<PrimaryHeader />
 			<div className='flex flex-row min-h-[96vh] h-fit'>
-				<div className='flex flex-col min-h-[96vh] !h-full basis-[20%] px-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
+				<div className='flex flex-col min-h-[96vh] pt-12 !h-full basis-[20%] px-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
 					{[
 						{ title: 'Requests', page: 'requests' },
 						{ title: 'My Swaps / Subleases', page: 'swaps-subleases' },
@@ -56,7 +56,7 @@ const RequestBookings = () => {
 						</p>
 					))}
 				</div>
-				<div className='flex flex-col min-h-[96vh] !h-fit basis-[80%] px-6 space-y-1'>
+				<div className='flex flex-col min-h-[96vh] pt-12  !h-fit basis-[80%] px-6 space-y-1'>
 					<p className='text-[#101828] text-[30px] font-[600] pb-8'>{page.title}</p>
 					{data && data?.length > 0 ? (
 						<div className='flex flex-col space-y-4 pb-16 mr-36'>

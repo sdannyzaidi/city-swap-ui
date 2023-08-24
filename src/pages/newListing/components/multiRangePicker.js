@@ -17,7 +17,7 @@ const compareDate = (date1, date2) => {
 const compareRanges = (range1, range2) => {
 	return compareDate(range1[0], range2[0])
 }
-const checkRangeOverlap = (range1, range2) => {
+export const checkRangeOverlap = (range1, range2) => {
 	const newRange1Start = dayjs(range1[1]).add(1, 'day')
 	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]) >= 0
 }
@@ -44,7 +44,7 @@ const checkSelected = (date, selectedRanges) => {
 	return selectedRanges
 		? selectedRanges
 				.map((range) => {
-					const newDate = dayjs(date)
+					const newDate = dayjs(date).add(1, 'month')
 					const newRangeStart = dayjs(range[0])
 					const newRangeEnd = dayjs(range[1])
 					if (newDate.isBetween(newRangeStart, newRangeEnd, 'day', '()')) {
@@ -86,19 +86,19 @@ const getDaysInMonth = (month, year, months) => {
 	return dayGrid
 }
 const CalendarCell = ({ day: { value, disabled } = {}, month, year, index }) => {
-	const { selectedStartingDate, hoveringDate, setHoveringDate, handleSelect, selectedRanges } = useContext(CalendarContext)
+	const { selectedStartingDate, handleSelect, selectedRanges } = useContext(CalendarContext)
 	const selected = checkSelected(`${year}-${month}-${value}`, selectedRanges)
 	return (
 		<div
 			className={`basis-[14.2857%] ${!disabled ? 'hover:cursor-pointer' : 'hover:cursor-not-allowed'}`}
-			onClick={() => !disabled && handleSelect(`${year}-${month}-${value}`)}
+			onClick={() => !disabled && handleSelect(`${year}-${month + 1}-${value}`)}
 		>
 			{disabled ? (
 				<p className='text-[#767f95] font-[400] text-[12px] text-center'>{value}</p>
 			) : selected === 'single' ||
 			  (selected === 'start' && index === 6) ||
 			  (selected === 'end' && index === 0) ||
-			  selectedStartingDate === `${year}-${month}-${value}` ? (
+			  dayjs(selectedStartingDate).isSame(`${year}-${month + 1}-${value}`) ? (
 				<p className='font-[600] text-[12px] bg-[#9B83CB] text-white h-7 w-7 text-center leading-7 rounded-full mx-auto'>{value}</p>
 			) : selected === 'start' || (selected === 'between' && index === 0) ? (
 				<p className='font-[600] text-[12px] bg-[#9B83CB] text-white my-1 h-7 w-full text-center leading-7 rounded-l-full mx-auto'>{value}</p>
@@ -174,9 +174,12 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 	const handleSelect = (date) => {
 		if (!viewOnly) {
 			if (selectedStartingDate) {
+				console.log({ second: date })
+
 				onChange(mergeRanges([...(value || []), [selectedStartingDate, date]]))
 				setSelectedStartingDate(null)
 			} else {
+				console.log({ date })
 				setSelectedStartingDate(date)
 			}
 		}

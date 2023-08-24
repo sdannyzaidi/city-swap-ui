@@ -16,13 +16,16 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-firebase.auth().onAuthStateChanged(async (user) => {
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+firebase.auth().onIdTokenChanged(async (user) => {
 	if (user) {
 		const token = await user.getIdToken()
+		console.log({ token })
 		localStorage.setItem('token', JSON.stringify({ token }))
 	} else {
-		localStorage.setItem('token', JSON.stringify(null))
+		console.log('hello')
+		// localStorage.setItem('token', JSON.stringify(null))
+		// localStorage.setItem('user', JSON.stringify(null))
 	}
 })
 

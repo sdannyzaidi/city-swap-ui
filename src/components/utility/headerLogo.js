@@ -1,9 +1,9 @@
-import HeaderIcon from '../../assets/logos/headerLogo.png'
+import HeaderIcon from '../../assets/drive-assets/logo.svg'
 
-const HeaderLogo = () => {
+const HeaderLogo = ({ width }) => {
 	return (
 		<div className='mr-4' key='header-logo' id='-blxlogo'>
-			<img className='' src={HeaderIcon} alt='' style={{ width: '86px', height: 'auto' }} />
+			<img className='' src={HeaderIcon} alt='' style={{ width: width > 640 ? '40px' : '30px', height: 'auto' }} />
 		</div>
 	)
 }

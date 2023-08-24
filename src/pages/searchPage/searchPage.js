@@ -1,19 +1,27 @@
 import { Form, Loader } from '@components'
 import NoImage from '../../assets/images/icon-no-image.svg'
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
-import { useCallback, useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { listingsAtom } from '@atoms'
+import { useRecoilValue } from 'recoil'
 import Icon from '@mdi/react'
 import { mdiFolderSearchOutline, mdiMapMarkerOutline } from '@mdi/js'
 import { BedroomSizeEnums } from '../newListing/helpers/enums'
-import { endpoints } from '../../helpers/enums'
+import { listingsNotByUserSelector, searchPropertiesSelector } from '../listing/helpers/selectors'
 
 const SearchPage = () => {
-	const location = useLocation()
 	const navigator = useNavigate()
-	const data = useRecoilValue(listingsAtom)
+	const id = JSON.parse(localStorage.getItem('user'))?.id
+
 	const { form, loading } = useOutletContext()
+	const values = Form.useWatch(undefined, form)
+	console.log({ values })
+	const data = useRecoilValue(
+		searchPropertiesSelector({
+			id,
+			dateRange: [values?.dateRange?.[0]?.format(), values?.dateRange?.[1]?.format()],
+			location: { city: values?.city, country: values?.country },
+			type: values?.type,
+		})
+	)
 
 	return (
 		<>
@@ -27,7 +35,13 @@ const SearchPage = () => {
 									className={`py-4 w-[311px] px-4 ${
 										index !== 0 && index % 3 === 2 ? '' : 'mr-6'
 									} mb-10 rounded-lg border border-solid border-[#dedede] hover:cursor-pointer`}
-									onClick={() => navigator(`/listing/${listing.property._id}`)}
+									onClick={() => {
+										localStorage.setItem('searchDate', JSON.stringify(form.getFieldValue(['dateRange'])))
+										localStorage.setItem('searchType', JSON.stringify(form.getFieldValue(['type'])))
+										localStorage.setItem('location', JSON.stringify({ city: form.getFieldValue(['city']), country: form.getFieldValue(['country']) }))
+
+										navigator(`/listing/${listing.property._id}`)
+									}}
 								>
 									<img
 										src={listing.property.pictures[0] && !listing.property.pictures[0].includes('example.com') ? listing.property.pictures[0] : NoImage}

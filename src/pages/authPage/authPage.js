@@ -1,4 +1,5 @@
 import { AlertBanner, Form } from '@components'
+import Image from '../../assets/drive-assets/erol-ahmed-FTy5VSGIfiQ-unsplash (1).jpg'
 import { useParams } from 'react-router-dom'
 import { authFormSchema } from './helpers/authFormSchemas'
 import { Button } from 'antd'
@@ -14,8 +15,10 @@ const Auth = (props) => {
 
 	return (
 		<div className='h-screen flex'>
-			<div className="w-[55%] h-full bg-cover bg-center bg-[url('/Users/adilaslam/Documents/personal/cityswap/src/assets/images/hand-house.jpg')] hidden sm:block rounded-[0_80px_0px_0]"></div>
-			<div className='w-full sm:w-[45%] h-full flex flex-col justify-center items-center'>
+			<div className='w-[50%] h-full hidden sm:block rounded-[0_80px_0px_0]'>
+				<img className='w-full h-full object-cover' src={Image} alt='' />
+			</div>
+			<div className=' sm:w-[50%] max-[640px]:w-full h-full flex flex-col justify-center items-center'>
 				<Form
 					key='AuthForm'
 					layout='vertical'

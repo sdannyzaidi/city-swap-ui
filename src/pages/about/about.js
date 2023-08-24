@@ -1,5 +1,14 @@
 import { useOutletContext } from 'react-router-dom'
-import HeroBackground from '../../assets/images/prague.webp'
+import BG1 from '../../assets/drive-assets/ben-o-bro-wpU4veNGnHg-unsplash.jpg'
+import BG2 from '../../assets/drive-assets/helena-lopes-e3OUQGT9bWU-unsplash.jpg'
+import BG3 from '../../assets/drive-assets/michael-olsen-vNIgKjZbJW0-unsplash.jpg'
+import BG4 from '../../assets/drive-assets/dallas-reedy-NEJFAS1Okho-unsplash.jpg'
+import BG5 from '../../assets/drive-assets/spacejoy-nEtpvJjnPVo-unsplash.jpg'
+import BG6 from '../../assets/drive-assets/kylie-lugo-t0BavJY0M-U-unsplash.jpg'
+import BG7 from '../../assets/drive-assets/community.jpeg'
+import BG8 from '../../assets/drive-assets/houses-top.jpeg'
+import BG9 from '../../assets/drive-assets/sustainability.jpeg'
+import BG10 from '../../assets/drive-assets/freedom.jpeg'
 
 const About = () => {
 	const { homeRef } = useOutletContext()
@@ -16,14 +25,16 @@ const About = () => {
 				</div>
 				<div className='basis-1/2 h-[360px] align-top text-center'>
 					<div className='rounded-2xl overflow-clip'>
-						<img className='h-full w-auto' src={HeroBackground} alt='' />
+						<img className='h-full w-auto' src={BG8} alt='' />
 					</div>
 				</div>
 			</div>
 			<div className='w-full h-fit flex flex-row'>
 				<div className='basis-1/3'>
-					<div className='relative'>
-						<div className='h-[364px] bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/prague.webp")]' />
+					<div className='relative h-full'>
+						<div className='w-full h-[364px] overflow-hidden'>
+							<img className='object-cover h-full w-full' src={BG9} alt='' />
+						</div>
 
 						<div className='absolute top-0 bottom-0 right-0 left-0 h-[364px] w-full bg-[#4444449C]'></div>
 
@@ -37,8 +48,10 @@ const About = () => {
 					</div>
 				</div>
 				<div className='basis-1/3'>
-					<div className='relative'>
-						<div className='h-[364px] bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/prague.webp")]' />
+					<div className='relative h-full'>
+						<div className='w-full h-[364px] overflow-hidden'>
+							<img className='object-cover h-full w-full' src={BG10} alt='' />
+						</div>
 						<div className='absolute top-0 bottom-0 right-0 left-0 h-[364px] w-full bg-[#4444449C]'></div>
 
 						<div
@@ -53,9 +66,10 @@ const About = () => {
 					</div>
 				</div>
 				<div className='basis-1/3'>
-					<div className='relative'>
-						<div className='h-[364px] bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/prague.webp")]' />
-
+					<div className='relative h-full'>
+						<div className='w-full h-[364px] overflow-hidden'>
+							<img className='object-cover h-full w-full' src={BG5} alt='' />
+						</div>
 						<div className='absolute top-0 bottom-0 right-0 left-0 h-[364px] w-full bg-[#4444449C]'></div>
 						<div
 							className='absolute flex flex-col items-center justify-center left-0 right-0 top-0 bottom-0 my-auto mx-auto text-center h-[200px]'
@@ -78,12 +92,14 @@ const About = () => {
 				</div>
 				<div className='basis-1/2 h-[360px] align-top text-center'>
 					<div className='rounded-2xl overflow-clip'>
-						<img className='h-full w-auto' src={HeroBackground} alt='' />
+						<img className='h-full w-auto' src={BG2} alt='' />
 					</div>
 				</div>
 			</div>
 			<div className='w-full flex flex-row px-[10rem] pt-[4.5rem] justify-between bg-[#F6F5FE]'>
-				<div className='rounded-[247.57px_22px_22px_22px] basis-[500px] h-[570px] align-middle text-center bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/prague.webp")]'></div>
+				<div className='rounded-[247.57px_22px_22px_22px] basis-[500px] h-[570px] overflow-hidden'>
+					<img className='object-cover h-full w-full' src={BG6} alt='' />
+				</div>
 				<div className='flex flex-col basis-1/2 my-auto pr-32'>
 					<p className='text-[2rem] leading-[2.1rem] text-[#474747] font-bold pb-6 text-left'>
 						<span className='text-[#832AF6]'>Community</span> you'll adore
@@ -104,7 +120,9 @@ const About = () => {
 						positive impact.
 					</p>
 				</div>
-				<div className='rounded-[247.57px_22px_22px_22px] h-[570px] basis-[500px] align-middle text-center bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/prague.webp")]'></div>
+				<div className='rounded-[247.57px_22px_22px_22px] basis-[500px] h-[570px] overflow-hidden'>
+					<img className='object-cover h-full w-full' src={BG7} alt='' />
+				</div>
 			</div>
 			<div className='w-full bg-[#664F94] h-[280px]'></div>
 		</>
