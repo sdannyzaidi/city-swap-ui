@@ -39,9 +39,15 @@ const PrimaryHeader = () => {
 							</div>
 						) : (
 							<div className='flex flex-row items-center space-x-6 mr-4 text-[#555555] font-semibold'>
-								<p className=' text-[16px]'>How It works</p>
-								<p className=' text-[16px]'>Pricing</p>
-								<p className=' text-[16px]'>FAQs</p>
+								<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/info')}>
+									How it works
+								</p>
+								<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/pricing')}>
+									Pricing
+								</p>
+								<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/faqs')}>
+									FAQs
+								</p>
 							</div>
 						)
 					) : null}

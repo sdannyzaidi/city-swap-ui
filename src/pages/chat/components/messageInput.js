@@ -5,28 +5,15 @@ import dayjs from 'dayjs'
 import EmojiPicker from 'emoji-picker-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const MessageInput = ({ sendMessage, setMessages, lastMessageRef }) => {
+const MessageInput = ({ sendMessage, lastMessageRef }) => {
 	const [height, setHeight] = useState(120)
 	const [inputValue, setInputValue] = useState('')
 	const newMessage = useCallback(() => {
 		if (inputValue?.length > 0) {
-			setMessages((prevVal) => {
-				const newMessages = [...prevVal?.map((messages) => messages.messages).flat(), { message: inputValue, user: 'me', timestamp: dayjs().format() }]
-				return (
-					Object.values(
-						newMessages?.reduce(
-							(prev, message) => ({
-								...prev,
-								[`${dayjs(message.timestamp).fromNow()}-${message.user}`]: {
-									timestamp: message.timestamp,
-									user: message.user,
-									messages: [...(prev[[`${dayjs(message.timestamp).fromNow()}-${message.user}`]]?.messages || []), message],
-								},
-							}),
-							{}
-						)
-					) || []
-				)
+			sendMessage({
+				message: inputValue,
+				user: { _id: JSON.parse(localStorage.getItem('user')).id, name: JSON.parse(localStorage.getItem('user')).name },
+				timestamp: dayjs().format(),
 			})
 			setInputValue('')
 			lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })

@@ -2,7 +2,7 @@ import { Button } from 'antd'
 
 const RadioButtonGroup = ({ options, value, onChange }) => {
 	return (
-		<div className='flex flex-row items-center space-x-6'>
+		<div className='flex flex-row items-center sm:space-x-6 max-sm:space-x-4'>
 			{options.map((option, index) => {
 				return (
 					<Button
@@ -13,7 +13,8 @@ const RadioButtonGroup = ({ options, value, onChange }) => {
 						<div className='radio-option  mr-2'>
 							<div className='radio-option-inner'></div>
 						</div>
-						<p>{option.label}</p>
+						{option.short && <p className='max-sm:block sm:hidden'>{option.short}</p>}
+						<p className='max-sm:hidden sm:block'>{option.label}</p>
 					</Button>
 				)
 			})}

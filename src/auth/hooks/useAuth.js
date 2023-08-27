@@ -4,14 +4,30 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { notification } from 'antd'
 import { AUTH_EVENTS } from '../helpers/enums'
+import { endpoints } from '../../helpers/enums'
 const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const setUserAtom = useSetRecoilState(userAtom)
 	const userAuth = useRecoilValue(authSelector())
 	const [loading, setLoading] = useState(false)
+	const [signupComplete, setSignupComplete] = useState(false)
+	const [userId, setUserId] = useState('')
+	const [userEmail, setUserEmail] = useState('')
 	const navigate = useNavigate()
 	const { action } = useParams()
 	const { pathname } = useLocation()
-
+	const [clientSecret, setClientSecret] = useState(null)
+	useEffect(() => {
+		if (action === 'signup' && signupComplete) {
+			fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['create-subscription']}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({ email: userEmail }),
+			})
+				.then((response) => response.json())
+				.then((data) => setClientSecret(data.clientSecret))
+				.catch((err) => console.log(err))
+		}
+	}, [signupComplete]) // eslint-disable-line
 	useEffect(() => {
 		if (!loading && userAuth) {
 			if (userAuth?.user === 'no user') {
@@ -76,15 +92,20 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 				body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
 			})
 			if (response.status === 200) {
-				notification['success']({
-					message: 'User created successfully',
-					duration: 5,
-					onClick: () => {
-						notification.close()
-					},
+				response.json().then((data) => {
+					console.log({ data })
+					notification['success']({
+						message: 'User created successfully',
+						duration: 5,
+						onClick: () => {
+							notification.close()
+						},
+					})
+					setSignupComplete(true)
+					setUserEmail(values.email)
+					setUserId(data._id)
+					setLoading(false)
 				})
-				navigate('/auth/login')
-				setLoading(false)
 			} else {
 				console.log(response)
 				setAlert({
@@ -106,6 +127,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 			// window.location.href = '/'
 		}
 	}
+
 	const dispatch = useCallback((event) => {
 		setLoading(true)
 		try {
@@ -130,7 +152,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		}
 	})
 
-	return [dispatch, loading]
+	return [dispatch, loading, signupComplete, userId, clientSecret]
 }
 
 export default useAuth

@@ -1,0 +1,272 @@
+{
+	"userRequests": [
+		{
+			"_id": "64dfb6fc6aa8c149687e835d",
+			"requestDates": [
+				{
+					"_id": "64dfb6fc6aa8c149687e835f",
+					"startDate": "2023-09-07T00:00:00.000Z",
+					"endDate": "2023-09-10T00:00:00.000Z"
+				}
+			],
+			"status": "Pending",
+			"reqUserId": "648eb12ab4fa65f5dd13dfa8",
+			"__v": 0,
+			"requestType": "sublease",
+			"requestedProperty": {
+				"propertyDetail": {
+					"reviews": ["Excellent place!", "Highly recommended"],
+					"pictures": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+					"_id": "64dfb6606aa8c149687e8345",
+					"user": "648ebe299afdd6002136d112",
+					"title": "3 marla house",
+					"description": "House is very great",
+					"size": 200,
+					"noOfPeople": 6,
+					"noOfBedroom": 3,
+					"noOfBathroom": 2,
+					"noOfStudio": 0,
+					"noOfSleep": 6,
+					"entirePlace": true,
+					"petFriendly": true,
+					"pool": true,
+					"parking": true,
+					"washingMachine": true,
+					"airConditioner": true,
+					"workDesk": false,
+					"wifi": true,
+					"noSmoking": true,
+					"balcony": false,
+					"garden": true,
+					"__v": 0
+				},
+				"associatedListings": [
+					{
+						"_id": "64dfb6616aa8c149687e8347",
+						"listingType": "sublease",
+						"cost": 1000,
+						"availableDates": [
+							{
+								"_id": "64dfb6616aa8c149687e8348",
+								"startDate": "2023-07-01T00:00:00.000Z",
+								"endDate": "2023-09-30T00:00:00.000Z"
+							}
+						],
+						"property": "64dfb6606aa8c149687e8345",
+						"__v": 0
+					}
+				],
+				"location": [
+					{
+						"coordinates": [37.7749, -122.4194],
+						"_id": "64dfb6616aa8c149687e834a",
+						"address": "123 Main Street",
+						"city": "Islamabad",
+						"country": "Pakistan",
+						"property": "64dfb6606aa8c149687e8345",
+						"__v": 0
+					}
+				]
+			}
+		}
+	],
+	"receivedRequests": [
+		{
+			"_id": "64dfb7196aa8c149687e8361",
+			"requestDates": [
+				{
+					"_id": "64dfb7196aa8c149687e8363",
+					"startDate": "2023-09-07T00:00:00.000Z",
+					"endDate": "2023-09-10T00:00:00.000Z"
+				}
+			],
+			"status": "Pending",
+			"reqUserId": "648ebe299afdd6002136d112",
+			"__v": 0,
+			"requestType": "sublease",
+			"requestedProperty": {
+				"propertyDetail": {
+					"reviews": ["Excellent place!", "Highly recommended"],
+					"pictures": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+					"_id": "64dfb6c86aa8c149687e8351",
+					"user": "648eb12ab4fa65f5dd13dfa8",
+					"title": "5 marla house",
+					"description": "House is very clean",
+					"size": 200,
+					"noOfPeople": 6,
+					"noOfBedroom": 3,
+					"noOfBathroom": 2,
+					"noOfStudio": 0,
+					"noOfSleep": 6,
+					"entirePlace": true,
+					"petFriendly": true,
+					"pool": true,
+					"parking": true,
+					"washingMachine": true,
+					"airConditioner": true,
+					"workDesk": false,
+					"wifi": true,
+					"noSmoking": true,
+					"balcony": false,
+					"garden": true,
+					"__v": 0
+				},
+				"associatedListings": [
+					{
+						"_id": "64dfb6c96aa8c149687e8353",
+						"listingType": "sublease",
+						"cost": 1000,
+						"availableDates": [
+							{
+								"_id": "64dfb6c96aa8c149687e8354",
+								"startDate": "2023-07-01T00:00:00.000Z",
+								"endDate": "2023-09-30T00:00:00.000Z"
+							}
+						],
+						"property": "64dfb6c86aa8c149687e8351",
+						"__v": 0
+					}
+				],
+				"location": [
+					{
+						"coordinates": [37.7749, -122.4194],
+						"_id": "64dfb6c96aa8c149687e8356",
+						"address": "123 Main Street",
+						"city": "Islamabad",
+						"country": "Pakistan",
+						"property": "64dfb6c86aa8c149687e8351",
+						"__v": 0
+					}
+				]
+			}
+		},
+		{
+			"_id": "64dfcdb5c2cbb932d06ee998",
+			"requestDates": [
+				{
+					"_id": "64dfcdb5c2cbb932d06ee99b",
+					"startDate": "2023-08-05T00:00:00.000Z",
+					"endDate": "2023-08-05T00:00:00.000Z"
+				},
+				{
+					"_id": "64dfcdb5c2cbb932d06ee99c",
+					"startDate": "2023-08-05T00:00:00.000Z",
+					"endDate": "2023-08-05T00:00:00.000Z"
+				}
+			],
+			"status": "Pending",
+			"__v": 0,
+			"requestType": "swap",
+			"ownProperty": {
+				"propertyDetail": {
+					"reviews": ["Excellent place!", "Highly recommended"],
+					"pictures": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+					"_id": "64dfb6606aa8c149687e8345",
+					"user": "648ebe299afdd6002136d112",
+					"title": "3 marla house",
+					"description": "House is very great",
+					"size": 200,
+					"noOfPeople": 6,
+					"noOfBedroom": 3,
+					"noOfBathroom": 2,
+					"noOfStudio": 0,
+					"noOfSleep": 6,
+					"entirePlace": true,
+					"petFriendly": true,
+					"pool": true,
+					"parking": true,
+					"washingMachine": true,
+					"airConditioner": true,
+					"workDesk": false,
+					"wifi": true,
+					"noSmoking": true,
+					"balcony": false,
+					"garden": true,
+					"__v": 0
+				},
+				"associatedListings": [
+					{
+						"_id": "64dfb6616aa8c149687e8347",
+						"listingType": "sublease",
+						"cost": 1000,
+						"availableDates": [
+							{
+								"_id": "64dfb6616aa8c149687e8348",
+								"startDate": "2023-07-01T00:00:00.000Z",
+								"endDate": "2023-09-30T00:00:00.000Z"
+							}
+						],
+						"property": "64dfb6606aa8c149687e8345",
+						"__v": 0
+					}
+				],
+				"location": [
+					{
+						"coordinates": [37.7749, -122.4194],
+						"_id": "64dfb6616aa8c149687e834a",
+						"address": "123 Main Street",
+						"city": "Islamabad",
+						"country": "Pakistan",
+						"property": "64dfb6606aa8c149687e8345",
+						"__v": 0
+					}
+				]
+			},
+			"requestedProperty": {
+				"propertyDetail": {
+					"reviews": ["Excellent place!", "Highly recommended"],
+					"pictures": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+					"_id": "64dfb6c86aa8c149687e8351",
+					"user": "648eb12ab4fa65f5dd13dfa8",
+					"title": "5 marla house",
+					"description": "House is very clean",
+					"size": 200,
+					"noOfPeople": 6,
+					"noOfBedroom": 3,
+					"noOfBathroom": 2,
+					"noOfStudio": 0,
+					"noOfSleep": 6,
+					"entirePlace": true,
+					"petFriendly": true,
+					"pool": true,
+					"parking": true,
+					"washingMachine": true,
+					"airConditioner": true,
+					"workDesk": false,
+					"wifi": true,
+					"noSmoking": true,
+					"balcony": false,
+					"garden": true,
+					"__v": 0
+				},
+				"associatedListings": [
+					{
+						"_id": "64dfb6c96aa8c149687e8353",
+						"listingType": "sublease",
+						"cost": 1000,
+						"availableDates": [
+							{
+								"_id": "64dfb6c96aa8c149687e8354",
+								"startDate": "2023-07-01T00:00:00.000Z",
+								"endDate": "2023-09-30T00:00:00.000Z"
+							}
+						],
+						"property": "64dfb6c86aa8c149687e8351",
+						"__v": 0
+					}
+				],
+				"location": [
+					{
+						"coordinates": [37.7749, -122.4194],
+						"_id": "64dfb6c96aa8c149687e8356",
+						"address": "123 Main Street",
+						"city": "Islamabad",
+						"country": "Pakistan",
+						"property": "64dfb6c86aa8c149687e8351",
+						"__v": 0
+					}
+				]
+			}
+		}
+	]
+}

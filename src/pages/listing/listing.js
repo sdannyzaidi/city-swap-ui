@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { listingByIdSelector, listingByUserAndDateRangeSelector, swappableListingsSelector } from './helpers/selectors'
+import {
+	listingByIdSelector,
+	listingByUserAndDateRangeSelector,
+	partialSwappableListingsSelector,
+	swappableListingsSelector,
+} from './helpers/selectors'
 import { listingsAtom } from '@atoms'
 import { useParams } from 'react-router-dom'
 import { Form, Loader, PrimaryHeader } from '@components'
@@ -21,7 +26,7 @@ const Listing = () => {
 	const location = JSON.parse(localStorage.getItem('location'))
 	const listing = useRecoilValue(listingByIdSelector({ id }))
 	const myListings = useRecoilValue(swappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange }))
-
+	const myPartialListings = useRecoilValue(partialSwappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange }))
 	const setData = useSetRecoilState(listingsAtom)
 
 	const [loading, setLoading] = useState(false)
@@ -50,7 +55,7 @@ const Listing = () => {
 		)
 		if (response2.status === 200) {
 			const data = await response2.json()
-			console.log({ data })
+			// console.log({ data })
 			setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj), obj])).values()])
 			setLoading(false)
 		} else {
@@ -76,7 +81,7 @@ const Listing = () => {
 		if (response3.status === 200) {
 			const data = await response3.json()
 			console.log({ data })
-			setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj), obj])).values()])
+			setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 			setLoading(false)
 		} else {
 			console.log(response3)
@@ -85,26 +90,148 @@ const Listing = () => {
 	}, [])
 	const sendRequest = useCallback(async () => {
 		const values = form.getFieldsValue()
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({
-				propertyId1: listing.property._id,
-				propertyId2: values?.swapPropertyId,
-				requestDates: [
-					{
-						startDate: '2024-01-04',
-
-						endDate: '2024-01-30',
-					},
-				],
-			}),
-		})
-		if (response.status === 200) {
-			const data = await response.json()
-			console.log({ data })
+		console.log({ values, myListings, myPartialListings })
+		if (JSON.parse(localStorage.getItem('searchType')) === 'sublease') {
+			const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({
+					propertyId: listing?.property?._id,
+					requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
+				}),
+			})
+			if (response.status === 200) {
+				const data = await response.json()
+				console.log({ data })
+			} else {
+				console.log(response)
+			}
 		} else {
-			console.log(response)
+			if (values?.swapPropertyId) {
+				const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						swapPropertyId: listing.property._id,
+						ownPropertyId: values?.swapPropertyId,
+						requestDates: [
+							{
+								startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0],
+								endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1],
+							},
+						],
+					}),
+				})
+				if (response.status === 200) {
+					const data = await response.json()
+					console.log({ data })
+				} else {
+					console.log(response)
+				}
+			} else if (values?.partialSwapPropertyId) {
+				const partialSwapProperty = myPartialListings.find((listing) => listing.property._id === values?.partialSwapPropertyId)
+				const { overlap, startRange, endRange } = partialSwapProperty || {}
+				const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						swapPropertyId: listing.property._id,
+						ownPropertyId: values?.partialSwapPropertyId,
+						requestDates: [
+							{
+								startDate: overlap?.[0],
+								endDate: overlap?.[1],
+							},
+						],
+					}),
+				})
+				if (response.status === 200) {
+					const data = await response.json()
+					console.log({ data })
+				} else {
+					console.log(response)
+				}
+				if (values?.subleaseSameProperty) {
+					const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json;charset=utf-8' },
+						body: JSON.stringify({
+							propertyId: listing.property._id,
+							requestDates: [
+								...(startRange
+									? [
+											{
+												startDate: startRange?.[0],
+												endDate: startRange?.[1],
+											},
+									  ]
+									: []),
+								...(endRange
+									? [
+											{
+												startDate: endRange?.[0],
+												endDate: endRange?.[1],
+											},
+									  ]
+									: []),
+							],
+						}),
+					})
+					if (response2.status === 200) {
+						const data = await response2.json()
+						console.log({ data })
+					} else {
+						console.log(response2)
+					}
+				} else if (values?.subleasePropertyId) {
+					const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json;charset=utf-8' },
+						body: JSON.stringify({
+							propertyId: values?.subleasePropertyId,
+							requestDates: [
+								...(startRange
+									? [
+											{
+												startDate: startRange?.[0],
+												endDate: startRange?.[1],
+											},
+									  ]
+									: []),
+								...(endRange
+									? [
+											{
+												startDate: endRange?.[0],
+												endDate: endRange?.[1],
+											},
+									  ]
+									: []),
+							],
+						}),
+					})
+					if (response2.status === 200) {
+						const data = await response2.json()
+						console.log({ data })
+					} else {
+						console.log(response2)
+					}
+				}
+			} else if (values?.subleasePropertyId) {
+				const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						propertyId: values?.subleasePropertyId,
+						requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
+					}),
+				})
+				if (response2.status === 200) {
+					const data = await response2.json()
+					console.log({ data })
+				} else {
+					console.log(response2)
+				}
+			}
 		}
 	}, [])
 
@@ -117,7 +244,7 @@ const Listing = () => {
 			<div className='flex flex-col'>
 				<PrimaryHeader />
 				{action === 'edit' ? (
-					<div className='px-44 py-8'>
+					<div className='sm:px-44 max-sm:px-8 py-8'>
 						{Form.renderFormItem({
 							type: 'input',
 							elementClassName: 'text-[#1A202C] text-[36px] font-bold',
@@ -127,27 +254,37 @@ const Listing = () => {
 						})}
 					</div>
 				) : (
-					<p className='text-[#1A202C] text-[36px] font-bold px-44 py-8'>{listing?.property.title || listing?.property.description}</p>
+					<p className='text-[#1A202C] text-[36px] font-bold sm:px-44 max-sm:px-8 py-8'>
+						{listing?.property.title || listing?.property.description || 'The Property'}
+					</p>
 				)}
-				<div className='pb-24'>
+				<div className='sm:pb-24 max-sm:pb-12'>
 					<PictureCard listing={listing} />
 				</div>
-				<div className='pb-24  pl-44 pr-48 flex flex-row justify-between items-start'>
+				<div className='sm:pb-24 max-sm:pb-12 sm:pl-44 sm:pr-48 max-sm:px-8 flex sm:flex-row max-sm:flex-col justify-between items-start'>
 					<PropertyDetails listing={listing} />
 					{action !== 'edit' ? <UserCard listing={listing} setVisible={setOpenModal} /> : null}
 				</div>
-				<div className='pb-24'>
+				<div className='sm:pb-24 max-sm:pb-12'>
 					<Amenities listing={listing} />
 				</div>
 
-				<div className='pb-24'>
+				<div className='sm:pb-24 max-sm:pb-12'>
 					<Calendar listing={listing} />
 				</div>
-				<div className='pb-24'>
+				<div className='sm:pb-24 max-sm:pb-12'>
 					<Testimonials listing={listing} />
 				</div>
 				<div className='w-full bg-[#664F94] h-[280px]' />
-				<PropertySelectionModal visible={openModal} otherProperty={listing} setVisible={setOpenModal} properties={myListings} sendRequest={sendRequest} />
+				<PropertySelectionModal
+					form={form}
+					visible={openModal}
+					otherProperty={listing}
+					setVisible={setOpenModal}
+					properties={myListings}
+					partialListings={myPartialListings}
+					sendRequest={sendRequest}
+				/>
 			</div>
 		</Form>
 	)

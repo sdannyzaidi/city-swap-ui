@@ -5,7 +5,7 @@ import { Form } from '@components'
 const PropertyDetails = ({ listing }) => {
 	const { action } = useParams()
 	return (
-		<div className='flex flex-col pr-36 basis-2/3'>
+		<div className='flex flex-col sm:pr-36 sm:basis-2/3 max-sm:basis-full'>
 			<p className='text-[30px] font-[700] text-[#333333] pb-6'>Description</p>
 			{action === 'edit' ? (
 				<div className='mb-6  min-h-[100px]'>
@@ -20,10 +20,10 @@ const PropertyDetails = ({ listing }) => {
 					})}
 				</div>
 			) : (
-				<p className='text-lg font-[400] text-[#00000064]  min-h-[100px]'>{listing?.property.description}</p>
+				<p className='text-lg font-[400] text-[#00000064]  sm:min-h-[100px] '>{listing?.property.description}</p>
 			)}
 
-			<div className='flex flex-row items-center space-x-6 pt-6'>
+			<div className='flex flex-row items-center space-x-6 pt-6 max-sm:w-full'>
 				<div className='flex flex-row space-x-2 items-center'>
 					<img style={{ width: '24px', height: '24px' }} src={BedroomSizeEnums.noOfBedroom.icon} alt={'bedrooms'} />
 					<p className='text-[#333333] font-[600] text-sm leading-[16.1px]'>

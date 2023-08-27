@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PrimaryHeader from '../../components/headers/primaryHeader'
 import ChatList from './components/chatList'
 import ChatMessages from './components/chatMessages'
@@ -6,63 +6,59 @@ import ResizeObserver from 'rc-resize-observer'
 import Icon from '@mdi/react'
 import { mdiArrowRight } from '@mdi/js'
 import { Tooltip } from 'antd'
+import { firestore } from '../../auth/firebase/config'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { chatsAtom } from '@atoms'
+import { userChatSelector } from './helpers/selectors'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 const Chat = () => {
+	const { id } = useParams()
+	const { state = {} } = useLocation()
+	const { user } = state || {}
+	const navigate = useNavigate()
+
 	const [chatSideBar, setChatSideBar] = useState({ visible: true, type: 'sidebar' })
-	const [chats, setChats] = useState([
-		{
-			id: 1,
-			user: { name: 'Katherine Moss' },
-			selected: true,
-			messages: [
-				{ message: 'Hi, There', user: 'them', timestamp: '2023-08-18T05:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'them', timestamp: '2023-08-18T12:50:44+00:00' },
-			],
-		},
-		{
-			id: 2,
-			user: { name: 'Sebastian La Grange' },
-			messages: [
-				{ message: 'Hi, There, Hope you are a pinnacle of your sky', user: 'them', timestamp: '2023-08-18T07:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'me', timestamp: '2023-08-18T07:55:44+00:00' },
-			],
-		},
-		{
-			id: 3,
-			user: { name: 'Sebastian La Grange' },
-			messages: [
-				{ message: 'Hi, There, Hope you are a pinnacle of your sky', user: 'them', timestamp: '2023-08-18T07:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'me', timestamp: '2023-08-18T07:55:44+00:00' },
-			],
-		},
-		{
-			id: 4,
-			user: { name: 'Sebastian La Grange' },
-			messages: [
-				{ message: 'Hi, There, Hope you are a pinnacle of your sky', user: 'them', timestamp: '2023-08-18T07:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'me', timestamp: '2023-08-18T07:55:44+00:00' },
-			],
-		},
-		{
-			id: 5,
-			user: { name: 'Sebastian La Grange' },
-			messages: [
-				{ message: 'Hi, There, Hope you are a pinnacle of your sky', user: 'them', timestamp: '2023-08-18T07:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'me', timestamp: '2023-08-18T07:55:44+00:00' },
-			],
-		},
-		{
-			id: 6,
-			user: { name: 'Sebastian La Grange' },
-			messages: [
-				{ message: 'Hi, There, Hope you are a pinnacle of your sky', user: 'them', timestamp: '2023-08-18T07:55:44+00:00' },
-				{ message: 'Hi, Sup', user: 'me', timestamp: '2023-08-18T07:55:44+00:00' },
-			],
-		},
-	])
+	const setChatsAtom = useSetRecoilState(chatsAtom)
+	const [loading, setLoading] = useState(true)
+	const chats = useRecoilValue(userChatSelector({ id: JSON.parse(localStorage.getItem('user')).id, selectedChatId: id }))
 	const onChatClick = useCallback((id) => {
-		setChats((prev) => prev.map((chat) => ({ ...chat, selected: id === chat.id })))
+		navigate(`/chat/${id}`)
 	}, [])
+	useEffect(() => {
+		if (!loading && chats && id) {
+			const chatExists = chats.some((chat) => chat?.users?.some((user) => user?._id === id || chat?._id === id))
+			if (!chatExists) {
+				firestore
+					.collection('chats')
+					.doc(`${id}+${JSON.parse(localStorage.getItem('user')).id}`)
+					.set({
+						_id: `${id}+${JSON.parse(localStorage.getItem('user')).id}`,
+						users: [
+							{ _id: id, name: user?.name },
+							{ _id: JSON.parse(localStorage.getItem('user')).id, name: JSON.parse(localStorage.getItem('user')).name },
+						],
+						messages: [],
+					})
+			}
+		}
+	}, [loading])
+	useEffect(() => {
+		setLoading(true)
+		const unsubscribe = firestore
+			.collection('chats')
+			.where('users', 'array-contains', { _id: JSON.parse(localStorage.getItem('user')).id, name: JSON.parse(localStorage.getItem('user')).name })
+			.onSnapshot((snapshot) => {
+				const userChats = snapshot.docs.map((doc) => ({
+					...doc.data(),
+				}))
+				console.log('userChats', userChats)
+				setChatsAtom(userChats)
+				setLoading(false)
+			})
+		return unsubscribe
+	}, []) // eslint-disable-line
+
 	return (
 		<ResizeObserver
 			onResize={({ width, height }) => {

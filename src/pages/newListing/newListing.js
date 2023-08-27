@@ -49,10 +49,10 @@ const NewListing = (props) => {
 				preserve
 			>
 				<div className='w-full h-max flex flex-row'>
-					<div className='w-2/5 min-h-[100vh] hidden sm:block'>
+					<div className='min-h-[100vh] max-sm:hidden sm:block sm:w-2/5'>
 						<img src={BG1} alt='bg' className='w-full h-full object-cover' />
 					</div>
-					<div className='w-3/5 h-max px-48 py-20 flex flex-col items-start'>
+					<div className='sm:w-3/5 max-sm:w-full h-max sm:px-48 max-sm:px-8 sm:py-20 max-sm:py-8 flex flex-col items-start'>
 						<ListingContext.Provider value={{ form, setLoading: setOtherLoading }}>
 							{page === 0 ? <PropertyDetails /> : page === 1 ? <LocationDetails /> : page === 2 ? <PropertyPictures /> : <PropertyAvailability />}
 						</ListingContext.Provider>

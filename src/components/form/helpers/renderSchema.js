@@ -8,7 +8,7 @@ export const rowRenderer = (fields, index, type) => {
 	const padding = 16
 	const minWidth = ((maxWidth - padding) / (maxWidth * 2)) * 100
 	return (
-		<div key={`RowRenderer_${index}`} className={'flex items-start ' + (type === 'filter' ? 'flex-wrap' : 'flex-row')}>
+		<div key={`RowRenderer_${index}`} className={'flex items-start ' + (type === 'filter' ? 'flex-wrap' : 'flex-row !w-full')}>
 			{visibleFields.map((field, index) =>
 				type === 'filter' ? (
 					<div

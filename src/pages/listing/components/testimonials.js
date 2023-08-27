@@ -12,10 +12,10 @@ const Testimonials = ({ listing }) => {
 		<Carousel autoplay>
 			{testimonials?.map((testimonial, t_index) => (
 				<div>
-					<div className='bg-[#F9FAFB] w-full h-[30rem] flex flex-col items-center justify-center text-center px-44'>
-						<p className='text-[#101828] font-[700] text-[36px] pb-8'>{testimonial.description}</p>
+					<div className='bg-[#F9FAFB] w-full h-[30rem] flex flex-col items-center justify-center text-center sm:px-44 max-sm:px-8'>
+						<p className='text-[#101828] font-[700] max-sm:text-lg sm:text-[36px] pb-8'>{testimonial.description}</p>
 						<img src={testimonial?.user?.profilePic || NoImage} alt='' className='h-16 w-16 rounded-full object-cover' />
-						<p className='text-[#101828] font-[600] text-lg py-2'>{testimonial.name}</p>
+						<p className='text-[#101828] font-[600] sm:text-lg max-sm:text-sm py-2'>{testimonial.name}</p>
 						<div className='flex flex-row items-center'>
 							{Array.from({ length: 5 }, (_, index) => (
 								<Icon

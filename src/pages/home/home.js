@@ -11,6 +11,11 @@ import { endpoints } from '../../helpers/enums'
 import { listingsAtom } from '@atoms'
 import { useSetRecoilState } from 'recoil'
 import CountryEnum from '../../helpers/countries'
+import { Picker } from 'antd-mobile'
+import { CalendarEnums } from '../newListing/helpers/enums'
+import { mdiChevronDoubleDown } from '@mdi/js'
+import Icon from '@mdi/react'
+import MobileRangePicker from './components/mobileRangePicker'
 
 const Home = (props) => {
 	const homeRef = useRef(null)
@@ -19,6 +24,8 @@ const Home = (props) => {
 	const [form] = Form.useForm()
 	const setData = useSetRecoilState(listingsAtom)
 	const [loading, setLoading] = useState(false)
+	const [visible, setVisible] = useState(false)
+	const [searchHeaderVisible, setSearchHeaderVisible] = useState(true)
 
 	const formValues = Form.useWatch(undefined, form)
 	const fetchData = useCallback(async () => {
@@ -59,7 +66,138 @@ const Home = (props) => {
 		<div className='overflow-y-scroll' ref={homeRef}>
 			<PrimaryHeader />
 			<Form form={form}>
-				<div className={`relative w-full ${pathname === '/home/search' ? 'h-[300px]' : 'h-[600px]'} overflow-y-clip transition-[height] duration-1000`}>
+				<div
+					className={`sm:hidden relative w-full ${
+						pathname === '/home/search' ? (searchHeaderVisible ? 'h-[400px] rounded-b-2xl overflow-hidden' : 'h-[50px]') : 'h-[600x]'
+					} overflow-y-clip transition-[height] duration-1000`}
+				>
+					{pathname === '/home/search' ? (
+						<div className={`transition-[height] duration-1000 ${searchHeaderVisible ? 'h-[400px] overflow-hidden' : 'h-[0px] overflow-hidden'}`}>
+							<img className='h-[400px] w-auto object-cover' src={HeroBackground1} alt='' />
+						</div>
+					) : (
+						<Carousel className={pathname === '/home/search' ? (searchHeaderVisible ? 'h-[400px]' : 'h-[50px]') : 'h-[600px]'} autoplay autoPlaySpeed={8000}>
+							<img className='h-[600px] w-auto object-cover' src={HeroBackground1} alt='' />
+							<img className='h-[600px] w-auto object-cover' src={HeroBackground2} alt='' />
+							<img className='h-[600px] w-auto object-cover' src={HeroBackground3} alt='' />
+							<img className='h-[600px] w-auto object-cover' src={HeroBackground4} alt='' />
+						</Carousel>
+					)}
+
+					<div
+						className={`absolute top-0 bottom-0 right-0 left-0  ${
+							pathname === '/home/search' ? (searchHeaderVisible ? 'h-[400px]' : 'h-[0px]') : 'h-[600px]'
+						}  transition-[height] duration-1000 w-full bg-[#44444458]`}
+					></div>
+
+					<div
+						className={`absolute flex flex-col items-center justify-start max-sm:px-4 ${
+							pathname === '/home/search' ? (searchHeaderVisible ? 'pt-8' : 'hidden') : 'pt-24'
+						}  left-0 right-0 top-0  bottom-8 w-full`}
+					>
+						{pathname !== '/home/search' ? <p className={`text-center text-3xl font-bold text-white pb-8`}>Search Property</p> : undefined}
+
+						<div className='w-full px-5 py-8 rounded-lg backdrop-blur-[2px] border border-solid border-gray-300 flex flex-col items-center justify-center'>
+							<div className='flex flex-col items-center space-y-4 w-full'>
+								{Form.renderSchema([
+									[
+										{
+											type: 'select',
+											key: 'country',
+											name: ['country'],
+											itemClassName: '!mb-0 !w-full',
+											className: '!w-full',
+											customWidth: true,
+											placeholder: 'Select Country',
+											required: true,
+											showSearch: true,
+											message: 'Please enter an description',
+											options: Object.keys(CountryEnum).map((country) => ({ label: country, value: country })),
+											displayProperty: 'label',
+											valueProperty: 'value',
+										},
+										{
+											type: 'select',
+											key: 'city',
+											name: ['city'],
+											itemClassName: '!mb-0 !w-full',
+											className: '!w-full',
+											customWidth: true,
+											placeholder: 'Select City',
+											required: true,
+											showSearch: true,
+											message: 'Please enter an description',
+											options: (
+												CountryEnum[formValues?.country]?.cities ||
+												Object.values(CountryEnum)
+													.map((country) => country.cities)
+													.flat()
+											).map((city) => ({
+												label: city,
+												value: city,
+											})),
+
+											displayProperty: 'label',
+											valueProperty: 'value',
+										},
+									],
+
+									{
+										type: 'select',
+										key: 'type',
+										name: ['type'],
+										itemClassName: '!mb-0 w-full',
+										customWidth: true,
+										placeholder: 'Select Type',
+										required: true,
+										message: 'Please enter an description',
+										options: [
+											{ label: 'Swap', value: 'swap' },
+											{ label: 'Sub-Lease', value: 'sublease' },
+										],
+										displayProperty: 'label',
+										valueProperty: 'value',
+										initialValue: 'swap',
+									},
+								])}
+								<Form.Item name={['dateRange']} className='!mb-0 !w-full'>
+									<MobileRangePicker />
+								</Form.Item>
+								<Button
+									disabled={!(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)}
+									className='btn-primary w-full !h-[40px] '
+									onClick={() => {
+										fetchData()
+										navigator('/home/search')
+									}}
+								>
+									Search
+								</Button>
+							</div>
+						</div>
+					</div>
+					{pathname === '/home/search' ? (
+						<div className={`absolute ${!searchHeaderVisible ? 'bottom-0' : 'bottom-6'} w-full flex flex-row items-center text-center justify-center`}>
+							<div
+								className='rounded-full p-2 bg-[#9B83CB] text-center'
+								onClick={() => {
+									setSearchHeaderVisible((prev) => !prev)
+								}}
+							>
+								<Icon
+									path={mdiChevronDoubleDown}
+									size={0.7}
+									className={`text-base leading-8 text-center font-[500] transition-all text-white ${searchHeaderVisible ? 'rotate-180' : 'rotate-0'}`}
+								/>
+							</div>
+						</div>
+					) : undefined}
+				</div>
+				<div
+					className={` max-sm:hidden relative w-full ${
+						pathname === '/home/search' ? 'h-[300px]' : 'h-[600px]'
+					} overflow-y-clip transition-[height] duration-1000`}
+				>
 					<Carousel className={pathname === '/home/search' ? 'h-[300px]' : 'h-[600px]'} autoplay autoPlaySpeed={8000}>
 						<img className='w-full h-auto' src={HeroBackground1} alt='' />
 						<img className='w-full h-auto' src={HeroBackground2} alt='' />
@@ -71,7 +209,7 @@ const Home = (props) => {
 							pathname === '/home/search' ? 'h-[300px]' : 'h-[600px]'
 						}  transition-[height] duration-1000 w-full bg-[#44444458]`}
 					></div>
-					<div className='absolute flex flex-col items-center justify-center  left-0 right-0 top-0  bottom-0 w-full max-sm:hidden'>
+					<div className='absolute flex flex-col items-center justify-center  left-0 right-0 top-0  bottom-0 w-full'>
 						<div className='flex flex-col items-start justify-center'>
 							<p className='text-3xl font-bold text-white pb-4'>Search Property</p>
 							<div className='flex flex-row items-center  space-x-4'>

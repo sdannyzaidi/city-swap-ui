@@ -11,9 +11,9 @@ const PictureCard = ({ listing }) => {
 	const [vewImages, setViewImages] = useState(false)
 	const [currImage, setCurrImage] = useState(0)
 	return (
-		<div className='flex flex-row px-44'>
+		<div className='flex flex-row sm:px-44'>
 			<div
-				className='w-full grid grid-cols-4 grid-rows-2 gap-x-5 gap-y-4 '
+				className='w-full grid grid-cols-4 grid-rows-2 gap-x-5 gap-y-4  max-sm:hidden'
 				style={{ height: ((divRef.current?.clientWidth || 1366) - 300) / 2 }}
 				ref={divRef}
 			>
@@ -35,6 +35,41 @@ const PictureCard = ({ listing }) => {
 						)}
 					</div>
 				))}
+			</div>
+			<div className='sm:hidden max-sm:block'>
+				<div className='flex flex-row items-center'>
+					<div className='basis-[10%] flex flex-row justify-center'>
+						<Icon
+							path={mdiChevronLeft}
+							size={2}
+							className={`${currImage > 0 ? 'text-[#333333] hover:cursor-pointer' : 'text-[#91919164] hover:cursor-not-allowed'}`}
+							onClick={() => currImage > 0 && setCurrImage(currImage - 1)}
+						/>
+					</div>
+					<div className='basis-[80%] text-center flex flex-row justify-center' ref={picRef}>
+						<img
+							alt='example'
+							width={picRef.current?.clientWidth || 500}
+							className='w-full h-auto rounded-[16px] object-scale-down'
+							src={
+								listing?.property.pictures[currImage] && !listing?.property.pictures[currImage].includes('example.com')
+									? listing?.property.pictures[currImage]
+									: NoImage
+							}
+						/>
+					</div>
+
+					<div className='basis-[10%] flex flex-row justify-center'>
+						<Icon
+							path={mdiChevronRight}
+							size={2}
+							className={`${
+								currImage < listing?.property.pictures.length - 1 ? 'text-[#333333] hover:cursor-pointer' : 'text-[#91919164] hover:cursor-not-allowed'
+							}`}
+							onClick={() => currImage < listing?.property.pictures.length - 1 && setCurrImage(currImage + 1)}
+						/>
+					</div>
+				</div>
 			</div>
 			<Modal open={vewImages} footer={null} onCancel={() => setViewImages(false)} className='!w-2/3'>
 				<div className='flex flex-row items-center justify-center pt-6 text-sm font-[500] '>

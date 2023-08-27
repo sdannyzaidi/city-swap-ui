@@ -17,9 +17,48 @@ const compareDate = (date1, date2) => {
 const compareRanges = (range1, range2) => {
 	return compareDate(range1[0], range2[0])
 }
+export const checkRangeIncludes = (range1, range2) => {
+	const newRange1Start = dayjs(range1[0])
+	const newRange1End = dayjs(range1[1])
+	const newRange2Start = dayjs(range2[0])
+	const newRange2End = dayjs(range2[1])
+
+	return newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '[]') && newRange1End.isBetween(newRange2Start, newRange2End, 'day', '[]')
+}
 export const checkRangeOverlap = (range1, range2) => {
 	const newRange1Start = dayjs(range1[1]).add(1, 'day')
 	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]) >= 0
+}
+export const findRangeOverlap = (range1, ranges2) => {
+	const range2 = ranges2.find(
+		(range) =>
+			!checkRangeIncludes(range1, [range.startDate, range.endDate]) &&
+			(checkRangeOverlap(range1, [range.startDate, range.endDate]) || checkRangeOverlap([range.startDate, range.endDate], range1))
+	)
+	const newRange1Start = dayjs(range1[0])
+	const newRange1End = dayjs(range1[1])
+	const newRange2Start = dayjs(range2?.startDate)
+	const newRange2End = dayjs(range2?.endDate)
+	let start = null
+	let end = null
+	let startRange = null
+	let endRange = null
+	console.log(range1, range2)
+	if (newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '()')) {
+		startRange = null
+		start = range1[0]
+	} else {
+		startRange = [newRange1Start.format(), newRange2Start.format()]
+		start = range2?.startDate
+	}
+	if (newRange1End.isBetween(newRange2Start, newRange2End, 'day', '()')) {
+		endRange = null
+		end = range1[1]
+	} else {
+		endRange = [newRange2End.format(), newRange1End.format()]
+		end = range2?.endDate
+	}
+	return { overlap: [start, end], startRange, endRange }
 }
 const mergeRanges = (ranges) => {
 	if (ranges.length === 0) return []
@@ -118,8 +157,12 @@ const CalendarMonth = ({ month, year, setMonth, setYear, position }) => {
 	const { months } = useContext(CalendarContext)
 	const dayGrid = getDaysInMonth(month, year, months)
 	return (
-		<div className='flex flex-col'>
-			<div className={`flex flex-row justify-between ${position === 'right' ? 'pl-6' : position === 'left' ? 'pr-6' : 'px-6'}  items-center pb-5`}>
+		<div className={`flex flex-col ${position === 'left' ? 'max-sm:border-b' : ''} border-solid border-gray-200`}>
+			<div
+				className={`flex flex-row justify-between ${
+					position === 'right' ? 'sm:pl-6 max-sm:pt-4' : position === 'left' ? 'sm:pr-6 max-sm:pb-4' : 'px-6'
+				}  items-center pb-5`}
+			>
 				<Icon
 					path={mdiChevronLeft}
 					size={1}
@@ -144,7 +187,7 @@ const CalendarMonth = ({ month, year, setMonth, setYear, position }) => {
 					}}
 				/>
 			</div>
-			<div className={`flex flex-col ${position === 'right' ? 'pl-6' : position === 'left' ? 'pr-6' : 'px-6'} py-4  space-y-2`}>
+			<div className={`flex flex-col ${position === 'right' ? 'sm:pl-6' : position === 'left' ? 'sm:pr-6' : 'px-6'} py-4  space-y-2`}>
 				<div className='flex flex-row justify-between px-2 items-center basis-1/6'>
 					{Object.values(WeekDaysEnums).map((day) => (
 						<div className='basis-[14.2857%]'>{<p className='text-[#344054] font-[600] text-[12px] text-center'>{day.short}</p>}</div>
@@ -168,18 +211,17 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 	const [currMonth, setCurrMonth] = useState(dayjs().month())
 	const [nextMonth, setNextMonth] = useState((dayjs().month() + 1) % 12)
 	const [nextMonthYear, setNextMonthYear] = useState(dayjs().month() === 11 ? dayjs().year() + 1 : dayjs().year())
-	console.log({ value })
 	const [currYear, setCurrYear] = useState(dayjs().year())
 	const months = useMemo(() => Object.values(CalendarEnums), [])
 	const handleSelect = (date) => {
 		if (!viewOnly) {
 			if (selectedStartingDate) {
-				console.log({ second: date })
+				// console.log({ second: date })
 
 				onChange(mergeRanges([...(value || []), [selectedStartingDate, date]]))
 				setSelectedStartingDate(null)
 			} else {
-				console.log({ date })
+				// console.log({ date })
 				setSelectedStartingDate(date)
 			}
 		}
@@ -188,18 +230,29 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 		<CalendarContext.Provider
 			value={{ selectedRanges: value, selectedStartingDate, setSelectedStartingDate, hoveringDate, setHoveringDate, handleSelect, months }}
 		>
-			<div className='flex flex-row w-full border border-solid border-[#F2F4F7] shadow-[0_8px_8px_-4px_rgba(16,24,40,0.03),0_20px_24px_-4px_rgba(16,24,40,0.08)] rounded-lg px-6 py-5 mb-7'>
+			<div className='flex sm:flex-row max-sm:flex-col w-full border border-solid border-[#F2F4F7] shadow-[0_8px_8px_-4px_rgba(16,24,40,0.03),0_20px_24px_-4px_rgba(16,24,40,0.08)] rounded-lg px-6 py-5 mb-7'>
 				{quickNavigate && (
-					<div className='flex flex-col !h-full basis-[24%] pr-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
-						{['Today', 'Tomorrow', 'This Week', 'Next Week', 'This Month', 'Next Month', 'This Year', 'Next Year'].map((item) => (
-							<p className='px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F9FAFB] rounded-md hover:cursor-pointer'>{item}</p>
-						))}
-					</div>
+					<>
+						<div className='max-sm:hidden flex flex-col !h-full basis-[24%] pr-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
+							{['Today', 'Tomorrow', 'This Week', 'Next Week', 'This Month', 'Next Month', 'This Year', 'Next Year'].map((item) => (
+								<p className='px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F9FAFB] rounded-md hover:cursor-pointer'>{item}</p>
+							))}
+						</div>
+						<div className='sm:hidden flex flex-row w-full overflow-scroll pb-6'>
+							{['Today', 'Tomorrow', 'This Week', 'Next Week', 'This Month', 'Next Month', 'This Year', 'Next Year'].map((item) => (
+								<p className='whitespace-nowrap w-fit px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F9FAFB] rounded-md hover:cursor-pointer'>{item}</p>
+							))}
+						</div>
+					</>
 				)}
-				<div className={`${quickNavigate ? 'basis-[38%] ml-6' : 'basis-1/2'}  border-r border-solid border-[#F2F4F7]`}>
+				<div
+					className={`${
+						quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-sm:basis-full' : 'sm:basis-1/2 max-sm:basis-full'
+					}  sm:border-r border-solid border-[#F2F4F7]`}
+				>
 					<CalendarMonth month={currMonth} year={currYear} setMonth={setCurrMonth} setYear={setCurrYear} position='left' />
 				</div>
-				<div className={`${quickNavigate ? 'basis-[38%]' : 'basis-1/2'}`}>
+				<div className={`${quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-sm:basis-full' : 'sm:basis-1/2 max-sm:basis-full'}`}>
 					<CalendarMonth month={nextMonth} year={nextMonthYear} setMonth={setNextMonth} setYear={setNextMonthYear} position='right' />
 				</div>
 			</div>

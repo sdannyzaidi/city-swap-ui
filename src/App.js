@@ -1,6 +1,6 @@
 import './App.css'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import { Home, Auth, NewListing, SearchPage, About, Listing, Profile, RequestsBookings, Chat } from '@/pages/index'
+import { Home, Auth, NewListing, SearchPage, About, Listing, Profile, RequestsBookings, Chat, Pricing } from '@/pages/index'
 import { PrivateRoute } from '@auth'
 import { useEffect } from 'react'
 import firebase from 'firebase/compat/app'
@@ -62,6 +62,8 @@ const App = () => {
 					}
 				/>
 				<Route path='listing/:id' element={<Listing />}></Route>
+				<Route path='pricing' element={<Pricing />}></Route>
+
 				<Route path='/' element={<Navigate to='home/about' replace />} />
 				<Route path='*' element={<Navigate to='home/about' replace />} />
 			</Routes>

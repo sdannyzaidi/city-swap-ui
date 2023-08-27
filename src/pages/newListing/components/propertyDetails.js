@@ -11,8 +11,8 @@ const PropertyDetails = (props) => {
 				<Form.Item name={'listingType'} noStyle initialValue='swap'>
 					<RadioButtonGroup
 						options={[
-							{ label: 'Available for Swap', value: 'swap' },
-							{ label: 'Available for Sublease', value: 'sublease' },
+							{ label: 'Available for Swap', short: 'Swap', value: 'swap' },
+							{ label: 'Available for Sublease', short: 'Sub-lease', value: 'sublease' },
 						]}
 					/>
 				</Form.Item>
