@@ -1,6 +1,6 @@
 import CountryEnum from '../../../helpers/countries'
 
-export const LocationDetailsSchema = (country) => [
+export const LocationDetailsSchema = (country, type) => [
 	{
 		type: 'input',
 		label: 'Title',
@@ -57,4 +57,7 @@ export const LocationDetailsSchema = (country) => [
 		message: 'Please enter an address',
 		name: ['location', 'address'],
 	},
+	...(type === 'sublease'
+		? [{ type: 'input', inputType: 'number', label: 'Price', required: true, message: 'Please enter price per week', name: ['price'] }]
+		: []),
 ]

@@ -18,10 +18,9 @@ const ReviewCard = ({ request }) => {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				body: JSON.stringify({
-					id: 1,
-					request_type: request.requestType,
-					request_date: dayjs().format(),
-					rating: (values?.review?.rating || 0).toString(),
+					propertyId: requestedProperty?.propertyDetail?._id,
+					userId: JSON.parse(localStorage.getItem('user'))?.id,
+					rating: values?.review?.rating || 0,
 					content_review: values?.review?.comment,
 				}),
 			})

@@ -1,5 +1,5 @@
 export const endpoints = {
-	'sublease-request': 'request/sublease-request',
+	'sublease-request': (id) => `request/sublease-request/${id}`,
 	'swap-request': 'request/swap-request',
 	'mark-request-status': (id) => `request/requests/${id}`,
 	find: 'propertyInfo/find/',

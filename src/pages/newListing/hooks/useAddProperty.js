@@ -6,8 +6,10 @@ const useAddProperty = () => {
 	const addNewProperty = async (values) => {
 		setLoading(true)
 		const user = JSON.parse(localStorage.getItem('user'))
+		console.log({ values })
 		const finalValues = {
 			listing: {
+				...(values.listingType === 'sublease' ? { cost: values?.price } : {}),
 				listingType: values.listingType,
 				availableDates: values.availableDates.map((range) => ({ startDate: range[0], endDate: range[1] })),
 			},

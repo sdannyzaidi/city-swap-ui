@@ -31,7 +31,35 @@ const Listing = () => {
 
 	const [loading, setLoading] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
-
+	const subleaseProperty = useCallback(async (values) => {
+		const response = await fetch(
+			`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request'](JSON.parse(localStorage.getItem('user'))?.id)}`,
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify(values),
+			}
+		)
+		if (response.status === 200) {
+			const data = await response.json()
+			console.log({ data })
+		} else {
+			console.log(response)
+		}
+	})
+	const swapProperty = useCallback(async (values) => {
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(values),
+		})
+		if (response.status === 200) {
+			const data = await response.json()
+			console.log({ data })
+		} else {
+			console.log(response)
+		}
+	})
 	const fetchData = useCallback(async () => {
 		setLoading(true)
 		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}propertyInfo/${id}`, {
@@ -92,148 +120,60 @@ const Listing = () => {
 		const values = form.getFieldsValue()
 		console.log({ values, myListings, myPartialListings })
 		if (JSON.parse(localStorage.getItem('searchType')) === 'sublease') {
-			const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					propertyId: listing?.property?._id,
-					requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
-				}),
+			subleaseProperty({
+				reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+				propertyId: listing?.property?._id,
+				requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
 			})
-			if (response.status === 200) {
-				const data = await response.json()
-				console.log({ data })
-			} else {
-				console.log(response)
-			}
 		} else {
 			if (values?.swapPropertyId) {
-				const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json;charset=utf-8' },
-					body: JSON.stringify({
-						swapPropertyId: listing.property._id,
-						ownPropertyId: values?.swapPropertyId,
-						requestDates: [
-							{
-								startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0],
-								endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1],
-							},
-						],
-					}),
+				swapProperty({
+					swapPropertyId: listing.property._id,
+					ownPropertyId: values?.swapPropertyId,
+					requestDates: [
+						{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
+						{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
+					],
 				})
-				if (response.status === 200) {
-					const data = await response.json()
-					console.log({ data })
-				} else {
-					console.log(response)
-				}
 			} else if (values?.partialSwapPropertyId) {
 				const partialSwapProperty = myPartialListings.find((listing) => listing.property._id === values?.partialSwapPropertyId)
 				const { overlap, startRange, endRange } = partialSwapProperty || {}
-				const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json;charset=utf-8' },
-					body: JSON.stringify({
-						swapPropertyId: listing.property._id,
-						ownPropertyId: values?.partialSwapPropertyId,
+				if (values?.subleaseSameProperty === 'yes') {
+					subleaseProperty({
+						propertyId: listing.property._id,
+						reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
 						requestDates: [
-							{
-								startDate: overlap?.[0],
-								endDate: overlap?.[1],
-							},
+							...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
+							...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
 						],
-					}),
-				})
-				if (response.status === 200) {
-					const data = await response.json()
-					console.log({ data })
-				} else {
-					console.log(response)
-				}
-				if (values?.subleaseSameProperty) {
-					const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json;charset=utf-8' },
-						body: JSON.stringify({
-							propertyId: listing.property._id,
-							requestDates: [
-								...(startRange
-									? [
-											{
-												startDate: startRange?.[0],
-												endDate: startRange?.[1],
-											},
-									  ]
-									: []),
-								...(endRange
-									? [
-											{
-												startDate: endRange?.[0],
-												endDate: endRange?.[1],
-											},
-									  ]
-									: []),
-							],
-						}),
 					})
-					if (response2.status === 200) {
-						const data = await response2.json()
-						console.log({ data })
-					} else {
-						console.log(response2)
-					}
 				} else if (values?.subleasePropertyId) {
-					const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json;charset=utf-8' },
-						body: JSON.stringify({
-							propertyId: values?.subleasePropertyId,
-							requestDates: [
-								...(startRange
-									? [
-											{
-												startDate: startRange?.[0],
-												endDate: startRange?.[1],
-											},
-									  ]
-									: []),
-								...(endRange
-									? [
-											{
-												startDate: endRange?.[0],
-												endDate: endRange?.[1],
-											},
-									  ]
-									: []),
-							],
-						}),
-					})
-					if (response2.status === 200) {
-						const data = await response2.json()
-						console.log({ data })
-					} else {
-						console.log(response2)
-					}
-				}
-			} else if (values?.subleasePropertyId) {
-				const response2 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request']}`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json;charset=utf-8' },
-					body: JSON.stringify({
+					subleaseProperty({
 						propertyId: values?.subleasePropertyId,
-						requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
-					}),
-				})
-				if (response2.status === 200) {
-					const data = await response2.json()
-					console.log({ data })
-				} else {
-					console.log(response2)
+						reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+						requestDates: [
+							...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
+							...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
+						],
+					})
 				}
+				swapProperty({
+					swapPropertyId: listing.property._id,
+					ownPropertyId: values?.partialSwapPropertyId,
+					requestDates: [
+						{ startDate: overlap?.[0], endDate: overlap?.[1] },
+						{ startDate: overlap?.[0], endDate: overlap?.[1] },
+					],
+				})
+			} else if (values?.subleasePropertyId) {
+				subleaseProperty({
+					reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+					propertyId: values?.subleasePropertyId,
+					requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
+				})
 			}
 		}
-	}, [])
+	}, [myListings, myPartialListings])
 
 	useEffect(() => {
 		document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })

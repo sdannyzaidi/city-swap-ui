@@ -20,12 +20,15 @@ import { useCallback, useState } from 'react'
 import { endpoints } from '../../../helpers/enums'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { requestsAtom } from '@atoms'
+import { useSetRecoilState } from 'recoil'
 
 const RequestCard = ({ request, type, index }) => {
 	const [loading, setLoading] = useState(false)
 	const navigator = useNavigate()
 	const requestListing = request?.requestedProperty
 	const ownListing = request?.ownProperty
+	const setRequests = useSetRecoilState(requestsAtom)
 	console.log({ requestListing, ownListing })
 	const changeListingStatus = useCallback(
 		(status) => {
@@ -40,6 +43,15 @@ const RequestCard = ({ request, type, index }) => {
 						.json()
 						.then((data) => {
 							setLoading(false)
+							if (type === 'received') {
+								setRequests((prev) => ({
+									...prev,
+									receivedRequests: prev.receivedRequests.map((req) =>
+										req._id === request._id ? { ...req, status: status === 'Accept' ? 'Successful' : 'Rejected' } : req
+									),
+								}))
+							}
+
 							console.log({ data })
 						})
 						.catch((err) => {
@@ -69,16 +81,16 @@ const RequestCard = ({ request, type, index }) => {
 
 			<div
 				className={`flex flex-row py-2 mx-4 justify-center items-center rounded-lg ${
-					request.status === 'Pending' ? 'bg-[#e0e4ea]' : request.status === 'Accept' ? 'bg-[#f2fef2]' : 'bg-[#FEF3F2]'
+					request.status === 'Pending' ? 'bg-[#e0e4ea]' : request.status === 'Successful' ? 'bg-[#f2fef2]' : 'bg-[#FEF3F2]'
 				}`}
 			>
 				<Icon
-					path={request.status === 'Pending' ? mdiClockOutline : request.status === 'Accept' ? mdiCheckCircleOutline : mdiCloseCircleOutline}
+					path={request.status === 'Pending' ? mdiClockOutline : request.status === 'Successful' ? mdiCheckCircleOutline : mdiCloseCircleOutline}
 					size={0.8}
 					className='text-[#333333]'
 				/>
 				<p className='text-[#333333] font-[500] text-sm pl-2'>
-					{request.status === 'Pending' ? 'Pending' : request.status === 'Accept' ? 'Accepted' : 'Rejected'}
+					{request.status === 'Pending' ? 'Pending' : request.status === 'Successful' ? 'Accepted' : 'Rejected'}
 				</p>
 			</div>
 			<div className={request.requestType === 'swap' ? 'sm:rounded-lg sm:border sm:border-solid border-[#dedede] sm:p-3 sm:mt-4 sm:mx-4' : ''}>
@@ -198,12 +210,8 @@ const RequestCard = ({ request, type, index }) => {
 							Decline
 						</Button>
 					</div>
-				) : (
-					<div className={`flex flex-row py-2 mx-4 justify-center items-center rounded-lg ${request.status === 'Accept' ? 'bg-[#fff3f3]' : 'bg-[#FEF3F2]'}`}>
-						<p className='text-[#333333] font-[500] text-sm'>{request.status === 'Accept' ? 'Accepted' : 'Rejected'}</p>
-					</div>
-				)
-			) : request.status === 'Accept' ? (
+				) : null
+			) : request.status === 'Successful' ? (
 				<ReviewCard request={request} />
 			) : null}
 		</div>
