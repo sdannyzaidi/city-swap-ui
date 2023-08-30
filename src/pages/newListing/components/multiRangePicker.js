@@ -18,25 +18,31 @@ const compareRanges = (range1, range2) => {
 	return compareDate(range1[0], range2[0])
 }
 export const checkRangeIncludes = (range1, range2) => {
-	const newRange1Start = dayjs(range1[0])
-	const newRange1End = dayjs(range1[1])
-	const newRange2Start = dayjs(range2[0])
-	const newRange2End = dayjs(range2[1])
+	const newRange1Start = dayjs(range1?.[0])
+	const newRange1End = dayjs(range1?.[1])
+	const newRange2Start = dayjs(range2?.[0])
+	const newRange2End = dayjs(range2?.[1])
 
 	return newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '[]') && newRange1End.isBetween(newRange2Start, newRange2End, 'day', '[]')
 }
 export const checkRangeOverlap = (range1, range2) => {
-	const newRange1Start = dayjs(range1[1]).add(1, 'day')
-	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]) >= 0
+	console.log({ range1, range2 })
+	const newRange1Start = dayjs(range1?.[1]).add(1, 'day')
+	// console.log({
+	// 	range1: newRange1Start.format('YYYY-MM-DD'),
+	// 	range2: range2[0],
+	// 	result: compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]),
+	// })
+	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[0]) >= 0 && compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[1]) <= 0
 }
 export const findRangeOverlap = (range1, ranges2) => {
-	const range2 = ranges2.find(
+	const range2 = ranges2?.find(
 		(range) =>
 			!checkRangeIncludes(range1, [range.startDate, range.endDate]) &&
 			(checkRangeOverlap(range1, [range.startDate, range.endDate]) || checkRangeOverlap([range.startDate, range.endDate], range1))
 	)
-	const newRange1Start = dayjs(range1[0])
-	const newRange1End = dayjs(range1[1])
+	const newRange1Start = dayjs(range1?.[0])
+	const newRange1End = dayjs(range1?.[1])
 	const newRange2Start = dayjs(range2?.startDate)
 	const newRange2End = dayjs(range2?.endDate)
 	let start = null
@@ -48,14 +54,14 @@ export const findRangeOverlap = (range1, ranges2) => {
 		startRange = null
 		start = range1[0]
 	} else {
-		startRange = [newRange1Start.format(), newRange2Start.format()]
+		startRange = [newRange1Start.format(), newRange2Start.subtract(1, 'day').format()]
 		start = range2?.startDate
 	}
 	if (newRange1End.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		endRange = null
 		end = range1[1]
 	} else {
-		endRange = [newRange2End.format(), newRange1End.format()]
+		endRange = [newRange2End.add(1, 'day').format(), newRange1End.format()]
 		end = range2?.endDate
 	}
 	return { overlap: [start, end], startRange, endRange }

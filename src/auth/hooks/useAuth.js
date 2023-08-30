@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { notification } from 'antd'
 import { AUTH_EVENTS } from '../helpers/enums'
 import { endpoints } from '../../helpers/enums'
+import { firebase } from '../firebase/config'
 const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const setUserAtom = useSetRecoilState(userAtom)
 	const userAuth = useRecoilValue(authSelector())

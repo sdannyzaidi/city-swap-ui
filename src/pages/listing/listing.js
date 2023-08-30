@@ -1,11 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-	listingByIdSelector,
-	listingByUserAndDateRangeSelector,
-	partialSwappableListingsSelector,
-	swappableListingsSelector,
-} from './helpers/selectors'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { constSelector, useRecoilValue, useSetRecoilState } from 'recoil'
+import { listingByIdSelector, partialSwappableListingsSelector, swappableListingsSelector } from './helpers/selectors'
 import { listingsAtom } from '@atoms'
 import { useParams } from 'react-router-dom'
 import { Form, Loader, PrimaryHeader } from '@components'
@@ -25,12 +20,81 @@ const Listing = () => {
 	const dateRange = JSON.parse(localStorage.getItem('searchDate'))
 	const location = JSON.parse(localStorage.getItem('location'))
 	const listing = useRecoilValue(listingByIdSelector({ id }))
-	const myListings = useRecoilValue(swappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange }))
-	const myPartialListings = useRecoilValue(partialSwappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange }))
+	const partialSwapPropertyId = Form.useWatch(['partialSwapPropertyId'], form)
+	const myListings = useRecoilValue(
+		action === 'edit' ? constSelector([]) : swappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange })
+	)
+	const myPartialListings = useRecoilValue(
+		action === 'edit' ? constSelector([]) : partialSwappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange })
+	)
+	const selectedProperty = useMemo(
+		() => myPartialListings?.find((listing) => partialSwapPropertyId === listing?.property?._id),
+		[partialSwapPropertyId]
+	)
+	console.log({ myListings, myPartialListings, selectedProperty, partialSwapPropertyId })
 	const setData = useSetRecoilState(listingsAtom)
-
+	useEffect(() => {
+		if (selectedProperty?.startRange || selectedProperty?.endRange) {
+			fetchSubleaseProperty()
+		}
+	}, [selectedProperty])
 	const [loading, setLoading] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
+	const fetchSubleaseProperty = useCallback(
+		async (values) => {
+			const response3 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({
+					country: location?.country,
+					city: location?.city,
+					startDate: selectedProperty?.startRange?.[0],
+					endDate: selectedProperty?.startRange?.[1],
+					entirePlace: true,
+					user: true,
+					location: true,
+					list: true,
+					type: 'sublease',
+				}),
+			})
+
+			if (response3.status === 200) {
+				const data = await response3.json()
+				console.log({ data })
+				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
+				setLoading(false)
+			} else {
+				console.log(response3)
+				setLoading(false)
+			}
+			const response4 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({
+					country: location?.country,
+					city: location?.city,
+					startDate: selectedProperty?.endRange?.[0],
+					endDate: selectedProperty?.endRange?.[1],
+					entirePlace: true,
+					user: true,
+					location: true,
+					list: true,
+					type: 'sublease',
+				}),
+			})
+
+			if (response4.status === 200) {
+				const data = await response4.json()
+				console.log({ data })
+				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
+				setLoading(false)
+			} else {
+				console.log(response4)
+				setLoading(false)
+			}
+		},
+		[selectedProperty]
+	)
 	const subleaseProperty = useCallback(async (values) => {
 		const response = await fetch(
 			`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request'](JSON.parse(localStorage.getItem('user'))?.id)}`,
@@ -48,11 +112,14 @@ const Listing = () => {
 		}
 	})
 	const swapProperty = useCallback(async (values) => {
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify(values),
-		})
+		const response = await fetch(
+			`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']?.(JSON.parse(localStorage.getItem('user'))?.id)}`,
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify(values),
+			}
+		)
 		if (response.status === 200) {
 			const data = await response.json()
 			console.log({ data })
@@ -68,7 +135,7 @@ const Listing = () => {
 		})
 		if (response.status === 200) {
 			const data = await response.json()
-			setData((prev) => [...new Map([...prev, data].map((obj) => [JSON.stringify(obj), obj])).values()])
+			setData((prev) => [...new Map([...prev, data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 			setLoading(false)
 		} else {
 			console.log(response)
@@ -84,35 +151,10 @@ const Listing = () => {
 		if (response2.status === 200) {
 			const data = await response2.json()
 			// console.log({ data })
-			setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj), obj])).values()])
-			setLoading(false)
-		} else {
-			console.log(response2)
-			setLoading(false)
-		}
-		const response3 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({
-				country: location?.country,
-				city: location?.city,
-				startDate: dateRange?.[0],
-				endDate: dateRange?.[1],
-				entirePlace: true,
-				user: true,
-				location: true,
-				list: true,
-				type: 'sublease',
-			}),
-		})
-
-		if (response3.status === 200) {
-			const data = await response3.json()
-			console.log({ data })
 			setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 			setLoading(false)
 		} else {
-			console.log(response3)
+			console.log(response2)
 			setLoading(false)
 		}
 	}, [])
@@ -217,6 +259,7 @@ const Listing = () => {
 				</div>
 				<div className='w-full bg-[#664F94] h-[280px]' />
 				<PropertySelectionModal
+					selectedProperty={selectedProperty}
 					form={form}
 					visible={openModal}
 					otherProperty={listing}

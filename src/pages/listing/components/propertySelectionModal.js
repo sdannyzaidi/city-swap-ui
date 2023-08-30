@@ -61,12 +61,12 @@ const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
 									</div>
 								</div>
 							</div>
-							{partial && (
+							{
 								<p className='pl-4 pb-4 text-sm font-[#666666] font-[500]'>
 									Available from <span className='font-[700] text-[#333333]'>{dayjs(listing?.overlap?.[0]).format('ddd, MMM DD YYYY')}</span> to{' '}
 									<span className='font-[700] text-[#333333]'>{dayjs(listing?.overlap?.[1]).format('ddd, MMM DD YYYY')}</span>{' '}
 								</p>
-							)}
+							}
 						</div>
 					</Radio>
 				))}
@@ -74,14 +74,16 @@ const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
 		</div>
 	)
 }
-const PropertySelectionModal = ({ form, visible, setVisible, properties, partialListings, otherProperty, sendRequest }) => {
+const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, properties, partialListings, otherProperty, sendRequest }) => {
 	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
 	const searchDate = JSON.parse(localStorage.getItem('searchDate'))
 	const listingType = JSON.parse(localStorage.getItem('searchType'))
 	const id = JSON.parse(localStorage.getItem('user'))?.id
 	const location = JSON.parse(localStorage.getItem('location'))
-	const suggestedProperties = useRecoilValue(suggestedListingsSelector({ id, dateRange: searchDate, location }))
+	const suggestedProperties = useRecoilValue(
+		suggestedListingsSelector({ id, dateRanges: [selectedProperty?.startRange, selectedProperty?.endRange], searchRange: searchDate, location })
+	)
 	const formValues = Form.useWatch(undefined, form)
 	return (
 		<Modal
@@ -169,8 +171,9 @@ const PropertySelectionModal = ({ form, visible, setVisible, properties, partial
 									name={['subleaseSameProperty']}
 									key={'subleaseSameProperty'}
 									className='max-sm:pb-8'
+									hidden={true}
 									rules={[{ required: true, message: 'Please select an option' }]}
-									initialValue={'yes'}
+									initialValue={'no'}
 								>
 									<RadioButtonGroup
 										options={[
@@ -182,7 +185,7 @@ const PropertySelectionModal = ({ form, visible, setVisible, properties, partial
 							</div>
 							{formValues?.subleaseSameProperty === 'no' && suggestedProperties?.length > 0 ? (
 								<div className='flex flex-col space-y-4 w-full'>
-									<p className='text-start font-[400] text-[#666666] text-base py-4'>Other Suggested Properties for Sub-Lease:</p>
+									<p className='text-start font-[400] text-[#666666] text-base py-4'>Other Properties available for Sublease on remaining days:</p>
 									<Form.Item
 										name={['subleasePropertyId']}
 										key={'subleasePropertyId'}

@@ -1,10 +1,11 @@
 import { Form } from '@components'
 import PrimaryHeader from '../../components/headers/primaryHeader'
 import Icon from '@mdi/react'
-import { mdiEmail } from '@mdi/js'
+import { mdiEmail, mdiLogout } from '@mdi/js'
 import { Button, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import useUpdateUser from './hooks/useUpdateUser'
+import { firebase } from '../../auth/firebase/config'
 
 const Profile = () => {
 	const navigator = useNavigate()
@@ -72,7 +73,7 @@ const Profile = () => {
 							])}
 						</div>
 					</div>
-					<div className='w-full flex sm:flex-row max-sm:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>
+					<div className='w-full flex sm:flex-row max-sm:flex-col items-start border-b border-solid border-[#EAECF0]'>
 						<p className='flex basis-1/3 text-[#344054]  max-sm:pb-2 text-sm font-[600]'>Membership</p>
 						<div className='flex basis-2/3 '>
 							{Form.renderSchema([
@@ -84,6 +85,22 @@ const Profile = () => {
 								},
 							])}
 						</div>
+					</div>
+					<div className='w-full flex flex-row items-center bg-white  rounded-lg  my-6 py-3 border border-solid border-[#EAECF0]'>
+						<p
+							className={`flex flex-row items-center py-2 px-4 text-sm font-[500] text-[#344054] ${' hover:bg-[#F9FAFB]'} rounded-md hover:cursor-pointer`}
+							onClick={() => {
+								firebase.auth().signOut()
+								localStorage.setItem('user', JSON.stringify(null))
+								localStorage.setItem('token', JSON.stringify(null))
+								navigator('/home/about')
+							}}
+						>
+							<Icon path={mdiLogout} size={1} className='text-red-400' />
+							<p size={1} className='text-red-400 pl-2 '>
+								Logout
+							</p>
+						</p>
 					</div>
 				</div>
 			</Form>

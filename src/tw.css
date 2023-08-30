@@ -874,6 +874,14 @@ video {
   visibility: visible;
 }
 
+.\!visible {
+  visibility: visible !important;
+}
+
+.fixed {
+  position: fixed;
+}
+
 .absolute {
   position: absolute;
 }
@@ -924,6 +932,14 @@ video {
 
 .z-20 {
   z-index: 20;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
 }
 
 .col-span-1 {
@@ -1004,6 +1020,11 @@ video {
 .mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
+}
+
+.my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .\!mb-0 {
@@ -1776,6 +1797,10 @@ video {
   border-right-width: 1px;
 }
 
+.border-l {
+  border-left-width: 1px;
+}
+
 .border-solid {
   border-style: solid;
 }
@@ -1935,6 +1960,19 @@ video {
   background-color: rgb(242 254 242 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#000000\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#66666611\] {
+  background-color: #66666611;
+}
+
+.bg-\[\#66666633\] {
+  background-color: #66666633;
+}
+
 .bg-\[url\(\"\/Users\/adilaslam\/Documents\/personal\/cityswap\/src\/assets\/images\/Logomark\.png\"\)\] {
   background-image: url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/Logomark.png");
 }
@@ -1965,6 +2003,10 @@ video {
 
 .p-3 {
   padding: 0.75rem;
+}
+
+.\!p-0 {
+  padding: 0px !important;
 }
 
 .\!px-2 {
@@ -2203,6 +2245,10 @@ video {
 
 .pr-5 {
   padding-right: 1.25rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
 }
 
 .text-left {
@@ -2549,6 +2595,11 @@ video {
   color: rgb(109 110 120 / var(--tw-text-opacity));
 }
 
+.text-red-400 {
+  --tw-text-opacity: 1;
+  color: rgb(244 67 54 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2602,6 +2653,12 @@ video {
 .shadow-\[inset_-20px_0_15px_8px_rgba\(256\2c 256\2c 256\2c 0\.99\)\] {
   --tw-shadow: inset -20px 0 15px 8px rgba(256,256,256,0.99);
   --tw-shadow-colored: inset -20px 0 15px 8px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-\[10px_0_20px_10px_rgba\(0\2c 0\2c 0\2c 0\.1\)\] {
+  --tw-shadow: 10px 0 20px 10px rgba(0,0,0,0.1);
+  --tw-shadow-colored: 10px 0 20px 10px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
@@ -3245,6 +3302,10 @@ ul.slick-dots.slick-dots-bottom li button {
     display: block;
   }
 
+  .max-sm\:flex {
+    display: flex;
+  }
+
   .max-sm\:hidden {
     display: none;
   }
@@ -3373,6 +3434,11 @@ ul.slick-dots.slick-dots-bottom li button {
   .max-sm\:py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
+  }
+
+  .max-sm\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
   .max-sm\:pb-12 {
