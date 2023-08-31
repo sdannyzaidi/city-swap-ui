@@ -86,8 +86,8 @@ export const listingByIdSelector = selectorFamily({
 		({ get }) => {
 			const { id } = props
 			const listings = get(listingsAtom)
-			// console.log({ listings })
 			const listing = listings?.find((listing) => listing.property._id === id)
+			console.log({ listing })
 			return listing
 		},
 })

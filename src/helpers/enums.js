@@ -8,4 +8,5 @@ export const endpoints = {
 	'confirm-transaction': 'stripe/confirm-transaction',
 	'user-requests': (id) => `users/requests/${id}`,
 	'add-review': 'review/add-review',
+	'update-property': (id) => `propertyInfo/updateProperty/${id}`,
 }

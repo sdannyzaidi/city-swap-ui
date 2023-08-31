@@ -12,6 +12,10 @@ import PictureCard from './components/pictureCard'
 import Testimonials from './components/testimonials'
 import PropertySelectionModal from './components/propertySelectionModal'
 import { endpoints } from '../../helpers/enums'
+import { Button } from 'antd'
+import { AmenitiesEnums, BedroomSizeEnums } from '../newListing/helpers/enums'
+import dayjs from 'dayjs'
+import useUpdateProperty from './hooks/useUpdateProperty'
 
 const Listing = () => {
 	const [form] = Form.useForm()
@@ -21,6 +25,30 @@ const Listing = () => {
 	const location = JSON.parse(localStorage.getItem('location'))
 	const listing = useRecoilValue(listingByIdSelector({ id }))
 	const partialSwapPropertyId = Form.useWatch(['partialSwapPropertyId'], form)
+	const [updatePropertyFunction, updatePropertyLoading] = useUpdateProperty()
+	useEffect(() => {
+		if (action === 'edit' && listing) {
+			const initValues = {
+				description: listing?.property.description,
+				title: listing?.property.title || listing?.property.description,
+				size: Object.values(BedroomSizeEnums).reduce((acc, item) => {
+					acc[item.value] = (listing?.property?.[item.value] || 0).toString()
+					return acc
+				}, {}),
+				amenities: Object.values(AmenitiesEnums).reduce((acc, item) => {
+					acc[item.value] = listing?.property?.[item.value] || false
+					return acc
+				}, {}),
+				availableDates: Object.values(listing?.asscocitedListings?.[0]?.availableDates || listing?.associatedListings?.[0]?.availableDates || [])?.map(
+					(obj) => {
+						return [dayjs(obj.startDate).format('YYYY-MM-DD'), dayjs(obj.endDate).format('YYYY-MM-DD')]
+					}
+				),
+			}
+			console.log({ initValues })
+			form.setFieldsValue(initValues)
+		}
+	}, [listing])
 	const myListings = useRecoilValue(
 		action === 'edit' ? constSelector([]) : swappableListingsSelector({ id: JSON.parse(localStorage.getItem('user'))?.id, dateRange })
 	)
@@ -95,6 +123,27 @@ const Listing = () => {
 		},
 		[selectedProperty]
 	)
+	const updateProperty = useCallback(async (values) => {
+		console.log({ values })
+		updatePropertyFunction(values, listing).then(() => {
+			console.log('done')
+		})
+
+		// const response = await fetch(
+		// 	`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request'](JSON.parse(localStorage.getItem('user'))?.id)}`,
+		// 	{
+		// 		method: 'POST',
+		// 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
+		// 		body: JSON.stringify(values),
+		// 	}
+		// )
+		// if (response.status === 200) {
+		// 	const data = await response.json()
+		// 	console.log({ data })
+		// } else {
+		// 	console.log(response)
+		// }
+	})
 	const subleaseProperty = useCallback(async (values) => {
 		const response = await fetch(
 			`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request'](JSON.parse(localStorage.getItem('user'))?.id)}`,
@@ -222,15 +271,22 @@ const Listing = () => {
 		fetchData()
 	}, [])
 	return (
-		<Form form={form}>
+		<Form
+			form={form}
+			onFinish={(values) => {
+				if (action === 'edit') {
+					updateProperty(values)
+				}
+			}}
+		>
 			<div className='flex flex-col'>
 				<PrimaryHeader />
+
 				{action === 'edit' ? (
 					<div className='sm:px-44 max-sm:px-8 py-8'>
 						{Form.renderFormItem({
 							type: 'input',
 							elementClassName: 'text-[#1A202C] text-[36px] font-bold',
-							initialValue: listing?.property.title || listing?.property.description,
 							name: 'title',
 							rules: [{ required: true, message: 'Please enter a title' }],
 						})}
@@ -244,19 +300,44 @@ const Listing = () => {
 					<PictureCard listing={listing} />
 				</div>
 				<div className='sm:pb-24 max-sm:pb-12 sm:pl-44 sm:pr-48 max-sm:px-8 flex sm:flex-row max-sm:flex-col justify-between items-start'>
-					<PropertyDetails listing={listing} />
+					<PropertyDetails listing={listing} editable />
 					{action !== 'edit' ? <UserCard listing={listing} setVisible={setOpenModal} /> : null}
 				</div>
 				<div className='sm:pb-24 max-sm:pb-12'>
-					<Amenities listing={listing} />
+					<Amenities listing={listing} editable />
 				</div>
 
 				<div className='sm:pb-24 max-sm:pb-12'>
-					<Calendar listing={listing} />
+					<Calendar listing={listing} editable={action === 'edit'} />
 				</div>
-				<div className='sm:pb-24 max-sm:pb-12'>
-					<Testimonials listing={listing} />
-				</div>
+				{action !== 'edit' ? (
+					<div className='sm:pb-24 max-sm:pb-12'>
+						<Testimonials listing={listing} />
+					</div>
+				) : null}
+				{action === 'edit' ? (
+					<div className={`w-full flex flex-row justify-end items-center sm:px-64 max-sm:px-4 pb-16`}>
+						<Button
+							className='btn-secondary mr-6'
+							// disabled={loading || otherLoading}
+							onClick={() => {
+								navigator('/home')
+							}}
+						>
+							CANCEL
+						</Button>
+
+						<Button
+							loading={updatePropertyLoading}
+							className='btn-primary !h-10 text-lg'
+							onClick={() => {
+								form.submit()
+							}}
+						>
+							SUBMIT
+						</Button>
+					</div>
+				) : null}
 				<div className='w-full bg-[#664F94] h-[280px]' />
 				<PropertySelectionModal
 					selectedProperty={selectedProperty}
