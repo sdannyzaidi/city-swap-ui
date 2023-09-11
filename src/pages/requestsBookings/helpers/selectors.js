@@ -20,6 +20,7 @@ export const userRequestsSelector = selectorFamily({
 		({ get }) => {
 			const requests = get(requestsAtom)
 			const userRequests = typeof requests?.userRequests === 'string' ? [] : requests?.userRequests
+			// console.log({ userRequests })
 			return userRequests || []
 		},
 })

@@ -21,7 +21,7 @@ const MessageInput = ({ sendMessage, lastMessageRef }) => {
 	})
 	return (
 		<div
-			className='flex flex-row mb-8 max-sm:mb-0 max-sm:mx-4  mx-8 border border-solid border-[#D0D5DD] rounded-lg py-3 px-3'
+			className='flex flex-row mb-8 max-md:mb-0 max-md:mx-4  mx-8 border border-solid border-[#D0D5DD] rounded-lg py-3 px-3'
 			style={{ height: height + 24 }}
 		>
 			<Input.TextArea

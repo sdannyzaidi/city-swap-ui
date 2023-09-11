@@ -11,9 +11,9 @@ const PictureCard = ({ listing }) => {
 	const [vewImages, setViewImages] = useState(false)
 	const [currImage, setCurrImage] = useState(0)
 	return (
-		<div className='flex flex-row sm:px-44'>
+		<div className='flex flex-row md:px-44 '>
 			<div
-				className='w-full grid grid-cols-4 grid-rows-2 gap-x-5 gap-y-4  max-sm:hidden'
+				className='w-full grid grid-cols-4 grid-rows-2 gap-x-5 gap-y-4  max-md:hidden '
 				style={{ height: ((divRef.current?.clientWidth || 1366) - 300) / 2 }}
 				ref={divRef}
 			>
@@ -36,8 +36,8 @@ const PictureCard = ({ listing }) => {
 					</div>
 				))}
 			</div>
-			<div className='sm:hidden max-sm:block'>
-				<div className='flex flex-row items-center'>
+			<div className='md:hidden max-md:block max-md:w-full'>
+				<div className='flex flex-row items-center w-full'>
 					<div className='basis-[10%] flex flex-row justify-center'>
 						<Icon
 							path={mdiChevronLeft}

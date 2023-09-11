@@ -19,7 +19,7 @@ const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
 					<Radio key={`radio-swapPropertyId-${index}`} className='w-full' value={listing?.property?._id} onChange={(e) => onChange(listing?.property?._id)}>
 						<div className='flex flex-col w-full'>
 							<div
-								className={`flex sm:flex-row max-sm:flex-col py-4 w-full px-4`}
+								className={`flex md:flex-row max-md:flex-col py-4 w-full px-4`}
 								// onClick={() => navigator(`/listing/${listing.property._id}`)}
 							>
 								<img
@@ -27,7 +27,7 @@ const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
 									alt=''
 									className='h-[142px] w-[210px] rounded-lg object-cover'
 								/>
-								<div className='flex flex-col sm:px-6 w-fit space-y-4 items-start justify-start mt-4'>
+								<div className='flex flex-col md:px-6 w-fit space-y-4 items-start justify-start mt-4'>
 									<p className='text-[#333333] text-[24px] leading-[24px] font-[700] break-normal pb-4'>{listing?.property.title || listing?.property.description}</p>
 									<div className='flex flex-row items-center space-x-4'>
 										<div className='flex flex-row space-x-2 items-center'>
@@ -114,13 +114,28 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 									? 'SUBMIT SUB-LEASE REQUEST'
 									: listingType === 'sublease'
 									? 'SUBMIT SUB-LEASE REQUEST'
-									: 'SUBMIT SWAP REQUEST',
+									: suggestedProperties?.length > 0 || partialListings?.length > 0
+									? 'SUBMIT SWAP REQUEST'
+									: 'GO TO YOUR LISTINGS',
 							onClick: () => {
-								setLoading(true)
-								sendRequest().then(() => {
-									setLoading(false)
+								if (
+									listingType === 'sublease' ||
+									properties?.length > 0 ||
+									partialListings?.length > 0 ||
+									suggestedProperties?.length > 0 ||
+									(otherProperty?.asscocitedListings || otherProperty?.associatedListings)
+										?.find((listing) => listing?.listingType === 'sublease')
+										?.availableDates?.some((range) => checkRangeOverlap([range.startDate, range.endDate], searchDate))
+								) {
+									setLoading(true)
+									sendRequest().then(() => {
+										setLoading(false)
+										setVisible(false)
+									})
+								} else {
 									setVisible(false)
-								})
+									navigate(`/requests-bookings/my-listings`)
+								}
 							},
 						},
 					]?.map((button, index) => {
@@ -165,12 +180,12 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 							>
 								<PropertyRadioCard properties={partialListings} partial />
 							</Form.Item>
-							<div className='flex sm:flex-row max-sm:flex-col sm:items-start'>
-								<p className='text-start font-bold text-[#333333] text-lg max-sm:pb-4 sm:pr-6 sm:pt-4'>Sublease for remaining days ? </p>
+							<div className='flex md:flex-row max-md:flex-col sm:items-start'>
+								<p className='text-start font-bold text-[#333333] text-lg max-md:pb-4 md:pr-6 sm:pt-4'>Sublease for remaining days ? </p>
 								<Form.Item
 									name={['subleaseSameProperty']}
 									key={'subleaseSameProperty'}
-									className='max-sm:pb-8'
+									className='max-md:pb-8'
 									hidden={true}
 									rules={[{ required: true, message: 'Please select an option' }]}
 									initialValue={'no'}
@@ -203,7 +218,7 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 						?.availableDates?.some((range) => checkRangeOverlap([range.startDate, range.endDate], searchDate)) ? (
 					<div className='flex flex-col '>
 						<p className='text-center font-bold text-[#333333] text-[24px] py-4'>No Swappable Property Found</p>
-						<p className='text-start font-[400] text-[#666666] text-base py-12 sm:px-12'>
+						<p className='text-start font-[400] text-[#666666] text-base py-12 md:px-12'>
 							This property is available for sub-lease on the selected dates:
 							<p className='pt-4 text-[#333333] font-semibold'>
 								{` ${dayjs(searchDate?.[0])?.format('MMM DD')} to ${dayjs(searchDate?.[1])?.format('MMM DD, YYYY')} `}
@@ -220,17 +235,21 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 								{` ${dayjs(searchDate?.[0])?.format('MMM DD')} to ${dayjs(searchDate?.[1])?.format('MMM DD, YYYY')} `}
 							</p>
 						</p>
-						<p className='text-start font-[400] text-[#666666] text-base py-12 px-12'>Other Suggested Properties for Sub-Lease:</p>
-						<div className='flex flex-col space-y-4 w-full'>
-							<Form.Item
-								name={['subleasePropertyId']}
-								key={'subleasePropertyId'}
-								rules={[{ required: true, message: 'Please select a property' }]}
-								initialValue={suggestedProperties?.[0]?.property?._id}
-							>
-								<PropertyRadioCard properties={suggestedProperties} />
-							</Form.Item>
-						</div>
+						{suggestedProperties?.length > 0 && (
+							<>
+								<p className='text-start font-[400] text-[#666666] text-base py-12 px-12'>Other Suggested Properties for Sub-Lease:</p>
+								<div className='flex flex-col space-y-4 w-full'>
+									<Form.Item
+										name={['subleasePropertyId']}
+										key={'subleasePropertyId'}
+										rules={[{ required: true, message: 'Please select a property' }]}
+										initialValue={suggestedProperties?.[0]?.property?._id}
+									>
+										<PropertyRadioCard properties={suggestedProperties} />
+									</Form.Item>
+								</div>
+							</>
+						)}
 					</div>
 				)
 			) : (

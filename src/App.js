@@ -22,7 +22,7 @@ const App = () => {
 					<Route path='search' element={<SearchPage />} />
 				</Route>
 				<Route
-					path='requests-bookings'
+					path='requests-bookings/:type?'
 					element={
 						<PrivateRoute redirect='/auth/login'>
 							<RequestsBookings />

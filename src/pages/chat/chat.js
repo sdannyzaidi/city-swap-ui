@@ -52,7 +52,7 @@ const Chat = () => {
 				const userChats = snapshot.docs.map((doc) => ({
 					...doc.data(),
 				}))
-				console.log('userChats', userChats)
+				// console.log('userChats', userChats)
 				setChatsAtom(userChats)
 				setLoading(false)
 			})
@@ -72,14 +72,14 @@ const Chat = () => {
 			<div className='flex flex-col w-full h-full'>
 				<PrimaryHeader />
 
-				<div className='relative flex flex-row flex-grow h-[calc(100vh-85.33px)]'>
+				<div className='relative flex flex-row flex-grow h-[calc(100vh)]'>
 					<div
 						className={`flex border-r border-solid border-[#D0D5DD] ${
 							chatSideBar.type === 'drawer'
 								? `${
 										chatSideBar.visible ? ' w-[300px] opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
-								  } bg-white transition-[width,opacity] duration-200 absolute left-0 z-10 bottom-0 h-full`
-								: 'w-1/4 min-w-[300px]'
+								  } bg-white transition-[width,opacity] duration-200 fixed left-0 pt-14 z-20 bottom-0 h-screen`
+								: 'w-1/4 min-w-[300px] pt-24'
 						}  `}
 					>
 						<ChatList chats={chats} visible={chatSideBar.visible} onChatClick={onChatClick} />
@@ -102,7 +102,7 @@ const Chat = () => {
 						</div>
 					) : null}
 					<div
-						className={`${chatSideBar.type === 'drawer' ? `w-full ` : 'w-3/4'}  h-full`}
+						className={`${chatSideBar.type === 'drawer' ? `w-full  pt-14` : 'w-3/4  pt-24'}  h-full`}
 						onClick={() => {
 							if (chatSideBar.visible && chatSideBar.type === 'drawer') {
 								setChatSideBar({ visible: false, type: 'drawer' })

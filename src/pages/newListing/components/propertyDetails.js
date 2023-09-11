@@ -8,7 +8,7 @@ const PropertyDetails = (props) => {
 		<div className='flex flex-col w-full'>
 			<p className='text-[#333333] font-[700] text-3xl'>List your property on CitySwapp</p>
 			<div className='py-7 flex flex-row'>
-				<Form.Item name={'listingType'} noStyle initialValue='swap'>
+				<Form.Item name={'listingType'} noStyle initialValue='swap' required>
 					<RadioButtonGroup
 						options={[
 							{ label: 'Available for Swap', short: 'Swap', value: 'swap' },

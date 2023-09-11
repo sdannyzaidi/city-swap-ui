@@ -29,7 +29,7 @@ const RequestCard = ({ request, type, index }) => {
 	const requestListing = request?.requestedProperty
 	const ownListing = request?.ownProperty
 	const setRequests = useSetRecoilState(requestsAtom)
-	console.log({ requestListing, ownListing })
+	// console.log({ requestListing, ownListing })
 	const changeListingStatus = useCallback(
 		(status) => {
 			setLoading(true)
@@ -52,7 +52,7 @@ const RequestCard = ({ request, type, index }) => {
 								}))
 							}
 
-							console.log({ data })
+							// console.log({ data })
 						})
 						.catch((err) => {
 							console.log({ err })
@@ -95,7 +95,7 @@ const RequestCard = ({ request, type, index }) => {
 			</div>
 			<div className={request.requestType === 'swap' ? 'sm:rounded-lg sm:border sm:border-solid border-[#dedede] sm:p-3 sm:mt-4 sm:mx-4' : ''}>
 				<div
-					className={`flex sm:flex-row max-sm:flex-col py-4 w-full px-4 `}
+					className={`flex md:flex-row max-md:flex-col py-4 w-full px-4 `}
 					// onClick={() => navigator(`/requestListing/${requestListing.propertyDetail._id}`)}
 				>
 					<img
@@ -105,9 +105,9 @@ const RequestCard = ({ request, type, index }) => {
 								: NoImage
 						}
 						alt=''
-						className='sm:h-[142px] sm:w-[210px] max-sm:w-full max-sm:h-auto rounded-lg object-cover'
+						className='sm:h-[142px] sm:w-[210px] max-md:w-full max-md:h-auto rounded-lg object-cover'
 					/>
-					<div className='flex flex-col sm:px-6 w-fit space-y-4 items-start justify-start mt-4'>
+					<div className='flex flex-col md:px-6 w-fit space-y-4 items-start justify-start mt-4'>
 						<p className='text-[#333333] text-[24px] leading-[24px] font-[700] break-normal'>
 							{requestListing?.propertyDetail.title || requestListing?.propertyDetail.description}
 						</p>
@@ -146,7 +146,7 @@ const RequestCard = ({ request, type, index }) => {
 							<p className='text-[#333333] font-[500] text-sm'>Swap</p>
 						</div>
 						<div
-							className={`flex sm:flex-row max-sm:flex-col py-4 w-full px-4 `}
+							className={`flex md:flex-row max-md:flex-col py-4 w-full px-4 `}
 							// onClick={() => navigator(`/listing/${listing.propertyDetail._id}`)}
 						>
 							<img
@@ -156,9 +156,9 @@ const RequestCard = ({ request, type, index }) => {
 										: NoImage
 								}
 								alt=''
-								className='sm:h-[142px] sm:w-[210px] max-sm:w-full max-sm:h-auto rounded-lg object-cover'
+								className='sm:h-[142px] sm:w-[210px] max-md:w-full max-md:h-auto rounded-lg object-cover'
 							/>
-							<div className='flex flex-col sm:px-6 w-fit space-y-4 items-start justify-start mt-4'>
+							<div className='flex flex-col md:px-6 w-fit space-y-4 items-start justify-start mt-4'>
 								<p className='text-[#333333] text-[24px] leading-[24px] font-[700] break-normal'>
 									{ownListing?.propertyDetail.title || ownListing?.propertyDetail.description}
 								</p>

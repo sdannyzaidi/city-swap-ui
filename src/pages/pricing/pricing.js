@@ -9,11 +9,11 @@ const Pricing = () => {
 	return (
 		<div className='overflow-y-scroll'>
 			<PrimaryHeader />
-			<div className='flex flex-col pt-12 items-center justify-center text-center max-sm:px-8 mb-32'>
-				<p className='text-[38px] max-sm:text-2xl leading-[3rem] text-[#1A202C] font-bold pb-6'>Choose a plan to start swapping and subleasing</p>
-				<p className='text-[20px] max-sm:text-base text-[#475467] font-[500] sm:pb-16 max-sm:pb-8'>Explore our global community free for a month</p>
+			<div className='flex flex-col pt-12 items-center justify-center text-center max-md:px-8 mb-32'>
+				<p className='text-[38px] max-md:text-2xl leading-[3rem] text-[#1A202C] font-bold pb-6'>Choose a plan to start swapping and subleasing</p>
+				<p className='text-[20px] max-md:text-base text-[#475467] font-[500] sm:pb-16 max-md:pb-8'>Explore our global community free for a month</p>
 
-				<div className='relative flex flex-col items-center justify-center space-y-4 py-8 px-10 sm:w-[550px] max-sm:w-full rounded-[80px] overflow-hidden'>
+				<div className='relative flex flex-col items-center justify-center space-y-4 py-8 px-10 sm:w-[550px] max-md:w-full rounded-[80px] overflow-hidden'>
 					<div className='absolute right-0 left-0 top-0 bottom-0 h-full w-full -z-10'>
 						<img src={BG6} alt='' className='h-full w-full object-cover opacity-40' />
 					</div>

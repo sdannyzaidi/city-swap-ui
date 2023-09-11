@@ -8,7 +8,7 @@ import { firestore, firebase } from '../../../auth/firebase/config'
 const ChatMessages = ({ chats }) => {
 	const chat = chats.find((chat) => chat.selected)
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
-	console.log({ chat })
+	// console.log({ chat })
 	const lastMessageRef = useRef(null)
 	const sendMessage = useCallback(
 		(message) => {
@@ -56,7 +56,7 @@ const ChatMessages = ({ chats }) => {
 	}, [chat])
 
 	return (
-		<div className='flex flex-col bg-[#FCFCFD] h-full '>
+		<div className='flex flex-col bg-[#FCFCFD] h-full'>
 			<ChatHeader chat={chat} />
 			<div className='flex flex-col space-y-4 pb-8 px-8 h-full overflow-y-scroll'>
 				{groupedMessages?.map((messages, index) => (

@@ -5,8 +5,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import RequestCard from './components/requestCard'
 import MyListingCard from './components/myListingCard'
 import Loader from '../../components/utility/loader'
-import { useNavigate } from 'react-router-dom'
-import { Button, Modal } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button, Modal, notification } from 'antd'
 import Icon from '@mdi/react'
 import { mdiArrowRight, mdiDeleteOutline } from '@mdi/js'
 import ResizeObserver from 'rc-resize-observer'
@@ -15,7 +15,16 @@ import { listingByUserSelector, receivedRequestsSelector, userRequestsSelector }
 
 const RequestBookings = () => {
 	const navigator = useNavigate()
-	const [page, setPage] = useState({ title: 'Requests', page: 'requests' })
+	const { page: initPage } = useParams()
+	const [page, setPage] = useState(
+		initPage
+			? [
+					{ title: 'Requests', page: 'requests' },
+					{ title: 'My Swaps / Subleases', page: 'swaps-subleases' },
+					{ title: 'My Listings', page: 'my-listings' },
+			  ].find((item) => item.page === initPage)
+			: { title: 'Requests', page: 'requests' }
+	)
 	const [modalData, setModalData] = useState({ visible: false })
 	const setRequests = useSetRecoilState(requestsAtom)
 	const setListings = useSetRecoilState(listingsAtom)
@@ -34,7 +43,7 @@ const RequestBookings = () => {
 		})
 		if (response.status === 200) {
 			const data = await response.json()
-			console.log({ data })
+			// console.log({ data })
 			setListings(data)
 			setLoading(false)
 		} else {
@@ -50,7 +59,7 @@ const RequestBookings = () => {
 		})
 		if (response.status === 200) {
 			const data = await response.json()
-			console.log({ data })
+			// console.log({ data })
 			setRequests(data)
 			setLoading(false)
 		} else {
@@ -58,7 +67,39 @@ const RequestBookings = () => {
 			setLoading(false)
 		}
 	}, [])
+	const deleteProperty = useCallback(async (id) => {
+		setLoading(true)
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['delete-property']?.(id)}`, {
+			method: 'DELETE',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+		})
+		if (response.status === 200) {
+			// const data = await response.json()
+			// console.log({ data })
+			// setRequests(data)
+			setLoading(false)
+			notification['success']({
+				message: 'Property deletion successfully',
+				duration: 5,
+				onClick: () => {
+					notification.close()
+				},
+			})
+			navigator('home')
+		} else {
+			// console.log(response)
+			setLoading(false)
+			notification['error']({
+				message: 'Property addition failed',
+				duration: 5,
+				onClick: () => {
+					notification.close()
+				},
+			})
+		}
+	}, [])
 	useEffect(() => {
+		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 		fetchData()
 		fetchOtherData()
 	}, [])
@@ -72,7 +113,7 @@ const RequestBookings = () => {
 				}
 			}}
 		>
-			<div className='overflow-y-scroll'>
+			<div className=''>
 				<PrimaryHeader />
 				<div className='relative flex flex-row min-h-[96vh] h-fit'>
 					<div
@@ -80,11 +121,11 @@ const RequestBookings = () => {
 							sideBar.type === 'drawer'
 								? `${
 										sideBar.visible ? ' w-[250px] opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
-								  } bg-white transition-[width,opacity] duration-200 absolute left-0 z-10 bottom-0 h-full`
-								: 'w-[250px] min-w-[150px]'
+								  } bg-white transition-[width,opacity] duration-200 fixed left-0 z-10 pt-24 bottom-0 h-screen`
+								: 'w-[250px] min-w-[150px] pt-16'
 						}  `}
 					>
-						<div className='flex flex-col min-h-[96vh] sm:pt-12 max-sm:pt-4  !h-full sm:px-6 max-sm:px-4 space-y-1'>
+						<div className='flex flex-col min-h-[96vh] sm:pt-12 max-md:pt-4  !h-full md:px-6 max-md:px-4 space-y-1'>
 							{[
 								{ title: 'Requests', page: 'requests' },
 								{ title: 'My Swaps / Subleases', page: 'swaps-subleases' },
@@ -102,7 +143,7 @@ const RequestBookings = () => {
 						</div>
 					</div>
 					{sideBar.type === 'drawer' ? (
-						<div className='absolute left-0 z-20 flex flex-col h-screen items-start justify-center bg-transparent pr-4'>
+						<div className='fixed left-0 z-20 flex flex-col h-screen items-start justify-center bg-transparent pr-4'>
 							<div className={`${!sideBar.visible ? 'opacity-100' : 'opacity-0 w-0'} transition-opacity duration-1000`}>
 								<div
 									className='cursor-pointer p-2 w-fit  rounded-r-lg bg-white shadow-[0_-4px_20px_4px_rgba(0,0,0,0.1)]'
@@ -123,7 +164,7 @@ const RequestBookings = () => {
 							}
 						}}
 					>
-						<div className='flex flex-col min-h-[96vh] pt-12  !h-fit basis-[80%] px-6 space-y-1'>
+						<div className='flex flex-col min-h-[96vh] pt-24  !h-fit basis-[80%] px-6 space-y-1 overflow-y-scroll'>
 							<p className='text-[#101828] text-[30px] font-[600] pb-8'>{page.title}</p>
 							{(page.page === 'requests' && receivedRequests && receivedRequests?.length > 0) ||
 							(page.page === 'swaps-subleases' && userRequests && userRequests?.length > 0) ||
@@ -165,7 +206,21 @@ const RequestBookings = () => {
 						<div className='w-full items-center justify-end flex flex-row' key='footer'>
 							{[
 								{ type: 'cancel', className: 'btn-secondary', title: 'CANCEL', onClick: () => setModalData({ visible: false }) },
-								{ type: 'submit', className: 'btn-delete', title: 'DELETE', onClick: () => setModalData({ visible: false }) },
+								{
+									type: 'submit',
+									className: 'btn-delete',
+									title: 'DELETE',
+									onClick: () => {
+										deleteProperty(modalData.listing?.property?._id)
+											.then(() => {
+												setModalData({ visible: false })
+											})
+											.catch((error) => {
+												console.log({ error })
+												setModalData({ visible: false })
+											})
+									},
+								},
 							]?.map((button, index) => {
 								return (
 									<Button id={button?.type} className={button?.className} style={{ height: 40 }} onClick={button?.onClick} key={'button-' + index} loading={loading}>

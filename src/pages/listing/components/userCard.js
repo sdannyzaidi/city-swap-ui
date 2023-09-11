@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom'
 
 const UserCard = ({ listing, setVisible }) => {
 	const navigate = useNavigate()
-	console.log(listing)
+	// console.log(listing)
 	const user = listing?.user
 	return (
 		<div className='basis-1/3 px-[27px] py-[22px] w-full rounded-lg border border-solid border-[#F2F4F7] mt-12'>
-			<div className='flex flex-col justify-between sm:items-center max-sm:items-start'>
+			<div className='flex flex-col justify-between sm:items-center max-md:items-start'>
 				<div className='flex flex-row justify-start  items-start'>
 					<div className='h-16 w-16 rounded-full border border-solid border-black-75'>
 						<img className='h-full w-full rounded-full bg-black-75' src={user?.profilePicture || ProfileLogo} alt='' />
@@ -26,8 +26,8 @@ const UserCard = ({ listing, setVisible }) => {
 							{Array.from({ length: 5 }, (_, index) => (
 								<Icon key={index} path={mdiStar} size={1} className='text-[#FFAC33]' />
 							))}
-							<p className='text-[#9191919c] text-sm sm:pl-8 max-sm:pl-2 font-[600]'>
-								{'14'}&nbsp;<span className='max-sm:hidden'>exchanges</span>
+							<p className='text-[#9191919c] text-sm md:pl-8 max-md:pl-2 font-[600]'>
+								{'14'}&nbsp;<span className='max-md:hidden'>exchanges</span>
 							</p>
 						</div>
 					</div>

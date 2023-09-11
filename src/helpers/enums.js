@@ -9,4 +9,5 @@ export const endpoints = {
 	'user-requests': (id) => `users/requests/${id}`,
 	'add-review': 'review/add-review',
 	'update-property': (id) => `propertyInfo/updateProperty/${id}`,
+	'delete-property': (id) => `propertyInfo/${id}`,
 }

@@ -22,14 +22,14 @@ const PrimaryHeader = () => {
 				}}
 			>
 				<div
-					className='flex flex-row justify-between items-center border-b border-solid border-[#D0D5DD] w-full bg-white px-8 max-sm:px-4 max-sm:py-2 py-4'
+					className='fixed top-0 z-50  flex flex-row justify-between items-center border-b border-solid border-[#D0D5DD] w-full bg-white px-8 max-md:px-4 max-md:py-2 py-4'
 					id='primary-header'
 				>
 					<div className='flex flex-row items-center'>
 						<HeaderLogo width={width} />
 					</div>
 					<div className='flex flex-row justify-evenly items-center space-x-4'>
-						{width > 640 ? (
+						{width > 768 ? (
 							loggedInUser?.id ? (
 								<div className='flex flex-row items-center space-x-6 mr-4 text-[#555555] font-semibold'>
 									<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/home/about')}>
@@ -59,10 +59,10 @@ const PrimaryHeader = () => {
 						{loggedInUser?.id ? (
 							<div className='flex flex-row items-center space-x-4'>
 								<Button className={`flex flex-row items-center btn-primary hover:cursor-pointer `} onClick={() => navigator('/new-listing')}>
-									<Icon path={mdiPlus} size={width > 640 ? 1 : 0.7} className='text-white' />
-									<p className={width > 640 ? 'mx-2' : 'mx-1'}>Add Listing</p>
+									<Icon path={mdiPlus} size={width > 768 ? 1 : 0.7} className='text-white' />
+									<p className={width > 768 ? 'mx-2' : 'mx-1'}>Add Listing</p>
 								</Button>
-								{width > 640 ? (
+								{width > 768 ? (
 									<div className='h-11 w-11 rounded-full border border-solid border-black-75 hover:cursor-pointer' onClick={() => navigator('/profile')}>
 										<img className='h-full w-full rounded-full bg-black-75' src={loggedInUser?.profilePicture || ProfileLogo} alt='' />
 									</div>
@@ -100,12 +100,12 @@ const PrimaryHeader = () => {
 				open={visible}
 				onClose={() => setVisible(false)}
 				closable={false}
-				// 	className={`max-sm:flex sm:hidden border-l border-solid border-[#dfe0e2] ${
+				// 	className={`max-md:flex sm:hidden border-l border-solid border-[#dfe0e2] ${
 				// 		visible ? 'w-[250px] pt-5' : 'w-0'
 				// 	} opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0' bg-white transition-[width,opacity] duration-200 fixed right-0 z-50 bottom-0 h-full`}
 			>
 				<div className='flex flex-col justify-between pb-4  !h-full'>
-					<div className='flex flex-col  sm:pt-12 max-sm:pt-4  sm:px-6 max-sm:px-2 space-y-1'>
+					<div className='flex flex-col  sm:pt-12 max-md:pt-4  md:px-6 max-md:px-2 space-y-1'>
 						{(loggedInUser
 							? [
 									{ title: 'Home', page: '/home/about' },

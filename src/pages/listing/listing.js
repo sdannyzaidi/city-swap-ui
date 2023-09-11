@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { constSelector, useRecoilValue, useSetRecoilState } from 'recoil'
 import { listingByIdSelector, partialSwappableListingsSelector, swappableListingsSelector } from './helpers/selectors'
 import { listingsAtom } from '@atoms'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Form, Loader, PrimaryHeader } from '@components'
 import Amenities from './components/amenities'
 import Calendar from './components/calendar'
@@ -12,19 +12,37 @@ import PictureCard from './components/pictureCard'
 import Testimonials from './components/testimonials'
 import PropertySelectionModal from './components/propertySelectionModal'
 import { endpoints } from '../../helpers/enums'
-import { Button } from 'antd'
+import { Button, Upload, notification } from 'antd'
 import { AmenitiesEnums, BedroomSizeEnums } from '../newListing/helpers/enums'
 import dayjs from 'dayjs'
 import useUpdateProperty from './hooks/useUpdateProperty'
+import { mdiPlus } from '@mdi/js'
+import Icon from '@mdi/react'
+import { firebase } from '@auth'
+const getBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.readAsDataURL(file)
+		reader.onload = () => resolve(reader.result)
+		reader.onerror = (error) => reject(error)
+	})
 
+const normFile = (e) => {
+	if (Array.isArray(e)) return e
+	return e && e.fileList
+}
 const Listing = () => {
 	const [form] = Form.useForm()
-
+	const navigator = useNavigate()
 	const { id, action } = useParams()
 	const dateRange = JSON.parse(localStorage.getItem('searchDate'))
 	const location = JSON.parse(localStorage.getItem('location'))
 	const listing = useRecoilValue(listingByIdSelector({ id }))
+	const loggedInUser = JSON.parse(localStorage.getItem('user'))
+	const [loading, setLoading] = useState(false)
+	const [openModal, setOpenModal] = useState(false)
 	const partialSwapPropertyId = Form.useWatch(['partialSwapPropertyId'], form)
+
 	const [updatePropertyFunction, updatePropertyLoading] = useUpdateProperty()
 	useEffect(() => {
 		if (action === 'edit' && listing) {
@@ -44,8 +62,16 @@ const Listing = () => {
 						return [dayjs(obj.startDate).format('YYYY-MM-DD'), dayjs(obj.endDate).format('YYYY-MM-DD')]
 					}
 				),
+				photos: listing?.property.pictures?.map((picture) => {
+					return {
+						uid: picture,
+						name: picture,
+						status: 'done',
+						url: picture,
+					}
+				}),
 			}
-			console.log({ initValues })
+			// console.log({ initValues })
 			form.setFieldsValue(initValues)
 		}
 	}, [listing])
@@ -59,15 +85,19 @@ const Listing = () => {
 		() => myPartialListings?.find((listing) => partialSwapPropertyId === listing?.property?._id),
 		[partialSwapPropertyId]
 	)
-	console.log({ myListings, myPartialListings, selectedProperty, partialSwapPropertyId })
+	// console.log({ myListings, myPartialListings, selectedProperty, partialSwapPropertyId })
 	const setData = useSetRecoilState(listingsAtom)
 	useEffect(() => {
 		if (selectedProperty?.startRange || selectedProperty?.endRange) {
 			fetchSubleaseProperty()
 		}
 	}, [selectedProperty])
-	const [loading, setLoading] = useState(false)
-	const [openModal, setOpenModal] = useState(false)
+
+	useEffect(() => {
+		if (action !== 'edit' && !openModal) {
+			form.resetFields()
+		}
+	}, [openModal])
 	const fetchSubleaseProperty = useCallback(
 		async (values) => {
 			const response3 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
@@ -88,11 +118,11 @@ const Listing = () => {
 
 			if (response3.status === 200) {
 				const data = await response3.json()
-				console.log({ data })
+				// console.log({ data })
 				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 				setLoading(false)
 			} else {
-				console.log(response3)
+				// console.log(response3)
 				setLoading(false)
 			}
 			const response4 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
@@ -113,36 +143,39 @@ const Listing = () => {
 
 			if (response4.status === 200) {
 				const data = await response4.json()
-				console.log({ data })
+				// console.log({ data })
 				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 				setLoading(false)
 			} else {
-				console.log(response4)
+				// console.log(response4)
 				setLoading(false)
 			}
 		},
 		[selectedProperty]
 	)
 	const updateProperty = useCallback(async (values) => {
-		console.log({ values })
-		updatePropertyFunction(values, listing).then(() => {
-			console.log('done')
+		// console.log({ values })
+		updatePropertyFunction(values, listing).then((response) => {
+			if (response.status === 200) {
+				notification['success']({
+					message: 'Property Updated successfully',
+					duration: 5,
+					onClick: () => {
+						notification.close()
+					},
+				})
+				navigator(-1)
+			} else {
+				// console.log(response)
+				notification['error']({
+					message: 'Property updation failed',
+					duration: 5,
+					onClick: () => {
+						notification.close()
+					},
+				})
+			}
 		})
-
-		// const response = await fetch(
-		// 	`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['sublease-request'](JSON.parse(localStorage.getItem('user'))?.id)}`,
-		// 	{
-		// 		method: 'POST',
-		// 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
-		// 		body: JSON.stringify(values),
-		// 	}
-		// )
-		// if (response.status === 200) {
-		// 	const data = await response.json()
-		// 	console.log({ data })
-		// } else {
-		// 	console.log(response)
-		// }
 	})
 	const subleaseProperty = useCallback(async (values) => {
 		const response = await fetch(
@@ -155,9 +188,9 @@ const Listing = () => {
 		)
 		if (response.status === 200) {
 			const data = await response.json()
-			console.log({ data })
+			// console.log({ data })
 		} else {
-			console.log(response)
+			// console.log(response)
 		}
 	})
 	const swapProperty = useCallback(async (values) => {
@@ -171,9 +204,9 @@ const Listing = () => {
 		)
 		if (response.status === 200) {
 			const data = await response.json()
-			console.log({ data })
+			// console.log({ data })
 		} else {
-			console.log(response)
+			// console.log(response)
 		}
 	})
 	const fetchData = useCallback(async () => {
@@ -187,7 +220,7 @@ const Listing = () => {
 			setData((prev) => [...new Map([...prev, data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
 			setLoading(false)
 		} else {
-			console.log(response)
+			// console.log(response)
 			setLoading(false)
 		}
 		const response2 = await fetch(
@@ -209,7 +242,8 @@ const Listing = () => {
 	}, [])
 	const sendRequest = useCallback(async () => {
 		const values = form.getFieldsValue()
-		console.log({ values, myListings, myPartialListings })
+		const requests = []
+		// console.log({ values, myListings, myPartialListings })
 		if (JSON.parse(localStorage.getItem('searchType')) === 'sublease') {
 			subleaseProperty({
 				reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
@@ -218,56 +252,121 @@ const Listing = () => {
 			})
 		} else {
 			if (values?.swapPropertyId) {
-				swapProperty({
-					swapPropertyId: listing.property._id,
-					ownPropertyId: values?.swapPropertyId,
-					requestDates: [
-						{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
-						{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
-					],
-				})
+				requests.push(
+					swapProperty({
+						swapPropertyId: listing.property._id,
+						ownPropertyId: values?.swapPropertyId,
+						requestDates: [
+							{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
+							{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] },
+						],
+					})
+				)
 			} else if (values?.partialSwapPropertyId) {
 				const partialSwapProperty = myPartialListings.find((listing) => listing.property._id === values?.partialSwapPropertyId)
 				const { overlap, startRange, endRange } = partialSwapProperty || {}
 				if (values?.subleaseSameProperty === 'yes') {
-					subleaseProperty({
-						propertyId: listing.property._id,
-						reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
-						requestDates: [
-							...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
-							...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
-						],
-					})
+					requests.push(
+						subleaseProperty({
+							propertyId: listing.property._id,
+							reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+							requestDates: [
+								...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
+								...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
+							],
+						})
+					)
 				} else if (values?.subleasePropertyId) {
-					subleaseProperty({
-						propertyId: values?.subleasePropertyId,
-						reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+					requests.push(
+						subleaseProperty({
+							propertyId: values?.subleasePropertyId,
+							reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+							requestDates: [
+								...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
+								...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
+							],
+						})
+					)
+				}
+				requests.push(
+					swapProperty({
+						swapPropertyId: listing.property._id,
+						ownPropertyId: values?.partialSwapPropertyId,
 						requestDates: [
-							...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
-							...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
+							{ startDate: overlap?.[0], endDate: overlap?.[1] },
+							{ startDate: overlap?.[0], endDate: overlap?.[1] },
 						],
 					})
-				}
-				swapProperty({
-					swapPropertyId: listing.property._id,
-					ownPropertyId: values?.partialSwapPropertyId,
-					requestDates: [
-						{ startDate: overlap?.[0], endDate: overlap?.[1] },
-						{ startDate: overlap?.[0], endDate: overlap?.[1] },
-					],
-				})
+				)
 			} else if (values?.subleasePropertyId) {
-				subleaseProperty({
-					reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
-					propertyId: values?.subleasePropertyId,
-					requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
-				})
+				requests.push(
+					subleaseProperty({
+						reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+						propertyId: values?.subleasePropertyId,
+						requestDates: [{ startDate: JSON.parse(localStorage.getItem('searchDate'))?.[0], endDate: JSON.parse(localStorage.getItem('searchDate'))?.[1] }],
+					})
+				)
 			}
 		}
+		Promise.all(requests).then((responses) => {
+			if (responses.every((response) => response.status === 200)) {
+				notification['success']({
+					message: 'Request sent successfully',
+					duration: 5,
+					onClick: () => {
+						notification.close()
+					},
+				})
+				// navigator('home')
+			} else {
+				// console.log(responses)
+				notification['error']({
+					message: 'Request sending failed',
+					duration: 5,
+					onClick: () => {
+						notification.close()
+					},
+				})
+			}
+		})
 	}, [myListings, myPartialListings])
 
+	const DocumentUpload = async ({ file, onProgress, onSuccess, onError }) => {
+		setLoading(true)
+		const response = firebase.storage
+			.ref()
+			.child(
+				`public/images/properties/${loggedInUser.id}/${form.getFieldValue(['location', 'address'])}-${form.getFieldValue('photos')?.length}-${file.name}`
+			)
+			.put(file)
+		response.on(
+			'state_changed',
+			(snapshot) => onProgress({ percent: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 }),
+			(error) => onError(error),
+			() => onSuccess(null, response.metadata_)
+		)
+	}
+
+	const ChangeFileList = async ({ fileList }) => {
+		if (fileList.length > 0) {
+			fileList.forEach((file, index) => {
+				if (!file.url && file.status === 'done') {
+					const response = firebase.storage
+						.ref()
+						.child(
+							`public/images/properties/${loggedInUser.id}/${form.getFieldValue(['location', 'address'])}-${form.getFieldValue('photos')?.length}-${file.name}`
+						)
+					response.getDownloadURL().then((result) => {
+						fileList[index].url = result
+						setLoading(false)
+					})
+				}
+			})
+		}
+	}
+
 	useEffect(() => {
-		document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })
+		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 		fetchData()
 	}, [])
 	return (
@@ -281,64 +380,90 @@ const Listing = () => {
 		>
 			<div className='flex flex-col'>
 				<PrimaryHeader />
-
-				{action === 'edit' ? (
-					<div className='sm:px-44 max-sm:px-8 py-8'>
-						{Form.renderFormItem({
-							type: 'input',
-							elementClassName: 'text-[#1A202C] text-[36px] font-bold',
-							name: 'title',
-							rules: [{ required: true, message: 'Please enter a title' }],
-						})}
+				<div className='max-md:pt-14 sm:pt-20'>
+					{action === 'edit' ? (
+						<div className='md:px-44 max-md:px-8 py-8'>
+							{Form.renderFormItem({
+								type: 'input',
+								elementClassName: 'text-[#1A202C] text-[36px] font-bold',
+								name: 'title',
+								rules: [{ required: true, message: 'Please enter a title' }],
+							})}
+						</div>
+					) : (
+						<div className='flex md:flex-row max-md:flex-col md:items-center max-md:items-start justify-start  md:px-44 max-md:px-8 py-8'>
+							<p className='text-[#1A202C] text-[36px] font-bold'>{listing?.property.title || listing?.property.description || 'The Property'}</p>
+							{JSON.parse(localStorage.getItem('searchType')) === 'sublease' && (
+								<div className='border-2 border-solid border-gray-300 rounded-lg bg-white md:ml-8 max-md:mt-4'>
+									<p className='text-[#1A202C] font-bold text-lg px-4 py-2 '>
+										$&nbsp;{listing?.associatedListings?.find((item) => item.listingType === 'sublease')?.cost}&nbsp;/&nbsp;night
+									</p>
+								</div>
+							)}
+						</div>
+					)}
+					<div className='md:pb-24 max-md:pb-12'>
+						{action === 'edit' ? (
+							<div className='flex flex-row md:px-40'>
+								<Form.Item
+									key={'photo-upload'}
+									name={['photos']}
+									rules={[{ required: true, message: `Please upload at least one photo` }]}
+									valuePropName='fileList'
+									getValueFromEvent={normFile}
+								>
+									<Upload className='max-md:w-full' customRequest={DocumentUpload} listType='picture-card' onChange={ChangeFileList}>
+										<div className='bg-[#B3A7C9B2] h-full w-full flex flex-row items-center justify-center rounded-lg border border-solid border-[#664F94]'>
+											<Icon path={mdiPlus} size={1.5} className='text-[#333333]' />
+										</div>
+									</Upload>
+								</Form.Item>
+							</div>
+						) : (
+							<PictureCard listing={listing} />
+						)}
 					</div>
-				) : (
-					<p className='text-[#1A202C] text-[36px] font-bold sm:px-44 max-sm:px-8 py-8'>
-						{listing?.property.title || listing?.property.description || 'The Property'}
-					</p>
-				)}
-				<div className='sm:pb-24 max-sm:pb-12'>
-					<PictureCard listing={listing} />
-				</div>
-				<div className='sm:pb-24 max-sm:pb-12 sm:pl-44 sm:pr-48 max-sm:px-8 flex sm:flex-row max-sm:flex-col justify-between items-start'>
-					<PropertyDetails listing={listing} editable />
-					{action !== 'edit' ? <UserCard listing={listing} setVisible={setOpenModal} /> : null}
-				</div>
-				<div className='sm:pb-24 max-sm:pb-12'>
-					<Amenities listing={listing} editable />
-				</div>
-
-				<div className='sm:pb-24 max-sm:pb-12'>
-					<Calendar listing={listing} editable={action === 'edit'} />
-				</div>
-				{action !== 'edit' ? (
-					<div className='sm:pb-24 max-sm:pb-12'>
-						<Testimonials listing={listing} />
+					<div className='sm:pb-24 max-md:pb-12 md:pl-12 md:pr-12 lg:pl-44 lg:pr-48 max-md:px-8 flex md:flex-row max-md:flex-col justify-between items-start'>
+						<PropertyDetails listing={listing} editable />
+						{action !== 'edit' ? <UserCard listing={listing} setVisible={setOpenModal} /> : null}
 					</div>
-				) : null}
-				{action === 'edit' ? (
-					<div className={`w-full flex flex-row justify-end items-center sm:px-64 max-sm:px-4 pb-16`}>
-						<Button
-							className='btn-secondary mr-6'
-							// disabled={loading || otherLoading}
-							onClick={() => {
-								navigator('/home')
-							}}
-						>
-							CANCEL
-						</Button>
-
-						<Button
-							loading={updatePropertyLoading}
-							className='btn-primary !h-10 text-lg'
-							onClick={() => {
-								form.submit()
-							}}
-						>
-							SUBMIT
-						</Button>
+					<div className='sm:pb-24 max-md:pb-12'>
+						<Amenities listing={listing} editable={action === 'edit'} />
 					</div>
-				) : null}
-				<div className='w-full bg-[#664F94] h-[280px]' />
+
+					<div className='sm:pb-24 max-md:pb-12'>
+						<Calendar listing={listing} form={form} editable={action === 'edit'} />
+					</div>
+					{action !== 'edit' ? (
+						<div className='sm:pb-24 max-md:pb-12'>
+							<Testimonials listing={listing} />
+						</div>
+					) : null}
+					{action === 'edit' ? (
+						<div className={`w-full flex flex-row justify-end items-center md:px-64 max-md:px-4 pb-16`}>
+							<Button
+								className='btn-secondary mr-6'
+								// disabled={loading || otherLoading}
+								onClick={() => {
+									navigator(-1)
+								}}
+							>
+								CANCEL
+							</Button>
+
+							<Button
+								loading={updatePropertyLoading}
+								className='btn-primary !h-10 text-lg'
+								onClick={() => {
+									form.submit()
+								}}
+							>
+								SUBMIT
+							</Button>
+						</div>
+					) : null}
+					<div className='w-full bg-[#664F94] h-[280px]' />
+				</div>
 				<PropertySelectionModal
 					selectedProperty={selectedProperty}
 					form={form}

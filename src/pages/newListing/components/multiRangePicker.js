@@ -25,14 +25,15 @@ export const checkRangeIncludes = (range1, range2) => {
 
 	return newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '[]') && newRange1End.isBetween(newRange2Start, newRange2End, 'day', '[]')
 }
-export const checkRangeOverlap = (range1, range2) => {
-	console.log({ range1, range2 })
-	const newRange1Start = dayjs(range1?.[1]).add(1, 'day')
-	// console.log({
-	// 	range1: newRange1Start.format('YYYY-MM-DD'),
-	// 	range2: range2[0],
-	// 	result: compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]),
-	// })
+export const checkRangeOverlap = (range1, range2, adjust) => {
+	const newRange1Start = adjust === true ? dayjs(range1?.[1]).add(1, 'day') : dayjs(range1?.[1])
+	// show && console.log({ range1, range2 })
+	// show &&
+	// 	console.log({
+	// 		range1: newRange1Start.format('YYYY-MM-DD'),
+	// 		range2: range2[0],
+	// 		result: compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]),
+	// 	})
 	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[0]) >= 0 && compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[1]) <= 0
 }
 export const findRangeOverlap = (range1, ranges2) => {
@@ -49,7 +50,7 @@ export const findRangeOverlap = (range1, ranges2) => {
 	let end = null
 	let startRange = null
 	let endRange = null
-	console.log(range1, range2)
+
 	if (newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		startRange = null
 		start = range1[0]
@@ -64,6 +65,35 @@ export const findRangeOverlap = (range1, ranges2) => {
 		endRange = [newRange2End.add(1, 'day').format(), newRange1End.format()]
 		end = range2?.endDate
 	}
+	// console.log({ overlap: [start, end], startRange, endRange })
+	return { overlap: [start, end], startRange, endRange }
+}
+export const findCompleteRangeOverlap = (range1, ranges2) => {
+	const range2 = ranges2?.find((range) => checkRangeIncludes(range1, [range.startDate, range.endDate]))
+	const newRange1Start = dayjs(range1?.[0])
+	const newRange1End = dayjs(range1?.[1])
+	const newRange2Start = dayjs(range2?.startDate)
+	const newRange2End = dayjs(range2?.endDate)
+	let start = null
+	let end = null
+	let startRange = null
+	let endRange = null
+
+	if (newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '()')) {
+		startRange = null
+		start = range1[0]
+	} else {
+		startRange = [newRange1Start.format(), newRange2Start.subtract(1, 'day').format()]
+		start = range2?.startDate
+	}
+	if (newRange1End.isBetween(newRange2Start, newRange2End, 'day', '()')) {
+		endRange = null
+		end = range1[1]
+	} else {
+		endRange = [newRange2End.add(1, 'day').format(), newRange1End.format()]
+		end = range2?.endDate
+	}
+	// console.log({ overlap: [start, end], startRange, endRange })
 	return { overlap: [start, end], startRange, endRange }
 }
 const mergeRanges = (ranges) => {
@@ -73,8 +103,20 @@ const mergeRanges = (ranges) => {
 	const mergedRanges = sortedRanges.reduce(
 		(ranges, curr, index) => {
 			if (ranges.prev) {
-				if (checkRangeOverlap(ranges.prev, curr)) {
+				if (checkRangeOverlap(ranges.prev, curr, true)) {
 					return { prev: [ranges.prev[0], curr[1]], ranges: [...ranges.ranges, ...(index === sortedRanges.length - 1 ? [[ranges.prev[0], curr[1]]] : [])] }
+				}
+				if (checkRangeIncludes(ranges.prev, curr)) {
+					return {
+						prev: [curr[0], curr[1]],
+						ranges: [...ranges.ranges, ...(index === sortedRanges.length - 1 ? [[ranges.prev[0], ranges.prev[1]]] : [])],
+					}
+				}
+				if (checkRangeIncludes(curr, ranges.prev)) {
+					return {
+						prev: [ranges.prev[0], ranges.prev[1]],
+						ranges: [...ranges.ranges, ...(index === sortedRanges.length - 1 ? [[ranges.prev[0], ranges.prev[1]]] : [])],
+					}
 				} else {
 					return { prev: curr, ranges: [...ranges.ranges, ...(index === sortedRanges.length - 1 ? [ranges.prev, curr] : [ranges.prev])] }
 				}
@@ -133,10 +175,11 @@ const getDaysInMonth = (month, year, months) => {
 const CalendarCell = ({ day: { value, disabled } = {}, month, year, index }) => {
 	const { selectedStartingDate, handleSelect, selectedRanges } = useContext(CalendarContext)
 	const selected = checkSelected(`${year}-${month}-${value}`, selectedRanges)
+	const isSmall = compareDate(`${year}-${month + 1}-${value}`, selectedStartingDate) < 0
 	return (
 		<div
-			className={`basis-[14.2857%] ${!disabled ? 'hover:cursor-pointer' : 'hover:cursor-not-allowed'}`}
-			onClick={() => !disabled && handleSelect(`${year}-${month + 1}-${value}`)}
+			className={`basis-[14.2857%] ${!disabled && !isSmall ? 'hover:cursor-pointer' : 'hover:cursor-not-allowed'}`}
+			onClick={() => !disabled && !isSmall && !handleSelect(`${year}-${month + 1}-${value}`)}
 		>
 			{disabled ? (
 				<p className='text-[#767f95] font-[400] text-[12px] text-center'>{value}</p>
@@ -163,10 +206,10 @@ const CalendarMonth = ({ month, year, setMonth, setYear, position }) => {
 	const { months } = useContext(CalendarContext)
 	const dayGrid = getDaysInMonth(month, year, months)
 	return (
-		<div className={`flex flex-col ${position === 'left' ? 'max-sm:border-b' : ''} border-solid border-gray-200`}>
+		<div className={`flex flex-col ${position === 'left' ? 'max-md:border-b' : ''} border-solid border-gray-200`}>
 			<div
 				className={`flex flex-row justify-between ${
-					position === 'right' ? 'sm:pl-6 max-sm:pt-4' : position === 'left' ? 'sm:pr-6 max-sm:pb-4' : 'px-6'
+					position === 'right' ? 'md:pl-6 max-md:pt-4' : position === 'left' ? 'md:pr-6 max-md:pb-4' : 'px-6'
 				}  items-center pb-5`}
 			>
 				<Icon
@@ -193,7 +236,7 @@ const CalendarMonth = ({ month, year, setMonth, setYear, position }) => {
 					}}
 				/>
 			</div>
-			<div className={`flex flex-col ${position === 'right' ? 'sm:pl-6' : position === 'left' ? 'sm:pr-6' : 'px-6'} py-4  space-y-2`}>
+			<div className={`flex flex-col ${position === 'right' ? 'md:pl-6' : position === 'left' ? 'md:pr-6' : 'px-6'} py-4  space-y-2`}>
 				<div className='flex flex-row justify-between px-2 items-center basis-1/6'>
 					{Object.values(WeekDaysEnums).map((day) => (
 						<div className='basis-[14.2857%]'>{<p className='text-[#344054] font-[600] text-[12px] text-center'>{day.short}</p>}</div>
@@ -236,10 +279,10 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 		<CalendarContext.Provider
 			value={{ selectedRanges: value, selectedStartingDate, setSelectedStartingDate, hoveringDate, setHoveringDate, handleSelect, months }}
 		>
-			<div className='flex sm:flex-row max-sm:flex-col w-full border border-solid border-[#F2F4F7] shadow-[0_8px_8px_-4px_rgba(16,24,40,0.03),0_20px_24px_-4px_rgba(16,24,40,0.08)] rounded-lg px-6 py-5 mb-7'>
+			<div className='flex md:flex-row max-md:flex-col w-full border border-solid border-[#F2F4F7] shadow-[0_8px_8px_-4px_rgba(16,24,40,0.03),0_20px_24px_-4px_rgba(16,24,40,0.08)] rounded-lg px-6 py-5 mb-7'>
 				{quickNavigate && (
 					<>
-						<div className='max-sm:hidden flex flex-col !h-full basis-[24%] pr-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
+						<div className='max-md:hidden flex flex-col !h-full basis-[24%] pr-6 border-r border-solid  border-[#F2F4F7] space-y-1'>
 							{['Today', 'Tomorrow', 'This Week', 'Next Week', 'This Month', 'Next Month', 'This Year', 'Next Year'].map((item) => (
 								<p className='px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F9FAFB] rounded-md hover:cursor-pointer'>{item}</p>
 							))}
@@ -253,12 +296,12 @@ const MultiRangePicker = ({ value, onChange, viewOnly, quickNavigate }) => {
 				)}
 				<div
 					className={`${
-						quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-sm:basis-full' : 'sm:basis-1/2 max-sm:basis-full'
+						quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-md:basis-full' : 'sm:basis-1/2 max-md:basis-full'
 					}  sm:border-r border-solid border-[#F2F4F7]`}
 				>
 					<CalendarMonth month={currMonth} year={currYear} setMonth={setCurrMonth} setYear={setCurrYear} position='left' />
 				</div>
-				<div className={`${quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-sm:basis-full' : 'sm:basis-1/2 max-sm:basis-full'}`}>
+				<div className={`${quickNavigate ? 'sm:basis-[38%] sm:ml-6 max-md:basis-full' : 'sm:basis-1/2 max-md:basis-full'}`}>
 					<CalendarMonth month={nextMonth} year={nextMonthYear} setMonth={setNextMonth} setYear={setNextMonthYear} position='right' />
 				</div>
 			</div>

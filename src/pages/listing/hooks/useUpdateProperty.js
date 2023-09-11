@@ -7,13 +7,13 @@ const useUpdateProperty = () => {
 	const updateProperty = async (values, listing) => {
 		setLoading(true)
 		// const user = JSON.parse(localStorage.getItem('user'))
-		console.log({ values })
 		const finalValues = {
 			listing: {
 				listingId: listing?.associatedListings?.[0]?._id,
 				availableDates: values.availableDates.map((range) => ({ startDate: range[0], endDate: range[1] })),
 			},
 			property: {
+				pictures: values.photos.map((photo) => photo.url),
 				title: values.title,
 				description: values.description,
 				...values.amenities,
@@ -32,6 +32,7 @@ const useUpdateProperty = () => {
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify(finalValues),
 		})
+
 		console.log({ response })
 		setLoading(false)
 		return response

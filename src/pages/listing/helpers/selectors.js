@@ -1,6 +1,6 @@
 import { listingsAtom } from '@atoms'
 import { selectorFamily } from 'recoil'
-import { checkRangeIncludes, checkRangeOverlap, findRangeOverlap } from '../../newListing/components/multiRangePicker'
+import { checkRangeIncludes, checkRangeOverlap, findRangeOverlap, findCompleteRangeOverlap } from '../../newListing/components/multiRangePicker'
 
 export const swappableListingsSelector = selectorFamily({
 	key: 'swappableListingsSelector',
@@ -17,10 +17,20 @@ export const swappableListingsSelector = selectorFamily({
 							return checkRangeIncludes(dateRange, [range.startDate, range.endDate])
 						})
 				)
-				?.map((listing) => ({
-					...listing,
-					...findRangeOverlap(dateRange, (listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'swap')?.availableDates),
-				}))
+				?.map((listing) => {
+					// console.log({
+					// 	name: listing?.property?.title,
+					// 	dates: (listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'swap')?.availableDates,
+					// })
+					return {
+						...listing,
+						...findCompleteRangeOverlap(
+							dateRange,
+							(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'swap')?.availableDates,
+							'show'
+						),
+					}
+				})
 			return filteredListings
 		},
 })
@@ -41,13 +51,16 @@ export const partialSwappableListingsSelector = selectorFamily({
 								(checkRangeOverlap(dateRange, [range.startDate, range.endDate]) || checkRangeOverlap([range.startDate, range.endDate], dateRange))
 						)
 				)
-				?.map((listing) => ({
-					...listing,
-					...findRangeOverlap(
-						dateRange,
-						(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'swap')?.availableDates || []
-					),
-				}))
+				?.map((listing) => {
+					return {
+						...listing,
+						...findRangeOverlap(
+							dateRange,
+							(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'swap')?.availableDates || [],
+							'show'
+						),
+					}
+				})
 			return filteredListings
 		},
 })
@@ -67,14 +80,19 @@ export const suggestedListingsSelector = selectorFamily({
 							?.find((obj) => obj.listingType === 'sublease')
 							?.availableDates?.some((range) => dateRanges.some((dateRange) => checkRangeOverlap(dateRange, [range.startDate, range.endDate])))
 				)
-				?.map((listing) => ({
-					...listing,
-					...findRangeOverlap(
-						searchRange,
-						(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || []
-					),
-				}))
-			console.log({ filteredListings })
+				?.map((listing) => {
+					// console.log({ name: listing?.property?.title })
+
+					return {
+						...listing,
+						...findRangeOverlap(
+							searchRange,
+							(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || [],
+							'show'
+						),
+					}
+				})
+			// console.log({ filteredListings })
 
 			return filteredListings
 		},
@@ -87,7 +105,7 @@ export const listingByIdSelector = selectorFamily({
 			const { id } = props
 			const listings = get(listingsAtom)
 			const listing = listings?.find((listing) => listing.property._id === id)
-			console.log({ listing })
+			// console.log({ listing })
 			return listing
 		},
 })

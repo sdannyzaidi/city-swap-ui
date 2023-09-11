@@ -17,6 +17,7 @@ const NewListing = (props) => {
 	const [addProperty, loading] = useAddProperty()
 	const [otherLoading, setOtherLoading] = useState(false)
 	const [page, setPage] = useState(0)
+	const formValues = Form.useWatch(undefined, form)
 	return (
 		<div className='overflow-y-scroll' ref={homeRef}>
 			<PrimaryHeader />
@@ -49,10 +50,10 @@ const NewListing = (props) => {
 				preserve
 			>
 				<div className='w-full h-max flex flex-row'>
-					<div className='min-h-[100vh] max-sm:hidden sm:block sm:w-2/5'>
+					<div className='min-h-[100vh] max-md:hidden sm:block sm:w-2/5'>
 						<img src={BG1} alt='bg' className='w-full h-full object-cover' />
 					</div>
-					<div className='sm:w-3/5 max-sm:w-full h-max sm:px-48 max-sm:px-8 sm:py-20 max-sm:py-8 flex flex-col items-start'>
+					<div className='sm:w-3/5 max-md:w-full h-max md:px-48 max-md:px-8 sm:pb-20 max-md:pb-8 max-md:pt-20 sm:pt-32 flex flex-col items-start'>
 						<ListingContext.Provider value={{ form, setLoading: setOtherLoading }}>
 							{page === 0 ? <PropertyDetails /> : page === 1 ? <LocationDetails /> : page === 2 ? <PropertyPictures /> : <PropertyAvailability />}
 						</ListingContext.Provider>
@@ -90,14 +91,19 @@ const NewListing = (props) => {
 								<Button
 									className='btn-primary'
 									loading={loading || otherLoading}
+									disabled={
+										page === 0 &&
+										((formValues?.amenities && Object.values(formValues?.amenities)?.every((item) => item === false)) ||
+											(formValues?.size && Object.values(formValues?.size)?.every((item) => item === '0')))
+									}
 									onClick={() => {
 										form
 
 											.validateFields()
-											.then((formValues) => {
-												setValues((prev) => ({ ...prev, ...formValues }))
+											.then((values) => {
+												setValues((prev) => ({ ...prev, ...values }))
 												setPage((prev) => prev + 1)
-												document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })
+												window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 											})
 											.catch(() => {})
 									}}

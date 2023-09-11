@@ -8,7 +8,6 @@ const LocationDetails = () => {
 	const country = Form.useWatch(['location', 'country'], form)
 	const type = form.getFieldValue(['listingType'])
 
-	console.log({ country })
 	useEffect(() => {
 		form.setFieldValue(['location', 'city'], null)
 	}, [country])

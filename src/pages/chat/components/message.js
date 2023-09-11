@@ -18,7 +18,7 @@ const Message = ({ messages, className, loggedInUser }) => {
 						messages.user?._id === loggedInUser?.id ? 'bg-[#664F94] rounded-[8px_0px_8px_8px] justify-end' : 'bg-[#F2F4F7] rounded-[0_8px_8px_8px] justify-start'
 					}  px-4 py-3 ${index === messages?.messages?.length - 1 ? 'mb-4' : ''}`}
 				>
-					<p className={`text-base max-sm:text-sm ${messages.user?._id === loggedInUser?.id ? 'text-white' : 'text-[#101828]'}  w-full text break-words`}>
+					<p className={`text-base max-md:text-sm ${messages.user?._id === loggedInUser?.id ? 'text-white' : 'text-[#101828]'}  w-full text break-words`}>
 						{message?.message || 'Hey Olivia, I’ve finished with the requirements doc! I made some notes in the gdoc as well for Phoenix to look over.'}
 					</p>
 				</div>

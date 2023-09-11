@@ -24,15 +24,15 @@ const SearchPage = () => {
 
 	return (
 		<>
-			<div className='min-h-[70vh] sm:w-[981px] max-sm:px-8 py-8 h-fit bg-white mx-auto'>
+			<div className='min-h-[70vh] sm:w-[981px] max-md:px-8 py-8 h-fit bg-white mx-auto'>
 				<p className='text-[#333333] font-[700] text-lg pb-6'>Search Results</p>
 				{data && data?.length > 0 ? (
 					<div className='flex flex-wrap'>
 						{data.map((listing, index) => {
 							return (
 								<div
-									className={`py-4 sm:w-[311px] max-sm:w-full px-4  ${
-										index !== 0 && index % 3 === 2 ? '' : 'sm:mr-6 max-sm:mr-0'
+									className={`py-4 sm:w-[311px] max-md:w-full px-4  ${
+										index !== 0 && index % 3 === 2 ? '' : 'sm:mr-6 max-md:mr-0'
 									} mb-10 rounded-lg border border-solid border-[#dedede] hover:cursor-pointer`}
 									onClick={() => {
 										localStorage.setItem('searchDate', JSON.stringify(form.getFieldValue(['dateRange'])))
