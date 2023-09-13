@@ -25,7 +25,7 @@ const PrimaryHeader = () => {
 					className='fixed top-0 z-50  flex flex-row justify-between items-center border-b border-solid border-[#D0D5DD] w-full bg-white px-8 max-md:px-4 max-md:py-2 py-4'
 					id='primary-header'
 				>
-					<div className='flex flex-row items-center'>
+					<div className='flex flex-row items-center cursor-pointer' onClick={() => navigator('/home')}>
 						<HeaderLogo width={width} />
 					</div>
 					<div className='flex flex-row justify-evenly items-center space-x-4'>
@@ -44,7 +44,7 @@ const PrimaryHeader = () => {
 								</div>
 							) : (
 								<div className='flex flex-row items-center space-x-6 mr-4 text-[#555555] font-semibold'>
-									<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/info')}>
+									<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/how-it-works')}>
 										How it works
 									</p>
 									<p className=' text-[16px] hover:cursor-pointer hover:text-[#717171]' onClick={() => navigator('/pricing')}>
@@ -113,7 +113,7 @@ const PrimaryHeader = () => {
 									{ title: 'Requests & Bookings', page: '/requests-bookings' },
 							  ]
 							: [
-									{ title: 'How it works', page: '/info' },
+									{ title: 'How it works', page: '/how-it-works' },
 									{ title: 'Pricing', page: '/pricing' },
 									{ title: 'FAQs', page: '/faqs' },
 							  ]

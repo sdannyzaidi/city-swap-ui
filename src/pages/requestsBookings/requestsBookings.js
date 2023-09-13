@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import PrimaryHeader from '../../components/headers/primaryHeader'
+import { PrimaryHeader, Footer } from '@components'
 import { listingsAtom, requestsAtom } from '@atoms'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import RequestCard from './components/requestCard'
@@ -199,7 +199,7 @@ const RequestBookings = () => {
 					</div>
 				</div>
 
-				<div className='w-full bg-[#664F94] h-[280px]'></div>
+				<Footer />
 				<Modal
 					open={modalData.visible}
 					footer={

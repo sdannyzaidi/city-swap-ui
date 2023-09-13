@@ -14,7 +14,7 @@ import { BedroomSizeEnums } from '../../newListing/helpers/enums'
 import NoImage from '../../../assets/images/icon-no-image.svg'
 
 import Icon from '@mdi/react'
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
 import ReviewCard from './reviewCard'
 import { useCallback, useState } from 'react'
 import { endpoints } from '../../../helpers/enums'
@@ -29,7 +29,7 @@ const RequestCard = ({ request, type, index }) => {
 	const requestListing = request?.requestedProperty
 	const ownListing = request?.ownProperty
 	const setRequests = useSetRecoilState(requestsAtom)
-	// console.log({ requestListing, ownListing })
+	console.log({ requestListing, ownListing, request })
 	const changeListingStatus = useCallback(
 		(status) => {
 			setLoading(true)
@@ -43,15 +43,34 @@ const RequestCard = ({ request, type, index }) => {
 						.json()
 						.then((data) => {
 							setLoading(false)
-							if (type === 'received') {
-								setRequests((prev) => ({
-									...prev,
-									receivedRequests: prev.receivedRequests.map((req) =>
-										req._id === request._id ? { ...req, status: status === 'Accept' ? 'Successful' : 'Rejected' } : req
-									),
-								}))
-							}
 
+							if (response.status === 200) {
+								if (type === 'received') {
+									setRequests((prev) => ({
+										...prev,
+										receivedRequests: prev.receivedRequests.map((req) =>
+											req._id === request._id ? { ...req, status: status === 'Accept' ? 'Successful' : 'Rejected' } : req
+										),
+									}))
+								}
+								notification['success']({
+									message: 'Property Updated successfully',
+									duration: 5,
+									onClick: () => {
+										notification.close()
+									},
+								})
+								navigator(-1)
+							} else {
+								// console.log(response)
+								notification['error']({
+									message: 'Property updation failed',
+									duration: 5,
+									onClick: () => {
+										notification.close()
+									},
+								})
+							}
 							// console.log({ data })
 						})
 						.catch((err) => {
@@ -74,7 +93,8 @@ const RequestCard = ({ request, type, index }) => {
 		>
 			<p className='text-[#333333] font-[500] text-sm mx-4 pt-2 pb-4'>
 				{type === 'received' ? request.reqUser?.name || 'Some Guy ' : 'You '} requested to {request?.requestType}{' '}
-				{type === 'received' ? 'your' : `${request.reqUser?.name || 'Some Guy'}'s `} property {requestListing?.propertyDetail?.title} from&nbsp;
+				{type === 'received' ? 'your' : `${requestListing?.propertyDetail?.user?.name || 'Some Guy'}'s `} property {requestListing?.propertyDetail?.title}{' '}
+				from&nbsp;
 				<span className='font-bold'>{dayjs(request.requestDates?.[0]?.startDate).format('ddd, MMM DD YYYY')}</span> to&nbsp;
 				<span className='font-bold'>{dayjs(request.requestDates?.[0]?.endDate).format('ddd, MMM DD YYYY')}</span>
 			</p>
@@ -201,7 +221,7 @@ const RequestCard = ({ request, type, index }) => {
 						</Button>
 						<Button
 							className='btn-secondary flex flex-row items-center !px-2.5'
-							onClick={() => navigator(`/chat/${request.requestedProperty?.propertyDetail?.user?._id}`)}
+							onClick={() => navigator(`/chat/${request?.reqUser?._id}`, { state: { user: request?.reqUser } })}
 						>
 							<Icon size={0.8} path={mdiChatOutline} />
 						</Button>

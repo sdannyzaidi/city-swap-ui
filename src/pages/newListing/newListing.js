@@ -1,4 +1,4 @@
-import { Form, PrimaryHeader, RadioButtonGroup } from '@components'
+import { Footer, Form, PrimaryHeader, RadioButtonGroup } from '@components'
 import { useMemo, useRef, useState } from 'react'
 import { Button, notification } from 'antd'
 import PropertyDetails from './components/propertyDetails'
@@ -116,7 +116,7 @@ const NewListing = (props) => {
 				</div>
 			</Form>
 
-			<div className='w-full bg-[#664F94] h-[280px]'></div>
+			<Footer />
 		</div>
 	)
 }

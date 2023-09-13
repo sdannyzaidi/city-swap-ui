@@ -2,13 +2,14 @@ import { useOutletContext } from 'react-router-dom'
 import BG1 from '../../assets/drive-assets/ben-o-bro-wpU4veNGnHg-unsplash.jpg'
 import BG2 from '../../assets/drive-assets/helena-lopes-e3OUQGT9bWU-unsplash.jpg'
 import BG3 from '../../assets/drive-assets/michael-olsen-vNIgKjZbJW0-unsplash.jpg'
-import BG4 from '../../assets/drive-assets/dallas-reedy-NEJFAS1Okho-unsplash.jpg'
+import BG4 from '../../assets/drive-assets/picture.png'
 import BG5 from '../../assets/drive-assets/spacejoy-nEtpvJjnPVo-unsplash.jpg'
 import BG6 from '../../assets/drive-assets/kylie-lugo-t0BavJY0M-U-unsplash.jpg'
 import BG7 from '../../assets/drive-assets/community.jpeg'
 import BG8 from '../../assets/drive-assets/houses-top.jpeg'
 import BG9 from '../../assets/drive-assets/sustainability.jpeg'
 import BG10 from '../../assets/drive-assets/freedom.jpeg'
+import { Footer } from '@components'
 
 const Heading = ({ children }) => (
 	<p className='sm:text-[3.1rem] max-md:text-[2.5rem] sm:leading-[3.25rem] max-md:leading-[2.9rem] text-[#1A202C] font-bold pb-6'>{children}</p>
@@ -101,7 +102,7 @@ const About = () => {
 						own home while you are away, CitySwapp can help you find trustworthy renters.
 					</Paragraph>
 				</div>
-				<RoundedImage src={BG2} alt='' />
+				<RoundedImage src={BG4} alt='' />
 			</div>
 			<div className='w-full flex lg:flex-row max-lg:flex-col lg:pr-0 lg:pl-24 md:px-[7rem] max-lg:px-8 lg:pt-[4.5rem] max-lg:pb-[2rem] max-lg:pt-[2rem]  justify-between bg-[#F6F5FE]'>
 				<div className='max-lg:hidden rounded-[247.57px_22px_22px_22px] basis-[500px] h-[570px] overflow-hidden'>
@@ -137,7 +138,7 @@ const About = () => {
 					<img className='object-cover h-full w-full' src={BG7} alt='' />
 				</div>
 			</div>
-			<div className='w-full bg-[#664F94] h-[280px]'></div>
+			<Footer />
 		</>
 	)
 }

@@ -6,7 +6,7 @@ const useAddProperty = () => {
 	const addNewProperty = async (values) => {
 		setLoading(true)
 		const user = JSON.parse(localStorage.getItem('user'))
-		console.log({ values })
+		// console.log({ values })
 		const finalValues = {
 			listing: {
 				...(values.listingType === 'sublease' ? { cost: values?.price } : {}),

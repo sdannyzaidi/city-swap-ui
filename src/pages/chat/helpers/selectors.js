@@ -9,11 +9,11 @@ export const userChatSelector = selectorFamily({
 			const { id, selectedChatId } = props
 
 			const chats = get(chatsAtom)
-			console.log({ selectedChatId, chats })
+			// console.log({ selectedChatId, chats })
 			const userChats = chats
 				.filter((chat) => chat.users.some((user) => user?._id === id))
 				.map((chat) => ({ ...chat, selected: selectedChatId === chat._id || chat.users.some((user) => user?._id === selectedChatId) }))
-			console.log({ userChats })
+			// console.log({ userChats })
 			return userChats
 		},
 })

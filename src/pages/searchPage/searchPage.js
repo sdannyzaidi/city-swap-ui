@@ -1,4 +1,4 @@
-import { Form, Loader } from '@components'
+import { Footer, Form, Loader } from '@components'
 import NoImage from '../../assets/images/icon-no-image.svg'
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
@@ -89,7 +89,7 @@ const SearchPage = () => {
 					</div>
 				)}
 			</div>
-			<div className='w-full bg-[#664F94] h-[280px]'></div>
+			<Footer />
 		</>
 	)
 }

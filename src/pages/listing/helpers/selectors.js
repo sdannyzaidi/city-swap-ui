@@ -61,6 +61,8 @@ export const partialSwappableListingsSelector = selectorFamily({
 						),
 					}
 				})
+			console.log({ filteredListings })
+
 			return filteredListings
 		},
 })

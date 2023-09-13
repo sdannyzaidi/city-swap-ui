@@ -11,7 +11,7 @@ const useUpdateUser = () => {
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify({ id: user._id, ...values }),
 		})
-		console.log({ response })
+		// console.log({ response })
 		setLoading(false)
 		return response
 	}

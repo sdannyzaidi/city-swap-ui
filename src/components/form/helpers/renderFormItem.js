@@ -82,7 +82,7 @@ export const renderFormItem = (field) => {
 				hidden={field.hidden}
 			>
 				{field.inputType === 'textArea' ? (
-					<Input.TextArea className='InputField TextAreaField' rows={field.rows} />
+					<Input.TextArea className='input-field TextAreaField' rows={field.rows} placeholder={field.placeholder} />
 				) : (
 					<Input
 						className={field.elementClassName || 'input-field add-on'}

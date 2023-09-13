@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import PrimaryHeader from '../../components/headers/primaryHeader'
+import { PrimaryHeader, Footer } from '@components'
 import BG6 from '../../assets/drive-assets/outsite-co-R-LK3sqLiBw-unsplash.jpg'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,7 +9,7 @@ const Pricing = () => {
 	return (
 		<div className='overflow-y-scroll'>
 			<PrimaryHeader />
-			<div className='flex flex-col pt-12 items-center justify-center text-center max-md:px-8 mb-32'>
+			<div className='flex flex-col pt-32  items-center justify-center text-center max-md:px-8 mb-32'>
 				<p className='text-[38px] max-md:text-2xl leading-[3rem] text-[#1A202C] font-bold pb-6'>Choose a plan to start swapping and subleasing</p>
 				<p className='text-[20px] max-md:text-base text-[#475467] font-[500] sm:pb-16 max-md:pb-8'>Explore our global community free for a month</p>
 
@@ -26,7 +26,7 @@ const Pricing = () => {
 					</Button>
 				</div>
 			</div>
-			<div className='w-full bg-[#664F94] h-[280px]'></div>
+			<Footer />
 		</div>
 	)
 }

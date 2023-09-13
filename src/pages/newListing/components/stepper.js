@@ -2,7 +2,7 @@ const { mdiMinusCircleOutline, mdiPlusCircleOutline } = require('@mdi/js')
 const { default: Icon } = require('@mdi/react')
 
 const Stepper = ({ value, onChange }) => {
-	console.log({ value })
+	// console.log({ value })
 	return (
 		<div className='flex flex-row items-center'>
 			<Icon

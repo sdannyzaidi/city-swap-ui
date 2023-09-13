@@ -3,7 +3,7 @@ import { constSelector, useRecoilValue, useSetRecoilState } from 'recoil'
 import { listingByIdSelector, partialSwappableListingsSelector, swappableListingsSelector } from './helpers/selectors'
 import { listingsAtom } from '@atoms'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Loader, PrimaryHeader } from '@components'
+import { Footer, Form, Loader, PrimaryHeader } from '@components'
 import Amenities from './components/amenities'
 import Calendar from './components/calendar'
 import PropertyDetails from './components/propertyDetails'
@@ -186,12 +186,7 @@ const Listing = () => {
 				body: JSON.stringify(values),
 			}
 		)
-		if (response.status === 200) {
-			const data = await response.json()
-			// console.log({ data })
-		} else {
-			// console.log(response)
-		}
+		return response
 	})
 	const swapProperty = useCallback(async (values) => {
 		const response = await fetch(
@@ -202,12 +197,7 @@ const Listing = () => {
 				body: JSON.stringify(values),
 			}
 		)
-		if (response.status === 200) {
-			const data = await response.json()
-			// console.log({ data })
-		} else {
-			// console.log(response)
-		}
+		return response
 	})
 	const fetchData = useCallback(async () => {
 		setLoading(true)
@@ -309,7 +299,7 @@ const Listing = () => {
 			}
 		}
 		Promise.all(requests).then((responses) => {
-			if (responses.every((response) => response.status === 200)) {
+			if (responses.every((response) => response?.status === 200)) {
 				notification['success']({
 					message: 'Request sent successfully',
 					duration: 5,
@@ -462,7 +452,7 @@ const Listing = () => {
 							</Button>
 						</div>
 					) : null}
-					<div className='w-full bg-[#664F94] h-[280px]' />
+					<Footer />
 				</div>
 				<PropertySelectionModal
 					selectedProperty={selectedProperty}

@@ -1,4 +1,4 @@
-import { Form } from '@components'
+import { Footer, Form } from '@components'
 import PrimaryHeader from '../../components/headers/primaryHeader'
 import Icon from '@mdi/react'
 import { mdiEmail, mdiLogout } from '@mdi/js'
@@ -130,7 +130,7 @@ const Profile = () => {
 					SUBMIT
 				</Button>
 			</div>
-			<div className='w-full bg-[#664F94] h-[280px]'></div>
+			<Footer />
 		</div>
 	)
 }

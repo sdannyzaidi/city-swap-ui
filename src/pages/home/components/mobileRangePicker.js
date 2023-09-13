@@ -10,7 +10,7 @@ const { default: Icon } = require('@mdi/react')
 const MobileRangePicker = ({ value, onChange }) => {
 	const [visible, setVisible] = useState({ visible: false, type: null })
 	const [calendarValue, setCalendarValue] = useState()
-	console.log({ value })
+	// console.log({ value })
 	return (
 		<>
 			<div className='flex flex-row items-center rounded-lg h-12 w-full bg-white border border-solid border-gray-200'>
@@ -67,7 +67,7 @@ const MobileRangePicker = ({ value, onChange }) => {
 				confirmText='Confirm'
 				cancelText='Cancel'
 				onConfirm={(val) => {
-					console.log({ val })
+					// console.log({ val })
 					if (visible.type === 'start') {
 						onChange([dayjs(`${val[0]}-${Object.values(CalendarEnums).findIndex((month) => month.value === val[1]) + 1}-${val[2]}`), value?.[1]])
 					} else {

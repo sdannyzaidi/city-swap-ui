@@ -4,7 +4,7 @@ import { mdiFolderOffOutline, mdiStar, mdiStarOutline } from '@mdi/js'
 import Icon from '@mdi/react'
 
 const Testimonials = ({ listing }) => {
-	const testimonials = listing?.property?.reviews?.map((review) => ({
+	const testimonials = listing?.reviews?.map((review) => ({
 		name: review?.user?.name,
 		description: review?.content_review,
 		rating: review?.rating,
