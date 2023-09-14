@@ -27,13 +27,7 @@ export const checkRangeIncludes = (range1, range2) => {
 }
 export const checkRangeOverlap = (range1, range2, adjust) => {
 	const newRange1Start = adjust === true ? dayjs(range1?.[1]).add(1, 'day') : dayjs(range1?.[1])
-	// show && console.log({ range1, range2 })
-	// show &&
-	// 	console.log({
-	// 		range1: newRange1Start.format('YYYY-MM-DD'),
-	// 		range2: range2[0],
-	// 		result: compareDate(newRange1Start.format('YYYY-MM-DD'), range2[0]),
-	// 	})
+
 	return compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[0]) >= 0 && compareDate(newRange1Start.format('YYYY-MM-DD'), range2?.[1]) <= 0
 }
 export const findRangeOverlap = (range1, ranges2) => {

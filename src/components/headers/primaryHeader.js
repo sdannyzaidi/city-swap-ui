@@ -80,6 +80,11 @@ const PrimaryHeader = () => {
 								<Button className='btn-primary' onClick={() => navigator('/auth/signup')}>
 									Start Free Trial
 								</Button>
+								{width > 768 ? null : (
+									<div className='mr-4' onClick={() => setVisible(true)}>
+										<Icon path={mdiMenu} size={1.4} className='text-[#555555]' />
+									</div>
+								)}
 							</div>
 						)}
 					</div>

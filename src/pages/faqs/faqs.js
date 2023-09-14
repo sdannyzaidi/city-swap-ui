@@ -180,7 +180,7 @@ const FAQs = () => {
 	return (
 		<div className='overflow-y-scroll h-full flex flex-col justify-between'>
 			<PrimaryHeader />
-			<div className='flex flex-col lg:px-32 md:px-12 max-ms:px-6 items-center pt-32 pb-32 min-h-[700px] w-full'>
+			<div className='flex flex-col lg:px-32 md:px-12 max-md:px-6 items-center pt-32 pb-32 min-h-[700px] w-full'>
 				<p className='font-bold text-[#9B83CB] text-[36px] leading-[40px] pb-12'>Frequently asked questions</p>
 				<div className='flex flex-col items-start w-full'>
 					<Collapse defaultActiveKey={['1']} className='w-full'>

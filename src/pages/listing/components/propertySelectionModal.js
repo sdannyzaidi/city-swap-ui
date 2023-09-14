@@ -11,7 +11,8 @@ import dayjs from 'dayjs'
 import { useRecoilValue } from 'recoil'
 import { suggestedListingsSelector } from '../helpers/selectors'
 import RadioButtonGroup from '../../../components/utility/radioButtonGroup'
-const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
+const PropertyRadioCard = ({ properties, onChange, suggested }) => {
+	console.log({ suggested })
 	return (
 		<div className='pl-4 w-full rounded-lg border border-solid border-[#dedede] hover:cursor-pointer'>
 			<Radio.Group>
@@ -61,12 +62,29 @@ const PropertyRadioCard = ({ properties, onChange, value, partial }) => {
 									</div>
 								</div>
 							</div>
-							{
+							{suggested ? (
+								<p className='pl-4 pb-4 text-sm font-[#666666] font-[500]'>
+									Available from{' '}
+									{listing?.startOverlap?.[0] && (
+										<span>
+											<span className='font-[700] text-[#333333]'>{dayjs(listing?.startOverlap?.[0]).format('ddd, MMM DD YYYY')}</span> to{' '}
+											<span className='font-[700] text-[#333333]'>{dayjs(listing?.startOverlap?.[1]).format('ddd, MMM DD YYYY')}</span>
+											{listing?.endOverlap?.[0] && <span> and </span>}
+										</span>
+									)}
+									{listing?.endOverlap?.[0] && (
+										<span>
+											<span className='font-[700] text-[#333333]'>{dayjs(listing?.endOverlap?.[0]).format('ddd, MMM DD YYYY')}</span> to{' '}
+											<span className='font-[700] text-[#333333]'>{dayjs(listing?.endOverlap?.[1]).format('ddd, MMM DD YYYY')}</span>
+										</span>
+									)}
+								</p>
+							) : (
 								<p className='pl-4 pb-4 text-sm font-[#666666] font-[500]'>
 									Available from <span className='font-[700] text-[#333333]'>{dayjs(listing?.overlap?.[0]).format('ddd, MMM DD YYYY')}</span> to{' '}
 									<span className='font-[700] text-[#333333]'>{dayjs(listing?.overlap?.[1]).format('ddd, MMM DD YYYY')}</span>{' '}
 								</p>
-							}
+							)}
 						</div>
 					</Radio>
 				))}
@@ -181,7 +199,7 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 								<PropertyRadioCard properties={partialListings} partial />
 							</Form.Item>
 							<div className='flex md:flex-row max-md:flex-col sm:items-start'>
-								<p className='text-start font-bold text-[#333333] text-lg max-md:pb-4 md:pr-6 sm:pt-4'>Sublease for remaining days ? </p>
+								{/* <p className='text-start font-bold text-[#333333] text-lg max-md:pb-4 md:pr-6 sm:pt-4'>Sublease for remaining days ? </p> */}
 								<Form.Item
 									name={['subleaseSameProperty']}
 									key={'subleaseSameProperty'}
@@ -207,7 +225,7 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 										rules={[{ required: true, message: 'Please select a property' }]}
 										initialValue={suggestedProperties?.[0]?.property?._id}
 									>
-										<PropertyRadioCard properties={suggestedProperties} />
+										<PropertyRadioCard properties={suggestedProperties} suggested={true} />
 									</Form.Item>
 								</div>
 							) : null}
@@ -245,7 +263,7 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 										rules={[{ required: true, message: 'Please select a property' }]}
 										initialValue={suggestedProperties?.[0]?.property?._id}
 									>
-										<PropertyRadioCard properties={suggestedProperties} />
+										<PropertyRadioCard properties={suggestedProperties} suggested={true} />
 									</Form.Item>
 								</div>
 							</>

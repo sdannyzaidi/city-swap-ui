@@ -61,7 +61,7 @@ export const partialSwappableListingsSelector = selectorFamily({
 						),
 					}
 				})
-			console.log({ filteredListings })
+			// console.log({ filteredListings })
 
 			return filteredListings
 		},
@@ -83,18 +83,22 @@ export const suggestedListingsSelector = selectorFamily({
 							?.availableDates?.some((range) => dateRanges.some((dateRange) => checkRangeOverlap(dateRange, [range.startDate, range.endDate])))
 				)
 				?.map((listing) => {
-					// console.log({ name: listing?.property?.title })
-
+					console.log({ name: listing?.property?.title })
+					const { overlap: startOverlap } = findCompleteRangeOverlap(
+						dateRanges?.[0],
+						(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || []
+					)
+					const { overlap: endOverlap } = findCompleteRangeOverlap(
+						dateRanges?.[1],
+						(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || []
+					)
 					return {
 						...listing,
-						...findRangeOverlap(
-							searchRange,
-							(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || [],
-							'show'
-						),
+						startOverlap,
+						endOverlap,
 					}
 				})
-			// console.log({ filteredListings })
+			console.log({ filteredListings })
 
 			return filteredListings
 		},

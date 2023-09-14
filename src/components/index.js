@@ -1,4 +1,5 @@
 export { default as HeaderLogo } from './utility/headerLogo'
+export { default as FooterLogo } from './utility/footerLogo'
 export { default as Form } from './form/index'
 export { default as AlertBanner } from './utility/alertBanner'
 export { default as RadioButtonGroup } from './utility/radioButtonGroup'

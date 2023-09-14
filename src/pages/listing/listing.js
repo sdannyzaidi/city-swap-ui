@@ -189,14 +189,11 @@ const Listing = () => {
 		return response
 	})
 	const swapProperty = useCallback(async (values) => {
-		const response = await fetch(
-			`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']?.(JSON.parse(localStorage.getItem('user'))?.id)}`,
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify(values),
-			}
-		)
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['swap-request']}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(values),
+		})
 		return response
 	})
 	const fetchData = useCallback(async () => {
@@ -267,16 +264,24 @@ const Listing = () => {
 						})
 					)
 				} else if (values?.subleasePropertyId) {
-					requests.push(
-						subleaseProperty({
-							propertyId: values?.subleasePropertyId,
-							reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
-							requestDates: [
-								...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : []),
-								...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : []),
-							],
-						})
-					)
+					if (startRange?.[0]) {
+						requests.push(
+							subleaseProperty({
+								propertyId: values?.subleasePropertyId,
+								reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+								requestDates: [...(startRange ? [{ startDate: startRange?.[0], endDate: startRange?.[1] }] : [])],
+							})
+						)
+					}
+					if (endRange?.[0]) {
+						requests.push(
+							subleaseProperty({
+								propertyId: values?.subleasePropertyId,
+								reqUserId: JSON.parse(localStorage.getItem('user'))?.id,
+								requestDates: [...(endRange ? [{ startDate: endRange?.[0], endDate: endRange?.[1] }] : [])],
+							})
+						)
+					}
 				}
 				requests.push(
 					swapProperty({
@@ -299,7 +304,7 @@ const Listing = () => {
 			}
 		}
 		Promise.all(requests).then((responses) => {
-			if (responses.every((response) => response?.status === 200)) {
+			if (responses.every((response) => response?.status === 200 || response?.status === 201)) {
 				notification['success']({
 					message: 'Request sent successfully',
 					duration: 5,

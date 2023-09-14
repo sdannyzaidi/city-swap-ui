@@ -14,7 +14,7 @@ const Contact = () => {
 		<div className='overflow-y-scroll h-full flex flex-col justify-between'>
 			<PrimaryHeader />
 			<Form layout='vertical' onFinish={handleFinish}>
-				<div className='flex flex-col lg:px-32 md:px-12 max-ms:px-6 items-center pt-32 pb-32 min-h-[700px] w-full'>
+				<div className='flex flex-col lg:px-32 md:px-12 max-md:px-6 items-center pt-32 pb-32 min-h-[700px] w-full'>
 					<p className='font-bold text-[#9B83CB] text-[36px] leading-[40px] pb-12'>Contact Us</p>
 					<p className='text-base text-[#272C2D] font-[400] pb-6 w-full text-start'>
 						Enter your details below and we will get back to you as soon as possible.
