@@ -8,6 +8,7 @@ import { authSelector } from '../../recoil/selectors'
 import { AUTH_EVENTS, useAuth } from '@auth'
 import { useState } from 'react'
 import PaymentInfo from './components/paymentInfo'
+import AuthIcon from '../../assets/images/Logomark.png'
 const Auth = (props) => {
 	const { action } = useParams()
 	const [form] = Form.useForm()
@@ -27,7 +28,9 @@ const Auth = (props) => {
 				{action === 'signup' && signupComplete && clientSecret ? (
 					<div className='flex flex-col justify-center items-center mt-16'>
 						<div className='flex flex-col items-center w-[300px] mx-auto'>
-							<div className='w-14 h-14 bg-center bg-contain mx-auto bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/Logomark.png")]' />
+							<div className='w-14 h-14 mx-auto'>
+								<img className='w-14 h-14 object-contain' src={AuthIcon} alt='' />
+							</div>
 							<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-3'} text-center`}>Create an account</p>
 							<p className={`text-[#6d6e78] text-start font-[400] text-[0.75rem] leading-[1.45rem] ${action === 'login' ? 'pb-3' : 'pb-2'} text-center`}>
 								{`Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
@@ -48,7 +51,9 @@ const Auth = (props) => {
 							})
 						}
 					>
-						<div className='w-14 h-14 bg-center bg-contain mx-auto mb-6 bg-[url("/Users/adilaslam/Documents/personal/cityswap/src/assets/images/Logomark.png")]' />
+						<div className='w-14 h-14 mx-auto mb-6'>
+							<img className='w-14 h-14 object-contain' src={AuthIcon} alt='' />
+						</div>
 						<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-8'} text-center`}>
 							{action === 'signup' ? 'Create an account' : action === 'forgotPassword' ? 'Reset Password' : 'Log in to your account'}
 						</p>

@@ -84,6 +84,7 @@ export const suggestedListingsSelector = selectorFamily({
 				)
 				?.map((listing) => {
 					console.log({ name: listing?.property?.title })
+					console.log({ dateRanges })
 					const { overlap: startOverlap } = findCompleteRangeOverlap(
 						dateRanges?.[0],
 						(listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === 'sublease')?.availableDates || []

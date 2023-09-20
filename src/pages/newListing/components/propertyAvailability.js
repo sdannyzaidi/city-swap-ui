@@ -21,7 +21,7 @@ const PropertyAvailability = () => {
 		<div className='flex flex-col w-full'>
 			<p className='text-[#333333] font-[700] text-2xl pb-7 pl-2'>Available Dates</p>
 			<div className='relative  mb-7 '>
-				<div className='absolute right-0 h-full w-12 shadow-[inset_-20px_0_15px_8px_rgba(256,256,256,0.99)]'></div>
+				<div className='absolute right-0 h-full w-1.5 shadow-[inset_-20px_0_15px_8px_rgba(256,256,256,0.99)]'></div>
 				<div className='flex flex-row hide-scroll-container items-center '>
 					{availableDates && availableDates.length > 0 ? (
 						availableDates.map((range) => (

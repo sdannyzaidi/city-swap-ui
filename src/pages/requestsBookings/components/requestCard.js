@@ -29,7 +29,7 @@ const RequestCard = ({ request, type, index }) => {
 	const requestListing = request?.requestedProperty
 	const ownListing = request?.ownProperty
 	const setRequests = useSetRecoilState(requestsAtom)
-	console.log({ requestListing, ownListing, request })
+	// console.log({ requestListing, ownListing, request })
 	const changeListingStatus = useCallback(
 		(status) => {
 			setLoading(true)

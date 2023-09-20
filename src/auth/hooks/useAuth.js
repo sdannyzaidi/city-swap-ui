@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { notification } from 'antd'
 import { AUTH_EVENTS } from '../helpers/enums'
 import { endpoints } from '../../helpers/enums'
-import { firebase } from '../firebase/config'
+import { auth, firebase } from '../firebase/config'
 const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const setUserAtom = useSetRecoilState(userAtom)
 	const userAuth = useRecoilValue(authSelector())
@@ -17,6 +17,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const { action } = useParams()
 	const { pathname } = useLocation()
 	const [clientSecret, setClientSecret] = useState(null)
+
 	useEffect(() => {
 		if (action === 'signup' && signupComplete) {
 			fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['create-subscription']}`, {
@@ -29,6 +30,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 				.catch((err) => console.log(err))
 		}
 	}, [signupComplete]) // eslint-disable-line
+
 	useEffect(() => {
 		if (!loading && userAuth) {
 			if (userAuth?.user === 'no user') {
@@ -52,21 +54,22 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	}, [userAuth, loading]) // eslint-disable-line
 
 	const signInWithEmailAndPassword = async ({ email, password }) => {
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/login`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({ email, password }),
-		})
-		console.log(response)
 		try {
-			if (response.status === 200) {
-				const result = await response.json()
-				console.log({ result })
-				if (result.user) {
-					const token = result.token
-					localStorage.setItem('user', JSON.stringify(result.user))
-					localStorage.setItem('token', JSON.stringify({ token }))
-					setUserAtom(result.user)
+			const userCredential = await auth.signInWithEmailAndPassword(email, password)
+			if (userCredential) {
+				const token = await auth.currentUser?.getIdToken()
+				const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/email/${email}`, {
+					method: 'GET',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				})
+
+				if (response.status === 200) {
+					const user = await response.json()
+					if (user) {
+						localStorage.setItem('user', JSON.stringify({ ...user, id: user._id }))
+						localStorage.setItem('token', JSON.stringify({ token }))
+						setUserAtom(user)
+					}
 				}
 			} else {
 				setAlert({
@@ -74,15 +77,37 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 					message: 'Email address or password is incorrect.',
 				})
 			}
+
 			setLoading(false)
 		} catch (err) {
-			console.log(err)
+			console.log({ err: err.code })
+
+			if (err.code === 'auth/user-not-found') {
+				setAlert({
+					type: 'error',
+					message: 'No user record for this email address.',
+				})
+			} else if (err.code === 'auth/wrong-password') {
+				setAlert({
+					type: 'error',
+					message: 'Incorrect password entered. Please try again.',
+				})
+			}
 			setLoading(false)
 		}
 	}
 
-	const resetPassword = async (email) => {
-		// await firebase.auth.sendPasswordResetEmail(email)
+	const resetPassword = async ({ email }) => {
+		await auth
+			.sendPasswordResetEmail(email)
+			.then(() => {
+				setAlert({
+					type: 'success',
+					message: 'Password reset email sent successfully.',
+				})
+			})
+			.catch((err) => console.log(err))
+		setLoading(false)
 		return 'success'
 	}
 	const signUp = async (values) => {
@@ -94,7 +119,6 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 			})
 			if (response.status === 200) {
 				response.json().then((data) => {
-					console.log({ data })
 					notification['success']({
 						message: 'User created successfully',
 						duration: 5,
@@ -108,10 +132,9 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 					setLoading(false)
 				})
 			} else {
-				console.log(response)
 				setAlert({
 					type: 'error',
-					message: 'Email address or password is incorrect.',
+					message: 'A user against this email is already registered.',
 				})
 				setLoading(false)
 			}

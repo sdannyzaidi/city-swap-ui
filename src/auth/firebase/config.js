@@ -20,10 +20,8 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 firebase.auth().onIdTokenChanged(async (user) => {
 	if (user) {
 		const token = await user.getIdToken()
-		console.log({ token })
 		localStorage.setItem('token', JSON.stringify({ token }))
 	} else {
-		console.log('hello')
 		// localStorage.setItem('token', JSON.stringify(null))
 		// localStorage.setItem('user', JSON.stringify(null))
 	}

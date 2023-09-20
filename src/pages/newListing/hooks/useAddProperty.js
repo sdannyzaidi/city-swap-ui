@@ -23,7 +23,7 @@ const useAddProperty = () => {
 						[`${entry[0]}`]: parseInt(entry[1]),
 					}
 				}, {}),
-				user: user?.id,
+				user: user?._id,
 				pictures: values.photos.map((photo) => photo.url),
 			},
 			location: {
