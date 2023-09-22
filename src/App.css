@@ -184,16 +184,27 @@ span.ant-select-selection-item {
 	@apply bg-[#F2F4F7];
 }
 
+.ant-upload {
+	@apply bg-white rounded-lg sm:!h-[10.5rem] sm:!w-[10.5rem] md:!w-[24rem] md:!h-[8rem];
+}
+
+.ant-upload.ant-upload-drag {
+	@apply sm:!h-[10.5rem] sm:!w-[10.5rem] md:!w-[24.15rem] md:!h-[8.15rem] !rounded-lg !border-solid;
+}
+
 .ant-upload-list-item-container,
 .ant-upload.ant-upload-select {
 	@apply sm:!h-[10.5rem] sm:!w-[10.5rem] max-md:!w-full max-md:!h-[13rem] rounded-lg !m-3;
 }
 .ant-upload-list-item {
-	@apply rounded-lg !p-1 max-md:!w-full max-md:!h-[13rem];
+	@apply rounded-lg !p-1 md:!w-[14rem] max-md:!h-[13rem];
 }
 .ant-upload-list-item-image {
 	@apply object-none;
 }
+
+
+
 
 /******************************************** Form ********************************************/
 .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {

@@ -123,14 +123,23 @@ export const searchPropertiesSelector = selectorFamily({
 		({ get }) => {
 			const { id, dateRange, location, type } = props
 			const listings = get(listingsNotByUserSelector({ id }))
-			const filteredListings = listings.filter(
-				(listing) =>
-					listing.location?.country === location?.country &&
-					listing.location?.city === location?.city &&
-					(listing.asscocitedListings || listing.associatedListings)
-						?.find((obj) => obj.listingType === type)
-						?.availableDates?.some((range) => checkRangeOverlap(dateRange, [range.startDate, range.endDate]))
-			)
+			let filteredListings = []
+			if (id) {
+				filteredListings = listings.filter(
+					(listing) =>
+						listing.location?.country === location?.country &&
+						listing.location?.city === location?.city &&
+						(listing.asscocitedListings || listing.associatedListings)
+							?.find((obj) => obj.listingType === type)
+							?.availableDates?.some((range) => checkRangeOverlap(dateRange, [range.startDate, range.endDate]))
+				)
+			} else {
+				filteredListings = listings.filter(
+					(listing) =>
+						listing.location?.country === location?.country && (listing.asscocitedListings || listing.associatedListings)?.find((obj) => obj.listingType === type)
+				)
+			}
+
 			return filteredListings
 		},
 })

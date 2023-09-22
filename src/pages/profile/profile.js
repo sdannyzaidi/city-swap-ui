@@ -1,13 +1,15 @@
 import { Footer, Form } from '@components'
 import PrimaryHeader from '../../components/headers/primaryHeader'
 import Icon from '@mdi/react'
-import { mdiEmail, mdiLogout } from '@mdi/js'
+import ProfileLogo from '../../assets/images/profile.png'
+import { mdiEmail, mdiEmailOutline, mdiFlagOutline, mdiLogout } from '@mdi/js'
 import { Button, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import useUpdateUser from './hooks/useUpdateUser'
 import { firebase } from '../../auth/firebase/config'
 import { userAtom } from '@atoms'
 import { useSetRecoilState } from 'recoil'
+import CountryEnum from '../../helpers/countries'
 
 const Profile = () => {
 	const navigator = useNavigate()
@@ -15,6 +17,7 @@ const Profile = () => {
 	const [updateUser, loading] = useUpdateUser()
 	const setUserAtom = useSetRecoilState(userAtom)
 	const [form] = Form.useForm()
+	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 	// console.log(user)
 	return (
 		<div className='overflow-y-scroll'>
@@ -68,7 +71,7 @@ const Profile = () => {
 						<div className='flex basis-2/3 '>
 							{Form.renderSchema([
 								{
-									addonBefore: <Icon path={mdiEmail} size={1} className='text-[#4754677d]' />,
+									addonBefore: <Icon path={mdiEmailOutline} size={1} className='text-[#4754677d]' />,
 									type: 'input',
 									initialValue: user?.email,
 									name: ['email'],
@@ -76,17 +79,77 @@ const Profile = () => {
 							])}
 						</div>
 					</div>
-					<div className='w-full flex md:flex-row max-md:flex-col items-start border-b border-solid border-[#EAECF0]'>
+					<div className='w-full flex md:flex-row max-md:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>
+						<div className='flex flex-col basis-1/3'>
+							<p className='flex  text-[#344054]  max-md:pb-2 text-sm font-[600]'>Your Photo</p>
+							<p className='max-md:pb-2'>This will be displayed on your profile.</p>
+						</div>
+						<div className='flex basis-2/3 '>
+							{loggedInUser?.profilePicture && (
+								<div className='h-11 w-11 rounded-full border border-solid border-black-75 hover:cursor-pointer' onClick={() => navigator('/profile')}>
+									<img className='h-full w-full rounded-full bg-black-75' src={loggedInUser?.profilePicture} alt='' />
+								</div>
+							)}
+							<div className={`${loggedInUser?.profilePicture ? 'ml-5' : ''}`}>
+								{Form.renderSchema([
+									{
+										type: 'profile-picture-upload',
+										key: 'profilePicture',
+										name: ['profilePicture'],
+									},
+								])}
+							</div>
+						</div>
+					</div>
+					<div className='w-full flex md:flex-row max-md:flex-col items-start'>
+						<p className='flex basis-1/3 text-[#344054]  max-md:pb-2 text-sm font-[600]'>Country</p>
+						<div className='flex basis-2/3 '>
+							{Form.renderSchema([
+								{
+									type: 'select',
+									key: 'country',
+									name: ['country'],
+									itemClassName: '!w-[245px]',
+									customWidth: true,
+									placeholder: 'Select Country',
+									required: true,
+									showSearch: true,
+									message: 'Please enter an description',
+									options: Object.keys(CountryEnum).map((country) => ({ label: country, value: country })),
+									displayProperty: 'label',
+									valueProperty: 'value',
+								},
+							])}
+						</div>
+					</div>
+					<div className='w-full flex md:flex-row max-md:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>
 						<p className='flex basis-1/3 text-[#344054]  max-md:pb-2 text-sm font-[600]'>Membership</p>
 						<div className='flex basis-2/3 '>
 							{Form.renderSchema([
 								{
-									addonBefore: <Icon path={mdiEmail} size={1} className='text-[#4754677d]' />,
+									addonBefore: <Icon path={mdiEmailOutline} size={1} className='text-[#4754677d]' />,
 									type: 'input',
 									initialValue: user?.email,
 									name: ['email'],
 								},
 							])}
+						</div>
+					</div>
+					<div className='w-full flex md:flex-row max-md:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>
+						<div className='flex flex-col basis-1/3'>
+							<p className='flex  text-[#344054]  max-md:pb-2 text-sm font-[600]'>Bio</p>
+							<p className='max-md:pb-2'>Write a short introduction.</p>
+						</div>
+						<div className='flex basis-2/3 min-h-[100px]'>
+							{Form.renderFormItem({
+								type: 'input',
+								inputType: 'textArea',
+								rows: 5,
+								textWidth: '!w-96',
+								elementClassName: 'text-lg font-[400] text-[#00000064]',
+								key: 'bio',
+								name: ['bio'],
+							})}
 						</div>
 					</div>
 					<div className='w-full flex flex-row items-center bg-white  rounded-lg  my-6 py-3 border border-solid border-[#EAECF0]'>

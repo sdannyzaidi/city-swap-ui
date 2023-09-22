@@ -5,7 +5,7 @@ import { PlusOutlined, CaretDownOutlined, MinusCircleTwoTone } from '@ant-design
 
 import { firebase } from '@auth'
 import Icon from '@mdi/react'
-import { mdiPlus } from '@mdi/js'
+import { mdiCloudUploadOutline, mdiPlus } from '@mdi/js'
 import { renderSchema } from './renderSchema'
 const { RangePicker } = DatePicker
 // const { RangePicker: MobileRangePicker } = MobileDatePicker
@@ -82,7 +82,7 @@ export const renderFormItem = (field) => {
 				hidden={field.hidden}
 			>
 				{field.inputType === 'textArea' ? (
-					<Input.TextArea className='input-field TextAreaField' rows={field.rows} placeholder={field.placeholder} />
+					<Input.TextArea className={`input-field TextAreaField ${field.textWidth}`} rows={field.rows} placeholder={field.placeholder} />
 				) : (
 					<Input
 						className={field.elementClassName || 'input-field add-on'}
@@ -320,6 +320,37 @@ export const renderFormItem = (field) => {
 						</div>
 					</div>
 				</Upload>
+			</Form.Item>
+		)
+	} else if (field.type === 'profile-picture-upload') {
+		const UploadProps = {
+			listType: 'picture-card',
+			accept: 'image/png, image/jpg, image/jpeg, image/svg',
+			customRequest: DocumentUpload,
+			onChange: ChangeFileList,
+		}
+		return (
+			<Form.Item
+				key={field.label}
+				label={field.label}
+				name={field.name}
+				rules={[{ required: field.required, message: field.message }]}
+				tooltip={field.tooltip}
+				valuePropName='file'
+				getValueFromEvent={normFile}
+			>
+				<Upload.Dragger {...UploadProps} className='profile-picture !h-32 !w-96'>
+					<div className='flex flex-col items-center justify-center'>
+						<div className='p-2 rounded-full bg-[#F2F4F7]'>
+							<Icon path={mdiCloudUploadOutline} size={1} className=' text-[#475467]' />
+						</div>
+						<div className='mt-3'>
+							<span className='text-[#9B83CB] font-semibold text-sm'>Click to upload</span>
+							<span className='text-[#475467] text-sm font-normal'> or drag and drop</span>
+						</div>
+						<div className='text-[#475467] text-xs font-normal'>SVG, PNG, JPG (max. 800x400px)</div>
+					</div>
+				</Upload.Dragger>
 			</Form.Item>
 		)
 	}

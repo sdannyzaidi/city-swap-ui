@@ -1098,6 +1098,10 @@ video {
   margin-top: 2rem;
 }
 
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -1135,6 +1139,10 @@ video {
 
 .\!h-12 {
   height: 3rem !important;
+}
+
+.\!h-32 {
+  height: 8rem !important;
 }
 
 .\!h-\[40px\] {
@@ -1318,6 +1326,10 @@ video {
   width: 66.666667% !important;
 }
 
+.\!w-96 {
+  width: 24rem !important;
+}
+
 .\!w-\[12rem\] {
   width: 12rem !important;
 }
@@ -1432,6 +1444,10 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.\!w-\[245px\] {
+  width: 245px !important;
 }
 
 .min-w-\[150px\] {
@@ -2301,6 +2317,10 @@ video {
   font-weight: 700;
 }
 
+.font-normal {
+  font-weight: 400;
+}
+
 .font-semibold {
   font-weight: 600;
 }
@@ -3063,6 +3083,45 @@ span.ant-select-selection-item {
   background-color: rgb(242 244 247 / var(--tw-bg-opacity));
 }
 
+.ant-upload {
+  border-radius: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+@media (min-width: 640px) {
+  .ant-upload {
+    height: 10.5rem !important;
+    width: 10.5rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .ant-upload {
+    height: 8rem !important;
+    width: 24rem !important;
+  }
+}
+
+.ant-upload.ant-upload-drag {
+  border-radius: 0.5rem !important;
+  border-style: solid !important;
+}
+
+@media (min-width: 640px) {
+  .ant-upload.ant-upload-drag {
+    height: 10.5rem !important;
+    width: 10.5rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .ant-upload.ant-upload-drag {
+    height: 8.15rem !important;
+    width: 24.15rem !important;
+  }
+}
+
 .ant-upload-list-item-container,
 .ant-upload.ant-upload-select {
   margin: 0.75rem !important;
@@ -3093,7 +3152,12 @@ span.ant-select-selection-item {
 @media not all and (min-width: 768px) {
   .ant-upload-list-item {
     height: 13rem !important;
-    width: 100% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .ant-upload-list-item {
+    width: 14rem !important;
   }
 }
 

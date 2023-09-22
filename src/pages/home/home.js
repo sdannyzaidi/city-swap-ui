@@ -26,6 +26,7 @@ const Home = (props) => {
 	const [loading, setLoading] = useState(false)
 	const [visible, setVisible] = useState(false)
 	const [searchHeaderVisible, setSearchHeaderVisible] = useState(true)
+	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 
 	const formValues = Form.useWatch(undefined, form)
 	const fetchData = useCallback(async () => {
@@ -117,30 +118,34 @@ const Home = (props) => {
 												displayProperty: 'label',
 												valueProperty: 'value',
 											},
-											{
-												type: 'select',
-												key: 'city',
-												name: ['city'],
-												itemClassName: '!mb-0 !w-full',
-												className: '!w-full',
-												customWidth: true,
-												placeholder: 'Select City',
-												required: true,
-												showSearch: true,
-												message: 'Please enter an description',
-												options: (
-													CountryEnum[formValues?.country]?.cities ||
-													Object.values(CountryEnum)
-														.map((country) => country.cities)
-														.flat()
-												).map((city) => ({
-													label: city,
-													value: city,
-												})),
+											...(loggedInUser?._id
+												? [
+														{
+															type: 'select',
+															key: 'city',
+															name: ['city'],
+															itemClassName: '!mb-0 !w-full',
+															className: '!w-full',
+															customWidth: true,
+															placeholder: 'Select City',
+															required: true,
+															showSearch: true,
+															message: 'Please enter an description',
+															options: (
+																CountryEnum[formValues?.country]?.cities ||
+																Object.values(CountryEnum)
+																	.map((country) => country.cities)
+																	.flat()
+															).map((city) => ({
+																label: city,
+																value: city,
+															})),
 
-												displayProperty: 'label',
-												valueProperty: 'value',
-											},
+															displayProperty: 'label',
+															valueProperty: 'value',
+														},
+												  ]
+												: [{}]),
 										],
 
 										{
@@ -161,11 +166,17 @@ const Home = (props) => {
 											initialValue: 'swap',
 										},
 									])}
-									<Form.Item name={['dateRange']} className='!mb-0 !w-full'>
-										<MobileRangePicker />
-									</Form.Item>
+									{loggedInUser?._id && (
+										<Form.Item name={['dateRange']} className='!mb-0 !w-full'>
+											<MobileRangePicker />
+										</Form.Item>
+									)}
 									<Button
-										disabled={!(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)}
+										disabled={
+											loggedInUser?._id
+												? !(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)
+												: !(formValues?.country && formValues?.type)
+										}
 										className='btn-primary w-full !h-[40px] '
 										onClick={() => {
 											fetchData()
@@ -230,29 +241,33 @@ const Home = (props) => {
 												displayProperty: 'label',
 												valueProperty: 'value',
 											},
-											{
-												type: 'select',
-												key: 'country',
-												name: ['city'],
-												itemClassName: '!mb-0 !w-[12rem]',
-												customWidth: true,
-												placeholder: 'Select City',
-												required: true,
-												showSearch: true,
-												message: 'Please enter an description',
-												options: (
-													CountryEnum[formValues?.country]?.cities ||
-													Object.values(CountryEnum)
-														.map((country) => country.cities)
-														.flat()
-												).map((city) => ({
-													label: city,
-													value: city,
-												})),
+											...(loggedInUser?._id
+												? [
+														{
+															type: 'select',
+															key: 'country',
+															name: ['city'],
+															itemClassName: '!mb-0 !w-[12rem]',
+															customWidth: true,
+															placeholder: 'Select City',
+															required: true,
+															showSearch: true,
+															message: 'Please enter an description',
+															options: (
+																CountryEnum[formValues?.country]?.cities ||
+																Object.values(CountryEnum)
+																	.map((country) => country.cities)
+																	.flat()
+															).map((city) => ({
+																label: city,
+																value: city,
+															})),
 
-												displayProperty: 'label',
-												valueProperty: 'value',
-											},
+															displayProperty: 'label',
+															valueProperty: 'value',
+														},
+												  ]
+												: [{}]),
 											{
 												type: 'select',
 												key: 'type',
@@ -270,20 +285,28 @@ const Home = (props) => {
 												valueProperty: 'value',
 												initialValue: 'swap',
 											},
-											{
-												type: 'dateRange',
-												key: 'dateRange',
-												name: ['dateRange'],
-												itemClassName: '!mb-0 !w-[17rem]',
-												customWidth: true,
-												showTime: false,
-												required: true,
-												message: 'Please enter an description',
-											},
+											...(loggedInUser?._id
+												? [
+														{
+															type: 'dateRange',
+															key: 'dateRange',
+															name: ['dateRange'],
+															itemClassName: '!mb-0 !w-[17rem]',
+															customWidth: true,
+															showTime: false,
+															required: true,
+															message: 'Please enter an description',
+														},
+												  ]
+												: [{}]),
 										],
 									])}
 									<Button
-										disabled={!(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)}
+										disabled={
+											loggedInUser?._id
+												? !(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)
+												: !(formValues?.country && formValues?.type)
+										}
 										className='btn-primary '
 										onClick={() => {
 											fetchData()
