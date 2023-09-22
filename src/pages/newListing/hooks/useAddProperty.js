@@ -9,7 +9,7 @@ const useAddProperty = () => {
 		// console.log({ values })
 		const finalValues = {
 			listing: {
-				...(values.listingType === 'sublease' ? { cost: values?.price } : {}),
+				...(values.listingType === 'sublease' ? { cost: values?.price, timePeriod: values?.timePeriod } : {}),
 				listingType: values.listingType,
 				availableDates: values.availableDates.map((range) => ({ startDate: range[0], endDate: range[1] })),
 			},
