@@ -32,6 +32,7 @@ const RequestBookings = () => {
 	const userRequests = useRecoilValue(userRequestsSelector())
 	const receivedRequests = useRecoilValue(receivedRequestsSelector())
 
+	console.log({ userListings })
 	const [loading, setLoading] = useState(false)
 	const [sideBar, setSideBar] = useState({ visible: true, type: 'sidebar' })
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))

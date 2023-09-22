@@ -3,7 +3,7 @@ import { constSelector, useRecoilValue, useSetRecoilState } from 'recoil'
 import { listingByIdSelector, partialSwappableListingsSelector, swappableListingsSelector } from './helpers/selectors'
 import { listingsAtom } from '@atoms'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Footer, Form, Loader, PrimaryHeader } from '@components'
+import { Footer, Form, Loader, PrimaryHeader, RadioButtonGroup } from '@components'
 import Amenities from './components/amenities'
 import Calendar from './components/calendar'
 import PropertyDetails from './components/propertyDetails'
@@ -43,6 +43,8 @@ const Listing = () => {
 	const [openModal, setOpenModal] = useState(false)
 	const partialSwapPropertyId = Form.useWatch(['partialSwapPropertyId'], form)
 
+	console.log({ listing })
+	console.log({ listingType: listing?.associatedListings?.[0]?.listingType })
 	const [updatePropertyFunction, updatePropertyLoading] = useUpdateProperty()
 	useEffect(() => {
 		if (action === 'edit' && listing) {
@@ -395,6 +397,18 @@ const Listing = () => {
 									</p>
 								</div>
 							)}
+						</div>
+					)}
+					{action === 'edit' && (
+						<div className='md:px-44 max-md:px-8 pb-8'>
+							<Form.Item name={'listingType'} noStyle initialValue={listing?.associatedListings?.[0]?.listingType} required>
+								<RadioButtonGroup
+									options={[
+										{ label: 'Available for Swap', short: 'Swap', value: 'swap' },
+										{ label: 'Available for Sublease', short: 'Sub-lease', value: 'sublease' },
+									]}
+								/>
+							</Form.Item>
 						</div>
 					)}
 					<div className='md:pb-24 max-md:pb-12'>

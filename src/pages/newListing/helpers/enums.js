@@ -28,6 +28,11 @@ import Parking from '../../../assets/svgs/Parking.svg'
 // :
 // 0
 
+export const ListingTypeEnums = {
+	swap: { label: 'Swap', value: 'swap' },
+	sublease: { label: 'Sub-Lease', value: 'sublease' },
+}
+
 export const BedroomSizeEnums = {
 	noOfStudio: {
 		label: 'Studio',

@@ -16,6 +16,7 @@ const StripeForm = ({ userId }) => {
 		if (!elements || !stripe) {
 			return
 		}
+
 		setLoading(true)
 		await stripe
 			.confirmPayment({

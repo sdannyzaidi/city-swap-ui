@@ -338,6 +338,7 @@ export const renderFormItem = (field) => {
 				tooltip={field.tooltip}
 				valuePropName='file'
 				getValueFromEvent={normFile}
+				className='profilePicture'
 			>
 				<Upload.Dragger {...UploadProps} className='profile-picture !h-32 !w-96'>
 					<div className='flex flex-col items-center justify-center'>

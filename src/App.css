@@ -36,10 +36,10 @@ span.ant-select-selection-item {
 	@apply h-11 rounded-lg !border-none;
 }
 .input-field.add-on .ant-input-wrapper.ant-input-group .ant-input-group-addon {
-	@apply h-11 !bg-white !border-0 !border-b !border-solid rounded-l-lg;
+	@apply h-10 w-[30%] !bg-[#EEEEEE] border-l-[1px] !border-0 !border-b !border-solid rounded-r-lg ;
 }
 .input-field.add-on .ant-input-wrapper.ant-input-group .ant-input {
-	@apply h-11 !bg-white  !border-0 !border-b !border-solid rounded-r-lg;
+	@apply h-11 !bg-white  !border-0 !border-b !border-solid rounded-l-lg;
 	@apply !leading-6 !text-[16px] !font-[400] !text-[#667085];
 }
 .input-field.ant-picker .ant-picker-input input {
@@ -184,12 +184,8 @@ span.ant-select-selection-item {
 	@apply bg-[#F2F4F7];
 }
 
-.ant-upload {
-	@apply bg-white rounded-lg sm:!h-[10.5rem] sm:!w-[10.5rem] md:!w-[24rem] md:!h-[8rem];
-}
-
 .ant-upload.ant-upload-drag {
-	@apply sm:!h-[10.5rem] sm:!w-[10.5rem] md:!w-[24.15rem] md:!h-[8.15rem] !rounded-lg !border-solid;
+	@apply bg-white sm:!h-[10.5rem] sm:!w-[10.5rem] md:!w-[24.15rem] md:!h-[8.15rem] !rounded-lg !border-solid;
 }
 
 .ant-upload-list-item-container,
@@ -197,7 +193,7 @@ span.ant-select-selection-item {
 	@apply sm:!h-[10.5rem] sm:!w-[10.5rem] max-md:!w-full max-md:!h-[13rem] rounded-lg !m-3;
 }
 .ant-upload-list-item {
-	@apply rounded-lg !p-1 md:!w-[14rem] max-md:!h-[13rem];
+	@apply rounded-lg !p-1 max-md:!w-full max-md:!h-[13rem];
 }
 .ant-upload-list-item-image {
 	@apply object-none;

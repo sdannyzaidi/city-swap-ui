@@ -2,7 +2,7 @@ import { Footer, Form } from '@components'
 import PrimaryHeader from '../../components/headers/primaryHeader'
 import Icon from '@mdi/react'
 import ProfileLogo from '../../assets/images/profile.png'
-import { mdiEmail, mdiEmailOutline, mdiFlagOutline, mdiLogout } from '@mdi/js'
+import { mdiEmail, mdiEmailOutline, mdiFlagOutline, mdiLogout, mdiPencil } from '@mdi/js'
 import { Button, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import useUpdateUser from './hooks/useUpdateUser'
@@ -73,6 +73,7 @@ const Profile = () => {
 								{
 									addonBefore: <Icon path={mdiEmailOutline} size={1} className='text-[#4754677d]' />,
 									type: 'input',
+									disabled: true,
 									initialValue: user?.email,
 									name: ['email'],
 								},
@@ -125,14 +126,15 @@ const Profile = () => {
 					<div className='w-full flex md:flex-row max-md:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>
 						<p className='flex basis-1/3 text-[#344054]  max-md:pb-2 text-sm font-[600]'>Membership</p>
 						<div className='flex basis-2/3 '>
-							{Form.renderSchema([
-								{
-									addonBefore: <Icon path={mdiEmailOutline} size={1} className='text-[#4754677d]' />,
-									type: 'input',
-									initialValue: user?.email,
-									name: ['email'],
-								},
-							])}
+							<div className='flex flex-col'>
+								<p className='font-bold text-2xl text-[#344054]'>Basic</p>
+								<p className=' font-medium text-base text-gray-500'>$17/month</p>
+								<div className='flex flex-row items-center py-4'>
+									<div className='font-bold text-base text-[#344054]'>**** **** **** 1234</div>
+									<Icon path={mdiPencil} size={0.8} className='text-[#004EEB] ml-5' />
+								</div>
+								<div className='text-[#F04438] text-center font-semibold text-sm mb-5'>Cancel Membership</div>
+							</div>
 						</div>
 					</div>
 					<div className='w-full flex md:flex-row max-md:flex-col items-start mb-6 border-b border-solid border-[#EAECF0]'>

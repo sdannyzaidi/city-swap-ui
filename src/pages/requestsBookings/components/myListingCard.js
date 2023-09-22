@@ -1,5 +1,5 @@
-import { mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline } from '@mdi/js'
-import { BedroomSizeEnums } from '../../newListing/helpers/enums'
+import { mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline, mdiSwapHorizontalVariant } from '@mdi/js'
+import { BedroomSizeEnums, ListingTypeEnums } from '../../newListing/helpers/enums'
 import NoImage from '../../../assets/images/icon-no-image.svg'
 
 import Icon from '@mdi/react'
@@ -39,6 +39,10 @@ const MyListingCard = ({ listing, index, navigator, setModalData }) => {
 							<p className='text-[#333333] font-[600] text-sm leading-[16.1px]'>
 								{listing?.property.noOfSleep}&nbsp;{parseInt(listing?.property.noOfSleep) > 1 ? 'Beds' : 'Bed'}
 							</p>
+						</div>
+						<div className='flex flex-row space-x-2 pb-2 pr-4 items-center'>
+							<Icon path={mdiSwapHorizontalVariant} size={0.6} className='text-[#333333]' />
+							<p className='text-[#333333] font-[600] text-sm leading-[16.1px]'>{ListingTypeEnums[listing?.associatedListings?.[0]?.listingType]?.label}</p>
 						</div>
 					</div>
 					<div className='flex flex-row items-center space-x-4'>

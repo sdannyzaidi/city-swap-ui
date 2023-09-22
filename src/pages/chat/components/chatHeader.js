@@ -12,9 +12,11 @@ const ChatHeader = ({ chat }) => {
 				<div className='w-[38px] max-md:w-[30px] max-md:h-[30px] h-[38px] rounded-full bg-[#664F94]'></div>
 				<p className='text-lg max-md:text-base text-[#101828] font-[600] pl-4'>{user?.name}</p>
 			</div>
-			<Button className='flex flex-row items-center ml-5 btn-secondary hover:cursor-pointer' onClick={() => navigator(`/listing/${id}`)}>
-				Go Back to Listing
-			</Button>
+			{id && (
+				<Button className='flex flex-row items-center ml-5 btn-secondary hover:cursor-pointer' onClick={() => navigator(`/listing/${id}`)}>
+					Go Back to Listing
+				</Button>
+			)}
 		</div>
 	)
 }

@@ -222,9 +222,13 @@ const Home = (props) => {
 							}  transition-[height] duration-1000 w-full bg-[#44444458]`}
 						></div>
 						<div className='absolute flex flex-col items-center justify-center  left-0 right-0 top-0  bottom-0 w-full'>
-							<div className='flex flex-col items-start justify-center'>
-								<p className='text-3xl font-bold text-white pb-4'>Search Property</p>
-								<div className='flex flex-row items-center  space-x-4'>
+							<div className={`flex flex-col items-start justify-center ${!loggedInUser?._id ? 'bg-white w-[50%] px-8 py-6 rounded-md' : ''}`}>
+								{loggedInUser?._id ? (
+									<p className='text-3xl font-bold text-white pb-4'>Search Property</p>
+								) : (
+									<p className='text-base font-semibold text-black-300 pb-4'>Where are you going?</p>
+								)}
+								<div className='flex flex-row items-center space-between space-x-4'>
 									{Form.renderSchema([
 										[
 											{
@@ -249,7 +253,7 @@ const Home = (props) => {
 															name: ['city'],
 															itemClassName: '!mb-0 !w-[12rem]',
 															customWidth: true,
-															placeholder: 'Select City',
+															placeholder: 'Select State/City',
 															required: true,
 															showSearch: true,
 															message: 'Please enter an description',
@@ -307,13 +311,13 @@ const Home = (props) => {
 												? !(formValues?.country && formValues?.city && formValues?.type && formValues?.dateRange)
 												: !(formValues?.country && formValues?.type)
 										}
-										className='btn-primary '
+										className='btn-primary'
 										onClick={() => {
 											fetchData()
 											navigator('/home/search')
 										}}
 									>
-										Search
+										{loggedInUser?._id ? 'Search' : 'Find Home'}
 									</Button>
 								</div>
 							</div>
