@@ -33,6 +33,11 @@ export const ListingTypeEnums = {
 	sublease: { label: 'Sub-Lease', value: 'sublease' },
 }
 
+export const PaymentTypeEnums = {
+	perWeek: { text: 'week', value: 'perWeek' },
+	perMonth: { text: 'month', value: 'perMonth' },
+}
+
 export const BedroomSizeEnums = {
 	noOfStudio: {
 		label: 'Studio',

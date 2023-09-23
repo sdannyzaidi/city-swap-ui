@@ -1,11 +1,11 @@
 import { Footer, Form, Loader } from '@components'
 import NoImage from '../../assets/images/icon-no-image.svg'
-import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import Icon from '@mdi/react'
 import { mdiFolderSearchOutline, mdiMapMarkerOutline } from '@mdi/js'
-import { BedroomSizeEnums } from '../newListing/helpers/enums'
-import { listingsNotByUserSelector, searchPropertiesSelector } from '../listing/helpers/selectors'
+import { BedroomSizeEnums, PaymentTypeEnums } from '../newListing/helpers/enums'
+import { searchPropertiesSelector } from '../listing/helpers/selectors'
 
 const SearchPage = () => {
 	const navigator = useNavigate()
@@ -63,10 +63,19 @@ const SearchPage = () => {
 												</p>
 											</div>
 										</div>
-										<div className='flex flex-row items-center space-x-4'>
+										<div className='flex flex-row items-center justify-between'>
 											<div className='flex flex-row space-x-2 items-center'>
 												<Icon path={mdiMapMarkerOutline} size={0.7} className='text-[#333333]' />
 												{listing.location && <p className='text-[#333333] font-[700] text-sm leading-[16.1px]'>{listing.location.city}</p>}
+											</div>
+											<div>
+												<div className='flex flex-row space-x-2 items-center'>
+													{listing?.asscocitedListings?.[0]?.listingType === 'sublease' && (
+														<p className='text-[#333333] font-[700] text-sm leading-[16.1px]'>
+															${listing?.asscocitedListings?.[0]?.cost}/{PaymentTypeEnums[listing?.asscocitedListings?.[0]?.timePeriod]?.text}
+														</p>
+													)}
+												</div>
 											</div>
 										</div>
 									</div>
