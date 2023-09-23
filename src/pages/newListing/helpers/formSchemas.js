@@ -41,14 +41,11 @@ export const LocationDetailsSchema = (country) => [
 		showSearch: true,
 		displayProperty: 'label',
 		options: (
-			CountryEnum[country]?.cities ||
-			Object.values(CountryEnum)
-				.map((country) => country.cities)
-				.flat()
-		).map((city) => ({
-			label: city,
-			value: city,
-		})),
+			CountryEnum?.[country]?.cities ? CountryEnum?.[country]?.cities?.map((city) => ({
+				label: city,
+				value: city,
+			})): null
+		),
 	},
 	{
 		type: 'input',
@@ -58,3 +55,7 @@ export const LocationDetailsSchema = (country) => [
 		name: ['location', 'address'],
 	},
 ]
+
+// Object.values(CountryEnum)
+// 				.map((country) => country.cities)
+// 				.flat()
