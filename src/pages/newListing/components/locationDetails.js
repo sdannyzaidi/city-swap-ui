@@ -20,8 +20,6 @@ const LocationDetails = () => {
 	const country = Form.useWatch(['location', 'country'], form)
 	const type = form.getFieldValue(['listingType'])
 
-	console.log({ formValues: form.getFieldsValue() })
-
 	useEffect(() => {
 		form.setFieldValue(['location', 'city'], null)
 	}, [country, form])
@@ -54,7 +52,7 @@ const LocationDetails = () => {
 						className='!rounded-b-none'
 					>
 						<Input
-							className='input-field add-on'
+							className='input-field add-on price-add-on'
 							onInput={(e) => {
 								e.target.value = e.target.value.replace(/[^0-9.]*/g, '')
 							}}

@@ -2763,7 +2763,7 @@ span.ant-select-selection-item {
   border-style: none !important;
 }
 
-.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+.price-add-on.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input-group-addon {
   height: 2.5rem;
   width: 30%;
   border-top-right-radius: 0.5rem;
@@ -2776,10 +2776,37 @@ span.ant-select-selection-item {
   background-color: rgb(238 238 238 / var(--tw-bg-opacity)) !important;
 }
 
-.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input {
+.price-add-on.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input {
   height: 2.75rem;
   border-top-left-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
+  border-width: 0px !important;
+  border-bottom-width: 1px !important;
+  border-style: solid !important;
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5rem !important;
+  --tw-text-opacity: 1 !important;
+  color: rgb(102 112 133 / var(--tw-text-opacity)) !important;
+}
+
+.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+  height: 2.75rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-width: 0px !important;
+  border-bottom-width: 1px !important;
+  border-style: solid !important;
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
+}
+
+.input-field.add-on .ant-input-wrapper.ant-input-group .ant-input {
+  height: 2.75rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
   border-width: 0px !important;
   border-bottom-width: 1px !important;
   border-style: solid !important;
