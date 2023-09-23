@@ -35,7 +35,7 @@ const SearchPage = () => {
 										index !== 0 && index % 3 === 2 ? '' : 'sm:mr-6 max-md:mr-0'
 									} mb-10 rounded-lg border border-solid border-[#dedede] hover:cursor-pointer`}
 									onClick={() => {
-										localStorage.setItem('searchDate', JSON.stringify(form.getFieldValue(['dateRange'])))
+										localStorage.setItem('searchDate', JSON.stringify(form.getFieldValue(['dateRange']) || ['', '']))
 										localStorage.setItem('searchType', JSON.stringify(form.getFieldValue(['type'])))
 										localStorage.setItem('location', JSON.stringify({ city: form.getFieldValue(['city']), country: form.getFieldValue(['country']) }))
 

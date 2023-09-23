@@ -47,14 +47,14 @@ export const findRangeOverlap = (range1, ranges2) => {
 
 	if (newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		startRange = null
-		start = range1[0]
+		start = range1?.[0]
 	} else {
 		startRange = [newRange1Start.format(), newRange2Start.subtract(1, 'day').format()]
 		start = range2?.startDate
 	}
 	if (newRange1End.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		endRange = null
-		end = range1[1]
+		end = range1?.[1]
 	} else {
 		endRange = [newRange2End.add(1, 'day').format(), newRange1End.format()]
 		end = range2?.endDate
@@ -75,14 +75,14 @@ export const findCompleteRangeOverlap = (range1, ranges2) => {
 
 	if (newRange1Start.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		startRange = null
-		start = range1[0]
+		start = range1?.[0]
 	} else {
 		startRange = [newRange1Start.format(), newRange2Start.subtract(1, 'day').format()]
 		start = range2?.startDate
 	}
 	if (newRange1End.isBetween(newRange2Start, newRange2End, 'day', '()')) {
 		endRange = null
-		end = range1[1]
+		end = range1?.[1]
 	} else {
 		endRange = [newRange2End.add(1, 'day').format(), newRange1End.format()]
 		end = range2?.endDate
