@@ -13,7 +13,7 @@ const ChatHeader = ({ chat }) => {
 				<p className='text-lg max-md:text-base text-[#101828] font-[600] pl-4'>{user?.name}</p>
 			</div>
 			{id && (
-				<Button className='flex flex-row items-center ml-5 btn-secondary hover:cursor-pointer' onClick={() => navigator(`/listing/${id}`)}>
+				<Button className='flex flex-row items-center ml-5 btn-secondary hover:cursor-pointer' onClick={() => navigator(-1)}>
 					Go Back to Listing
 				</Button>
 			)}
