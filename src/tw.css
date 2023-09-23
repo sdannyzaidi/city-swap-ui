@@ -3894,6 +3894,10 @@ ul.slick-dots.slick-dots-bottom li button {
     width: 55%;
   }
 
+  .md\:w-\[50\%\] {
+    width: 50%;
+  }
+
   .md\:basis-1\/2 {
     flex-basis: 50%;
   }

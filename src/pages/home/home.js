@@ -222,7 +222,7 @@ const Home = (props) => {
 							}  transition-[height] duration-1000 w-full bg-[#44444458]`}
 						></div>
 						<div className='absolute flex flex-col items-center justify-center  left-0 right-0 top-0  bottom-0 w-full'>
-							<div className={`flex flex-col items-start justify-center ${!loggedInUser?._id ? 'bg-white w-[50%] px-8 py-6 rounded-md' : ''}`}>
+							<div className={`flex flex-col items-start justify-center ${!loggedInUser?._id ? 'bg-white px-8 py-6 rounded-md' : ''}`}>
 								{loggedInUser?._id ? (
 									<p className='text-3xl font-bold text-white pb-4'>Search Property</p>
 								) : (
