@@ -13,7 +13,7 @@ import Testimonials from './components/testimonials'
 import PropertySelectionModal from './components/propertySelectionModal'
 import { endpoints } from '../../helpers/enums'
 import { Button, Input, Select, Upload, notification } from 'antd'
-import { AmenitiesEnums, BedroomSizeEnums } from '../newListing/helpers/enums'
+import { AmenitiesEnums, BedroomSizeEnums, PaymentTypeEnums } from '../newListing/helpers/enums'
 import dayjs from 'dayjs'
 import useUpdateProperty from './hooks/useUpdateProperty'
 import { mdiPlus } from '@mdi/js'
@@ -409,7 +409,8 @@ const Listing = () => {
 							{JSON.parse(localStorage.getItem('searchType')) === 'sublease' && (
 								<div className='border-2 border-solid border-gray-300 rounded-lg bg-white md:ml-8 max-md:mt-4'>
 									<p className='text-[#1A202C] font-bold text-lg px-4 py-2 '>
-										$&nbsp;{listing?.associatedListings?.find((item) => item.listingType === 'sublease')?.cost}&nbsp;/&nbsp;night
+										$&nbsp;{listing?.associatedListings?.find((item) => item.listingType === 'sublease')?.cost}&nbsp;/&nbsp;
+										{PaymentTypeEnums[listing?.associatedListings?.find((item) => item.listingType === 'sublease')?.timePeriod]?.text}
 									</p>
 								</div>
 							)}
