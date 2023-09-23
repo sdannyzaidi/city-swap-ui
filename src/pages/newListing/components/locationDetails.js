@@ -52,7 +52,7 @@ const LocationDetails = () => {
 						className='!rounded-b-none'
 					>
 						<Input
-							className='input-field add-on price-add-on'
+							className='price-add-on'
 							onInput={(e) => {
 								e.target.value = e.target.value.replace(/[^0-9.]*/g, '')
 							}}

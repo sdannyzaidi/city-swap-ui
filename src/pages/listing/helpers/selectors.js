@@ -99,7 +99,6 @@ export const suggestedListingsSelector = selectorFamily({
 						endOverlap,
 					}
 				})
-			console.log({ filteredListings })
 
 			return filteredListings
 		},

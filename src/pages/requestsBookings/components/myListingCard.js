@@ -1,4 +1,4 @@
-import { mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline, mdiSwapHorizontalVariant } from '@mdi/js'
+import { mdiCash, mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline, mdiSwapHorizontalVariant } from '@mdi/js'
 import { BedroomSizeEnums, ListingTypeEnums } from '../../newListing/helpers/enums'
 import NoImage from '../../../assets/images/icon-no-image.svg'
 
