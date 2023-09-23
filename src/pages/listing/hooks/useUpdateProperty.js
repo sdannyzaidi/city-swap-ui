@@ -6,16 +6,21 @@ const useUpdateProperty = () => {
 
 	const updateProperty = async (values, listing) => {
 		setLoading(true)
+		console.log({ values, listing })
 		// const user = JSON.parse(localStorage.getItem('user'))
 		const finalValues = {
 			listing: {
 				listingId: listing?.associatedListings?.[0]?._id,
+				listingType: values?.listingType,
+				cost: values?.price,
+				timePeriod: values?.timePeriod,
 				availableDates: values.availableDates.map((range) => ({ startDate: range[0], endDate: range[1] })),
 			},
 			property: {
 				pictures: values.photos.map((photo) => photo.url),
 				title: values.title,
 				description: values.description,
+
 				...values.amenities,
 				...Object.entries(values.size)?.reduce((sizes, entry) => {
 					return {

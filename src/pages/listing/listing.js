@@ -12,13 +12,16 @@ import PictureCard from './components/pictureCard'
 import Testimonials from './components/testimonials'
 import PropertySelectionModal from './components/propertySelectionModal'
 import { endpoints } from '../../helpers/enums'
-import { Button, Upload, notification } from 'antd'
+import { Button, Input, Select, Upload, notification } from 'antd'
 import { AmenitiesEnums, BedroomSizeEnums } from '../newListing/helpers/enums'
 import dayjs from 'dayjs'
 import useUpdateProperty from './hooks/useUpdateProperty'
 import { mdiPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { firebase } from '@auth'
+
+const { Option } = Select
+
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
 		const reader = new FileReader()
@@ -31,6 +34,16 @@ const normFile = (e) => {
 	if (Array.isArray(e)) return e
 	return e && e.fileList
 }
+
+const selectAfter = (
+	<Form.Item name={['timePeriod']} initialValue={'perWeek'} className='!mb-0'>
+		<Select>
+			<Option value='perWeek'>Per Week</Option>
+			<Option value='perMonth'>Per Month</Option>
+		</Select>
+	</Form.Item>
+)
+
 const Listing = () => {
 	const [form] = Form.useForm()
 	const navigator = useNavigate()
@@ -42,9 +55,8 @@ const Listing = () => {
 	const [loading, setLoading] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const partialSwapPropertyId = Form.useWatch(['partialSwapPropertyId'], form)
+	const listingType = Form.useWatch(['listingType'], form)
 
-	console.log({ listing })
-	console.log({ listingType: listing?.associatedListings?.[0]?.listingType })
 	const [updatePropertyFunction, updatePropertyLoading] = useUpdateProperty()
 	useEffect(() => {
 		if (action === 'edit' && listing) {
@@ -64,6 +76,9 @@ const Listing = () => {
 						return [dayjs(obj.startDate).format('YYYY-MM-DD'), dayjs(obj.endDate).format('YYYY-MM-DD')]
 					}
 				),
+				price: listing?.associatedListings?.[0]?.cost,
+				timePeriod: listing?.associatedListings?.[0]?.timePeriod,
+				listingType: listing?.associatedListings?.[0]?.listingType,
 				photos: listing?.property.pictures?.map((picture) => {
 					return {
 						uid: picture,
@@ -156,7 +171,7 @@ const Listing = () => {
 		[selectedProperty]
 	)
 	const updateProperty = useCallback(async (values) => {
-		// console.log({ values })
+		console.log({ values })
 		updatePropertyFunction(values, listing).then((response) => {
 			if (response.status === 200) {
 				notification['success']({
@@ -366,6 +381,7 @@ const Listing = () => {
 		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 		fetchData()
 	}, [])
+
 	return (
 		<Form
 			form={form}
@@ -401,12 +417,46 @@ const Listing = () => {
 					)}
 					{action === 'edit' && (
 						<div className='md:px-44 max-md:px-8 pb-8'>
-							<Form.Item name={'listingType'} noStyle initialValue={listing?.associatedListings?.[0]?.listingType} required>
+							<Form.Item name={'listingType'} noStyle required>
 								<RadioButtonGroup
 									options={[
 										{ label: 'Available for Swap', short: 'Swap', value: 'swap' },
 										{ label: 'Available for Sublease', short: 'Sub-lease', value: 'sublease' },
 									]}
+								/>
+							</Form.Item>
+						</div>
+					)}
+					{action === 'edit' && listingType === 'sublease' && (
+						<div className='flex flex-col w-2/3 md:px-44 max-md:px-8 pb-8'>
+							<Form.Item
+								key='Price'
+								layout='horizontal'
+								name={['price']}
+								rules={[
+									{
+										required: true,
+										validator: (_, value = '') => {
+											if (value?.toString().length > 0) {
+												if (value < 0) {
+													return Promise.reject(new Error(`This value cannot be negative.`))
+												} else {
+													return Promise.resolve()
+												}
+											} else {
+												return Promise.reject(new Error('Please enter price'))
+											}
+										},
+									},
+								]}
+								className='!rounded-b-none'
+							>
+								<Input
+									className='price-add-on'
+									onInput={(e) => {
+										e.target.value = e.target.value.replace(/[^0-9.]*/g, '')
+									}}
+									addonAfter={selectAfter}
 								/>
 							</Form.Item>
 						</div>

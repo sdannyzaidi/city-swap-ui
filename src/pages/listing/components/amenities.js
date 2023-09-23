@@ -5,7 +5,6 @@ import { Form } from '@components'
 const Amenities = ({ listing, editable }) => {
 	const amenities = Object.values(AmenitiesEnums)
 
-	console.log({ listing })
 	return (
 		<div className='flex flex-col lg:pl-44  lg:pr-96 md:px-12 max-md:px-8'>
 			<p className='text-[30px] font-[700] text-[#333333] pb-6'>Amenities</p>
