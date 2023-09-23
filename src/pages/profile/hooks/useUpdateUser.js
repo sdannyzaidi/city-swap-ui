@@ -9,7 +9,7 @@ const useUpdateUser = () => {
 		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/update`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({ id: user._id, ...values }),
+			body: JSON.stringify({ _id: user._id, ...values, profilePicture: values?.profilePicture?.[0]?.url }),
 		})
 		// console.log({ response })
 		setLoading(false)

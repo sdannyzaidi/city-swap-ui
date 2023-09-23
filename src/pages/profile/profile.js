@@ -10,15 +10,18 @@ import { firebase } from '../../auth/firebase/config'
 import { userAtom } from '@atoms'
 import { useSetRecoilState } from 'recoil'
 import CountryEnum from '../../helpers/countries'
+import useFetchUser from './hooks/useFetchUser'
+
 
 const Profile = () => {
 	const navigator = useNavigate()
 	const user = JSON.parse(localStorage.getItem('user'))
+	const fetchUser = useFetchUser()
+	fetchUser({email: user.email})
 	const [updateUser, loading] = useUpdateUser()
 	const setUserAtom = useSetRecoilState(userAtom)
 	const [form] = Form.useForm()
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
-	// console.log(user)
 	return (
 		<div className='overflow-y-scroll'>
 			<PrimaryHeader />
@@ -119,6 +122,7 @@ const Profile = () => {
 									options: Object.keys(CountryEnum).map((country) => ({ label: country, value: country })),
 									displayProperty: 'label',
 									valueProperty: 'value',
+									initialValue: loggedInUser?.country
 								},
 							])}
 						</div>
@@ -151,6 +155,7 @@ const Profile = () => {
 								elementClassName: 'text-lg font-[400] text-[#00000064]',
 								key: 'bio',
 								name: ['bio'],
+								initialValue: loggedInUser?.bio
 							})}
 						</div>
 					</div>
