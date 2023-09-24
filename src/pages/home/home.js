@@ -16,6 +16,8 @@ import { CalendarEnums } from '../newListing/helpers/enums'
 import { mdiChevronDoubleDown } from '@mdi/js'
 import Icon from '@mdi/react'
 import MobileRangePicker from './components/mobileRangePicker'
+import statesToCities from '../../helpers/statesCities'
+import countryStates from '../../helpers/countiesStates'
 
 const Home = (props) => {
 	const homeRef = useRef(null)
@@ -37,7 +39,7 @@ const Home = (props) => {
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify({
 				country: values?.country,
-				city: values?.city,
+				city: statesToCities[values?.city] || values?.city,
 				startDate: values?.dateRange?.[0]?.format('YYYY-MM-DD'),
 				endDate: values?.dateRange?.[1]?.format('YYYY-MM-DD'),
 				type: values?.type,
@@ -132,7 +134,7 @@ const Home = (props) => {
 															showSearch: true,
 															message: 'Please enter an description',
 															options: (
-																CountryEnum[formValues?.country]?.cities ||
+																CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country] ] ||
 																Object.values(CountryEnum)
 																	.map((country) => country.cities)
 																	.flat()
@@ -258,7 +260,7 @@ const Home = (props) => {
 															showSearch: true,
 															message: 'Please enter an description',
 															options: (
-																CountryEnum[formValues?.country]?.cities ||
+																CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country] ] ||
 																Object.values(CountryEnum)
 																	.map((country) => country.cities)
 																	.flat()
