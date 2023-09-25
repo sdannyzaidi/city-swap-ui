@@ -1,3 +1,6 @@
+import cityToState from "./city_state";
+import statesToCities from "./statesCities";
+
 // Checks
 export const check = (Param) => Param !== null && Param !== undefined;
 export const checkArray = (Param) => !!Param && Param.constructor === Array;
@@ -37,3 +40,10 @@ export const debounce = (func, timeout = 500) => {
     }, timeout);
   };
 };
+
+
+export const findCities = (city)=>{
+  const state = cityToState[city]
+  const cities = statesToCities[state] || null
+  return cities || null
+}

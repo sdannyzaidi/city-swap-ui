@@ -19,6 +19,7 @@ import MobileRangePicker from './components/mobileRangePicker'
 import statesToCities from '../../helpers/statesCities'
 import countryStates from '../../helpers/countiesStates'
 import cityToState from '../../helpers/city_state'
+import { findCities } from '../../helpers/utilFunctions'
 
 const Home = (props) => {
 	const homeRef = useRef(null)
@@ -32,13 +33,6 @@ const Home = (props) => {
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 
 	const formValues = Form.useWatch(undefined, form)
-
-	const findCities = (city)=>{
-		const state = cityToState[city]
-		const cities = statesToCities[state] || null
-		return cities || null
-	}
-
 
 	const fetchData = useCallback(async () => {
 		setLoading(true)
