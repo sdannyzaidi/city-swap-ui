@@ -128,7 +128,7 @@ export const searchPropertiesSelector = selectorFamily({
 				filteredListings = listings.filter(
 					(listing) =>
 						listing.location?.country === location?.country &&
-						(listing.location?.city === location?.city || statesToCities?.[location?.city].includes(listing.location?.city))  &&
+						(listing.location?.city === location?.city || statesToCities?.[location?.city]?.includes(listing.location?.city))  &&
 						(listing.asscocitedListings || listing.associatedListings)
 							?.find((obj) => obj.listingType === type)
 							?.availableDates?.some((range) => checkRangeOverlap(dateRange, [range.startDate, range.endDate]))

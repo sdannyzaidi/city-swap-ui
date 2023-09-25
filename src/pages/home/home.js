@@ -18,6 +18,7 @@ import Icon from '@mdi/react'
 import MobileRangePicker from './components/mobileRangePicker'
 import statesToCities from '../../helpers/statesCities'
 import countryStates from '../../helpers/countiesStates'
+import cityToState from '../../helpers/city_state'
 
 const Home = (props) => {
 	const homeRef = useRef(null)
@@ -31,6 +32,14 @@ const Home = (props) => {
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 
 	const formValues = Form.useWatch(undefined, form)
+
+	const findCities = (city)=>{
+		const state = cityToState[city]
+		const cities = statesToCities[state] || null
+		return cities || null
+	}
+
+
 	const fetchData = useCallback(async () => {
 		setLoading(true)
 		const values = form.getFieldsValue()
@@ -39,7 +48,7 @@ const Home = (props) => {
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify({
 				country: values?.country,
-				city: statesToCities[values?.city] || values?.city,
+				city: statesToCities[values?.city] || findCities(values?.city) || values?.city,
 				startDate: values?.dateRange?.[0]?.format('YYYY-MM-DD'),
 				endDate: values?.dateRange?.[1]?.format('YYYY-MM-DD'),
 				type: values?.type,
