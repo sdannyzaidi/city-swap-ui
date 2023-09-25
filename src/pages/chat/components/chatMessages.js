@@ -4,6 +4,7 @@ import Message from './message'
 import MessageInput from './messageInput'
 import dayjs from 'dayjs'
 import { firestore, firebase } from '../../../auth/firebase/config'
+import { Empty } from 'antd'
 
 const ChatMessages = ({ chats }) => {
 	const chat = chats.find((chat) => chat.selected)
@@ -59,11 +60,17 @@ const ChatMessages = ({ chats }) => {
 		<div className='flex flex-col bg-[#FCFCFD] h-full'>
 			<ChatHeader chat={chat} />
 			<div className='flex flex-col space-y-4 pb-8 px-8 h-full overflow-y-scroll'>
-				{groupedMessages?.map((messages, index) => (
-					<div className={`flex flex-row items-center w-full ${messages.user?._id === loggedInUser?.id ? 'justify-end' : 'justify-start'}`}>
-						<Message className={index === 0 ? 'mt-8' : ''} key={messages.id} messages={messages} loggedInUser={loggedInUser} />
+				{groupedMessages?.length > 0 ? (
+					groupedMessages?.map((messages, index) => (
+						<div className={`flex flex-row items-center w-full ${messages.user?._id === loggedInUser?.id ? 'justify-end' : 'justify-start'}`}>
+							<Message className={index === 0 ? 'mt-8' : ''} key={messages.id} messages={messages} loggedInUser={loggedInUser} />
+						</div>
+					))
+				) : (
+					<div className='my-auto'>
+						<Empty description='No messages yet' />
 					</div>
-				))}
+				)}
 				<div ref={lastMessageRef}></div>
 			</div>
 

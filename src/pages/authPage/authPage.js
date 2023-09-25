@@ -6,12 +6,13 @@ import { Button } from 'antd'
 import { userAtom } from '../../recoil/atoms'
 import { authSelector } from '../../recoil/selectors'
 import { AUTH_EVENTS, useAuth } from '@auth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PaymentInfo from './components/paymentInfo'
 import AuthIcon from '../../assets/images/Logomark.png'
 const Auth = (props) => {
 	const { action } = useParams()
 	const [form] = Form.useForm()
+	const [success, setSuccess] = useState(false)
 	const [alert, setAlert] = useState({ type: '', message: '' })
 	const [dispatch, loading, signupComplete, userId, clientSecret] = useAuth({
 		reroute: '/home',
@@ -19,6 +20,11 @@ const Auth = (props) => {
 		authSelector: authSelector,
 		setAlert,
 	})
+
+	useEffect(() => {
+		setAlert({ type: '', message: '' })
+	}, [])
+
 	return (
 		<div className=' min-h-screen max-h-[110vh] flex'>
 			<div className='w-[50%] h-full hidden sm:block rounded-[0_80px_0px_0]'>
@@ -31,12 +37,17 @@ const Auth = (props) => {
 							<div className='w-14 h-14 mx-auto'>
 								<img className='w-14 h-14 object-contain' src={AuthIcon} alt='' />
 							</div>
-							<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-3'} text-center`}>Create an account</p>
+
+							<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-3'} text-center`}>
+								{success ? 'Subscription Successful' : 'Create an account'}
+							</p>
 							<p className={`text-[#6d6e78] text-start font-[400] text-[0.75rem] leading-[1.45rem] ${action === 'login' ? 'pb-3' : 'pb-2'} text-center`}>
-								{`Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
+								{success
+									? 'Your subscription is now active! Enjoy your 30-day trial. You can cancel your subscription anytime.'
+									: `Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
 							</p>
 						</div>
-						<PaymentInfo userId={userId} clientSecret={clientSecret} />
+						<PaymentInfo success={success} setSuccess={setSuccess} userId={userId} clientSecret={clientSecret} />
 					</div>
 				) : (
 					<Form

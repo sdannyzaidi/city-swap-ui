@@ -4,12 +4,11 @@ import { endpoints } from '../../../helpers/enums'
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
-const StripeForm = ({ userId }) => {
+const StripeForm = ({ userId, success, setSuccess }) => {
 	const navigator = useNavigate()
 	const stripe = useStripe()
 	const elements = useElements()
 
-	const [success, setSuccess] = useState(false)
 	const [loading, setLoading] = useState(false)
 
 	const handleSubmit = useCallback(async (e) => {
@@ -60,9 +59,8 @@ const StripeForm = ({ userId }) => {
 		<div className='flex flex-col '>
 			{success ? (
 				<>
-					<h1 className='text-2xl font-semibold text-center'>Payment Successful</h1>
-					<Button onClick={() => navigator('/auth/login')} className='btn-primary !h-[50px] !w-full mt-8'>
-						Go to Login
+					<Button onClick={() => navigator('/home/about')} className='btn-primary !h-[50px] !w-full mt-8'>
+						Go to Home
 					</Button>
 				</>
 			) : (

@@ -86,7 +86,7 @@ const PropertyPictures = () => {
 					multiple={true}
 					onChange={ChangeFileList}
 				>
-					<div className='bg-[#B3A7C9B2] h-full w-full flex flex-row items-center justify-center rounded-lg border border-solid border-[#664F94]'>
+					<div className='bg-[#B3A7C9B2] md:h-full md:w-full sm:w-full sm:h-full xs:h-24 xs:w-24 flex flex-row items-center justify-center rounded-lg border border-solid border-[#664F94]'>
 						<Icon path={mdiPlus} size={1.5} className='text-[#333333]' />
 					</div>
 				</Upload>
