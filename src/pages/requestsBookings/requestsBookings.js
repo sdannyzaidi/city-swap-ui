@@ -90,7 +90,7 @@ const RequestBookings = () => {
 			// console.log(response)
 			setLoading(false)
 			notification['error']({
-				message: 'Property addition failed',
+				message: 'Cannot delete property due to clash with pending request"',
 				duration: 5,
 				onClick: () => {
 					notification.close()
