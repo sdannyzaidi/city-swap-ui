@@ -19,6 +19,8 @@ import useUpdateProperty from './hooks/useUpdateProperty'
 import { mdiPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { firebase } from '@auth'
+import { findCities } from '../../helpers/utilFunctions'
+import statesToCities from '../../helpers/statesCities'
 
 const { Option } = Select
 
@@ -107,6 +109,9 @@ const Listing = () => {
 	useEffect(() => {
 		if (selectedProperty?.startRange || selectedProperty?.endRange) {
 			fetchSubleaseProperty()
+		} else if ((!myPartialListings || myPartialListings?.length === 0) && dateRange) {
+			console.log({ dateRange })
+			fetchSubleaseProperty()
 		}
 	}, [selectedProperty])
 
@@ -117,55 +122,83 @@ const Listing = () => {
 	}, [openModal])
 	const fetchSubleaseProperty = useCallback(
 		async (values) => {
-			const response3 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					country: location?.country,
-					city: location?.city,
-					startDate: selectedProperty?.startRange?.[0],
-					endDate: selectedProperty?.startRange?.[1],
-					entirePlace: true,
-					user: true,
-					location: true,
-					list: true,
-					type: 'sublease',
-				}),
-			})
+			if (selectedProperty) {
+				const response3 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						country: location?.country,
+						city: statesToCities[location?.city] || findCities(location?.city) || location?.city,
+						startDate: selectedProperty?.startRange?.[0],
+						endDate: selectedProperty?.startRange?.[1],
+						entirePlace: true,
+						user: true,
+						location: true,
+						list: true,
+						type: 'sublease',
+					}),
+				})
 
-			if (response3.status === 200) {
-				const data = await response3.json()
-				// console.log({ data })
-				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
-				setLoading(false)
-			} else {
-				// console.log(response3)
-				setLoading(false)
-			}
-			const response4 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					country: location?.country,
-					city: location?.city,
-					startDate: selectedProperty?.endRange?.[0],
-					endDate: selectedProperty?.endRange?.[1],
-					entirePlace: true,
-					user: true,
-					location: true,
-					list: true,
-					type: 'sublease',
-				}),
-			})
-
-			if (response4.status === 200) {
-				const data = await response4.json()
-				// console.log({ data })
-				setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
-				setLoading(false)
-			} else {
-				// console.log(response4)
-				setLoading(false)
+				if (response3.status === 200) {
+					const data = await response3.json()
+					// console.log({ data })
+					setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
+					setLoading(false)
+				} else {
+					// console.log(response3)
+					setLoading(false)
+				}
+				const response4 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						country: location?.country,
+						city: statesToCities[location?.city] || findCities(location?.city) || location?.city,
+						startDate: selectedProperty?.endRange?.[0],
+						endDate: selectedProperty?.endRange?.[1],
+						entirePlace: true,
+						user: true,
+						location: true,
+						list: true,
+						type: 'sublease',
+					}),
+				})
+				console.log({ response4 })
+				if (response4.status === 200) {
+					const data = await response4.json()
+					// console.log({ data })
+					setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
+					setLoading(false)
+				} else {
+					// console.log(response4)
+					setLoading(false)
+				}
+			} else if (!myPartialListings || myPartialListings?.length === 0) {
+				const response4 = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints.find}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						country: location?.country,
+						city: statesToCities[location?.city] || findCities(location?.city) || location?.city,
+						startDate: dayjs(dateRange?.[0]).format('YYYY-MM-DD'),
+						endDate: dayjs(dateRange?.[1]).format('YYYY-MM-DD'),
+						entirePlace: true,
+						user: true,
+						location: true,
+						list: true,
+						type: 'sublease',
+					}),
+				})
+				console.log({ response4 })
+				if (response4.status === 200) {
+					const data = await response4.json()
+					// console.log({ data })
+					setData((prev) => [...new Map([...prev, ...data].map((obj) => [JSON.stringify(obj?.property?._id), obj])).values()])
+					setLoading(false)
+				} else {
+					// console.log(response4)
+					setLoading(false)
+				}
 			}
 		},
 		[selectedProperty]

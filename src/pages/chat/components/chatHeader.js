@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const ChatHeader = ({ chat }) => {
-	const { id } = useParams()
+	const { goBackListing } = useParams()
 	const navigator = useNavigate()
 
 	const user = chat?.users?.find((user) => user._id !== JSON.parse(localStorage.getItem('user')).id)
@@ -12,7 +12,7 @@ const ChatHeader = ({ chat }) => {
 				<div className='w-[38px] max-md:w-[30px] max-md:h-[30px] h-[38px] rounded-full bg-[#664F94]'></div>
 				<p className='text-lg max-md:text-base text-[#101828] font-[600] pl-4'>{user?.name}</p>
 			</div>
-			{id && (
+			{goBackListing && (
 				<Button className='flex flex-row items-center ml-5 btn-secondary hover:cursor-pointer' onClick={() => navigator(-1)}>
 					Go Back to Listing
 				</Button>

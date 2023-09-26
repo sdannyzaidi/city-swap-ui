@@ -7,7 +7,8 @@ import Icon from '@mdi/react'
 import ResizeObserver from 'rc-resize-observer'
 import { useState } from 'react'
 import { firebase } from '../../auth/firebase/config'
-const PrimaryHeader = () => {
+const PrimaryHeader = (props) => {
+	const { setHeaderHeight } = props
 	const { pathname } = useLocation()
 	const navigator = useNavigate()
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
@@ -19,6 +20,7 @@ const PrimaryHeader = () => {
 			<ResizeObserver
 				onResize={({ width, height }) => {
 					setWidth(width)
+					setHeaderHeight && setHeaderHeight(height)
 				}}
 			>
 				<div

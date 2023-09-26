@@ -18,6 +18,7 @@ const Chat = () => {
 	const { user } = state || {}
 	const navigate = useNavigate()
 
+	const [headerHeight, setHeaderHeight] = useState(0)
 	const [chatSideBar, setChatSideBar] = useState({ visible: true, type: 'sidebar' })
 	const setChatsAtom = useSetRecoilState(chatsAtom)
 	const [loading, setLoading] = useState(true)
@@ -70,48 +71,50 @@ const Chat = () => {
 			}}
 		>
 			<div className='flex flex-col w-full h-full'>
-				<PrimaryHeader />
-
-				<div className='relative flex flex-row flex-grow h-[calc(100vh)]'>
-					<div
-						className={`flex border-r border-solid border-[#D0D5DD] ${
-							chatSideBar.type === 'drawer'
-								? `${
-										chatSideBar.visible ? ' w-[300px] opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
-								  } bg-white transition-[width,opacity] duration-200 fixed left-0 pt-14 z-20 bottom-0 h-screen`
-								: 'w-1/4 min-w-[300px] pt-24'
-						}  `}
-					>
-						<ChatList chats={chats} visible={chatSideBar.visible} onChatClick={onChatClick} />
-					</div>
-
-					{chatSideBar.type === 'drawer' ? (
-						<div className='absolute left-0 z-20 flex flex-col h-full items-start justify-center bg-transparent pr-4'>
-							<div className={`${!chatSideBar.visible ? 'opacity-100' : 'opacity-0 w-0'} transition-opacity duration-1000`}>
-								<Tooltip title='Open chat list'>
-									<div
-										className='cursor-pointer p-2 w-fit  rounded-r-lg bg-white shadow-[0_-4px_20px_4px_rgba(0,0,0,0.1)]'
-										onClick={() => {
-											setChatSideBar({ visible: true, type: 'drawer' })
-										}}
-									>
-										<Icon path={mdiArrowRight} size={0.8} className='text-center leading-8 text-[#475467]' />
-									</div>
-								</Tooltip>
-							</div>
+				<PrimaryHeader setHeaderHeight={setHeaderHeight} />
+				{headerHeight !== 0 && (
+					<div className='flex flex-row flex-grow relative'>
+						<div
+							className={`flex border-r border-solid border-[#D0D5DD] ${
+								chatSideBar.type === 'drawer'
+									? `${
+											chatSideBar.visible ? ' w-[300px] opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
+									  } bg-white transition-[width,opacity] duration-200 fixed left-0 z-20`
+									: 'w-1/4 min-w-[300px] pt-24'
+							}  `}
+							style={chatSideBar.type === 'drawer' ? { height: `calc(100vh - ${headerHeight}px)`, top: `${headerHeight}px` } : {}}
+						>
+							<ChatList headerHeight={headerHeight} chats={chats} visible={chatSideBar.visible} onChatClick={onChatClick} />
 						</div>
-					) : null}
-					<div
-						className={`${chatSideBar.type === 'drawer' ? `w-full  pt-14` : 'w-3/4  pt-24'}  h-full`}
-						onClick={() => {
-							if (chatSideBar.visible && chatSideBar.type === 'drawer') {
-								setChatSideBar({ visible: false, type: 'drawer' })
-							}
-						}}
-					>
-						<ChatMessages chats={chats} />
+
+						{chatSideBar.type === 'drawer' ? (
+							<div className='absolute left-0 z-20 flex flex-col h-full items-start justify-center bg-transparent pr-4'>
+								<div className={`${!chatSideBar.visible ? 'opacity-100' : 'opacity-0 w-0'} transition-opacity duration-1000`}>
+									<Tooltip title='Open chat list'>
+										<div
+											className='cursor-pointer p-2 w-fit  rounded-r-lg bg-white shadow-[0_-4px_20px_4px_rgba(0,0,0,0.1)]'
+											onClick={() => {
+												setChatSideBar({ visible: true, type: 'drawer' })
+											}}
+										>
+											<Icon path={mdiArrowRight} size={0.8} className='text-center leading-8 text-[#475467]' />
+										</div>
+									</Tooltip>
+								</div>
+							</div>
+						) : null}
+						<div
+							className={`${chatSideBar.type === 'drawer' ? `w-full  pt-14` : 'w-3/4  pt-20'}  h-full`}
+							onClick={() => {
+								if (chatSideBar.visible && chatSideBar.type === 'drawer') {
+									setChatSideBar({ visible: false, type: 'drawer' })
+								}
+							}}
+						>
+							<ChatMessages headerHeight={headerHeight} chats={chats} />
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</ResizeObserver>
 	)

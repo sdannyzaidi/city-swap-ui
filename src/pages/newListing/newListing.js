@@ -63,15 +63,8 @@ const NewListing = (props) => {
 									className='btn-secondary mr-6'
 									disabled={loading || otherLoading}
 									onClick={() => {
-										form
-											.validateFields()
-											.then((values) => {
-												setPage((prev) => prev - 1)
-												document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })
-											})
-											.catch((e) => {
-												console.log('error', e)
-											})
+										setPage((prev) => prev - 1)
+										document.getElementById('primary-header').scrollIntoView({ behavior: 'smooth' })
 									}}
 								>
 									Previous

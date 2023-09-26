@@ -205,11 +205,11 @@ span.ant-select-selection-item {
 
 .ant-upload-list-item-container,
 .ant-upload.ant-upload-select {
-	@apply xs:!h-24 xs:!w-24 sm:!h-[10.5rem] sm:!w-[10.5rem] max-md:!w-full max-md:!h-[13rem] rounded-lg !m-3;
+	@apply xs:!h-24 xs:!w-24 sm:!h-[10.5rem] sm:!w-[10.5rem] max-md:!w-full max-md:!h-[10.5rem] rounded-lg !m-3;
 }
 
 .ant-upload-list-item {
-	@apply rounded-lg !p-1 max-md:!w-full max-md:!h-[13rem];
+	@apply rounded-lg !p-1 max-md:!w-full md:!h-[10.5rem] max-xs:!h-24 max-xs:!w-24;
 }
 
 .ant-upload-list-item-image {

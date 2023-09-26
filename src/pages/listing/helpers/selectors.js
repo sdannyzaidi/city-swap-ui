@@ -79,7 +79,9 @@ export const suggestedListingsSelector = selectorFamily({
 				.filter(
 					(listing) =>
 						listing.location?.country === location?.country &&
-						listing.location?.city === location?.city &&
+						(listing.location?.city === location?.city ||
+							findCities(location?.city)?.includes(listing.location?.city) ||
+							statesToCities?.[location?.city]?.includes(listing.location?.city)) &&
 						(listing.asscocitedListings || listing.associatedListings)
 							?.find((obj) => obj.listingType === 'sublease')
 							?.availableDates?.some((range) => dateRanges.some((dateRange) => checkRangeOverlap(dateRange, [range.startDate, range.endDate])))
@@ -129,7 +131,9 @@ export const searchPropertiesSelector = selectorFamily({
 				filteredListings = listings.filter(
 					(listing) =>
 						listing.location?.country === location?.country &&
-						(listing.location?.city === location?.city || findCities(location?.city)?.includes(listing.location?.city) ||   statesToCities?.[location?.city]?.includes(listing.location?.city))   &&
+						(listing.location?.city === location?.city ||
+							findCities(location?.city)?.includes(listing.location?.city) ||
+							statesToCities?.[location?.city]?.includes(listing.location?.city)) &&
 						(listing.asscocitedListings || listing.associatedListings)
 							?.find((obj) => obj.listingType === type)
 							?.availableDates?.some((range) => checkRangeOverlap(dateRange, [range.startDate, range.endDate]))

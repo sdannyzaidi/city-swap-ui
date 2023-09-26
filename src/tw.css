@@ -874,6 +874,10 @@ video {
   visibility: visible;
 }
 
+.static {
+  position: static;
+}
+
 .fixed {
   position: fixed;
 }
@@ -884,6 +888,11 @@ video {
 
 .relative {
   position: relative;
+}
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
 }
 
 .bottom-0 {
@@ -908,6 +917,22 @@ video {
 
 .top-0 {
   top: 0px;
+}
+
+.top-\[57px\] {
+  top: 57px;
+}
+
+.top-\[57\] {
+  top: 57;
+}
+
+.top-20 {
+  top: 5rem;
+}
+
+.top-1 {
+  top: 0.25rem;
 }
 
 .-z-10 {
@@ -1263,9 +1288,6 @@ video {
   height: 600x;
 }
 
-.h-\[calc\(100vh\)\] {
-  height: calc(100vh);
-}
 
 .h-auto {
   height: auto;
@@ -1289,6 +1311,9 @@ video {
 .h-screen {
   height: 100vh;
 }
+.h-10 {
+  height: 2.5rem;
+}
 
 .max-h-\[110vh\] {
   max-height: 110vh;
@@ -1300,6 +1325,10 @@ video {
 
 .max-h-\[450px\] {
   max-height: 450px;
+}
+
+.max-h-10 {
+  max-height: 2.5rem;
 }
 
 .min-h-\[100px\] {
@@ -1673,6 +1702,10 @@ video {
 
 .overflow-scroll {
   overflow: scroll;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
 }
 
 .overflow-y-clip {
@@ -2163,6 +2196,10 @@ video {
   padding-right: 1.5rem;
 }
 
+.pt-12 {
+  padding-top: 3rem;
+}
+
 .pt-14 {
   padding-top: 3.5rem;
 }
@@ -2197,6 +2234,10 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-20 {
+  padding-top: 5rem;
 }
 
 .text-left {
@@ -3175,7 +3216,7 @@ span.ant-select-selection-item {
 @media not all and (min-width: 768px) {
   .ant-upload-list-item-container,
 .ant-upload.ant-upload-select {
-    height: 13rem !important;
+    height: 10.5rem !important;
     width: 100% !important;
   }
 }
@@ -3203,8 +3244,20 @@ span.ant-select-selection-item {
 
 @media not all and (min-width: 768px) {
   .ant-upload-list-item {
-    height: 13rem !important;
     width: 100% !important;
+  }
+}
+
+@media not all and (min-width: 320px) {
+  .ant-upload-list-item {
+    height: 6rem !important;
+    width: 6rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .ant-upload-list-item {
+    height: 10.5rem !important;
   }
 }
 
@@ -3593,6 +3646,10 @@ ul.slick-dots.slick-dots-bottom li button {
     padding-top: 2rem;
   }
 
+  .max-md\:pb-0 {
+    padding-bottom: 0px;
+  }
+
   .max-md\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
@@ -3646,8 +3703,9 @@ ul.slick-dots.slick-dots-bottom li button {
 }
 
 @media (min-width: 320px) {
-  .xs\:\!mb-8 {
-    margin-bottom: 2rem !important;
+  .xs\:\!my-4 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
   }
 
   .xs\:\!mb-4 {
@@ -3660,6 +3718,15 @@ ul.slick-dots.slick-dots-bottom li button {
 
   .xs\:w-24 {
     width: 6rem;
+  }
+
+  .xs\:\!py-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .xs\:\!pb-4 {
+    padding-bottom: 1rem !important;
   }
 }
 

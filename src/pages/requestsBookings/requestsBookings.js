@@ -25,6 +25,8 @@ const RequestBookings = () => {
 			  ].find((item) => item.page === initPage)
 			: { title: 'Requests', page: 'requests' }
 	)
+
+	const [headerHeight, setHeaderHeight] = useState()
 	const [modalData, setModalData] = useState({ visible: false })
 	const setRequests = useSetRecoilState(requestsAtom)
 	const setListings = useSetRecoilState(listingsAtom)
@@ -103,6 +105,8 @@ const RequestBookings = () => {
 		fetchData()
 		fetchOtherData()
 	}, [])
+
+	console.log({ headerHeight })
 	return (
 		<ResizeObserver
 			onResize={({ width, height }) => {
@@ -114,90 +118,93 @@ const RequestBookings = () => {
 			}}
 		>
 			<div className=''>
-				<PrimaryHeader />
-				<div className='relative flex flex-row min-h-[96vh] h-fit'>
-					<div
-						className={`flex border-r border-solid border-[#dfe0e2] ${
-							sideBar.type === 'drawer'
-								? `${
-										sideBar.visible ? ' w-[250px] opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
-								  } bg-white transition-[width,opacity] duration-200 fixed left-0 z-10 pt-24 bottom-0 h-screen`
-								: 'w-[250px] min-w-[150px] pt-16'
-						}  `}
-					>
-						<div className='flex flex-col min-h-[96vh] sm:pt-12 max-md:pt-4  !h-full md:px-6 max-md:px-4 space-y-1'>
-							{[
-								{ title: 'Requests', page: 'requests' },
-								{ title: 'My Swaps / Subleases', page: 'swaps-subleases' },
-								{ title: 'My Listings', page: 'my-listings' },
-							].map((item) => (
-								<p
-									className={`px-2 py-2 text-sm font-[500] text-[#344054] ${
-										page.page === item.page ? 'bg-[#F4EBFF] text-[#101828]' : ' hover:bg-[#F9FAFB]'
-									} rounded-md hover:cursor-pointer`}
-									onClick={() => setPage(item)}
-								>
-									{item.title}
-								</p>
-							))}
-						</div>
-					</div>
-					{sideBar.type === 'drawer' ? (
-						<div className='fixed left-0 z-20 flex flex-col h-screen items-start justify-center bg-transparent pr-4'>
-							<div className={`${!sideBar.visible ? 'opacity-100' : 'opacity-0 w-0'} transition-opacity duration-1000`}>
-								<div
-									className='cursor-pointer p-2 w-fit  rounded-r-lg bg-white shadow-[0_-4px_20px_4px_rgba(0,0,0,0.1)]'
-									onClick={() => {
-										setSideBar({ visible: true, type: 'drawer' })
-									}}
-								>
-									<Icon path={mdiArrowRight} size={0.8} className='text-center leading-8 text-[#475467]' />
-								</div>
+				<PrimaryHeader setHeaderHeight={setHeaderHeight} />
+				{headerHeight && headerHeight !== 0 && (
+					<div className='relative flex flex-row'>
+						<div
+							className={`flex border-r border-solid border-[#dfe0e2] ${
+								sideBar.type === 'drawer'
+									? `${
+											sideBar.visible ? ' w-[250px] opacity-100  flex-row items-start shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0'
+									  } bg-white transition-[width,opacity] duration-200 fixed left-0 z-10`
+									: 'w-[250px] min-w-[150px] pt-16'
+							}  `}
+							style={sideBar.type === 'drawer' ? { height: `calc(100vh - ${headerHeight}px)`, top: `${headerHeight}px` } : {}}
+						>
+							<div className='flex flex-col h-fit sm:pt-12 max-md:pt-4 md:px-6 max-md:px-4 space-y-1'>
+								{[
+									{ title: 'Requests', page: 'requests' },
+									{ title: 'My Swaps / Subleases', page: 'swaps-subleases' },
+									{ title: 'My Listings', page: 'my-listings' },
+								].map((item) => (
+									<p
+										className={`px-2 py-2 text-sm font-[500] text-[#344054] ${
+											page.page === item.page ? 'bg-[#F4EBFF] text-[#101828]' : ' hover:bg-[#F9FAFB]'
+										} rounded-md hover:cursor-pointer`}
+										onClick={() => setPage(item)}
+									>
+										{item.title}
+									</p>
+								))}
 							</div>
 						</div>
-					) : null}
-					<div
-						className={`${sideBar.type === 'drawer' ? `w-full ` : 'w-3/4'}  h-full`}
-						onClick={() => {
-							if (sideBar.visible && sideBar.type === 'drawer') {
-								setSideBar({ visible: false, type: 'drawer' })
-							}
-						}}
-					>
-						<div className='flex flex-col min-h-[96vh] pt-24  !h-fit basis-[80%] px-6 space-y-1 overflow-y-scroll'>
-							<p className='text-[#101828] text-[30px] font-[600] pb-8'>{page.title}</p>
-							{(page.page === 'requests' && receivedRequests && receivedRequests?.length > 0) ||
-							(page.page === 'swaps-subleases' && userRequests && userRequests?.length > 0) ||
-							(page.page === 'my-listings' && userListings && userListings?.length > 0) ? (
-								<div className='flex flex-col space-y-4 pb-16 sm:mr-36'>
-									{page.page === 'requests'
-										? receivedRequests?.map((request, index) => <RequestCard type={'received'} request={request} index={index} />)
-										: page.page === 'swaps-subleases'
-										? userRequests?.map((request, index) => <RequestCard type={'sent'} request={request} index={index} />)
-										: page.page === 'my-listings'
-										? userListings?.map((listing, index) => <MyListingCard listing={listing} index={index} navigator={navigator} setModalData={setModalData} />)
-										: null}
-								</div>
-							) : loading ? (
-								<div className='flex flex-col justify-center items-center h-full'>
-									<div className='my-auto align-middle'>
-										<Loader />
+						{sideBar.type === 'drawer' ? (
+							<div className='fixed left-0 z-20 flex flex-col h-screen items-start justify-center bg-transparent pr-4'>
+								<div className={`${!sideBar.visible ? 'opacity-100' : 'opacity-0 w-0'} transition-opacity duration-1000`}>
+									<div
+										className='cursor-pointer p-2 w-fit  rounded-r-lg bg-white shadow-[0_-4px_20px_4px_rgba(0,0,0,0.1)]'
+										onClick={() => {
+											setSideBar({ visible: true, type: 'drawer' })
+										}}
+									>
+										<Icon path={mdiArrowRight} size={0.8} className='text-center leading-8 text-[#475467]' />
 									</div>
 								</div>
-							) : (
-								<p className='text-[#919191] font-[500] text-lg pb-7 pl-2'>
-									{page.page === 'requests'
-										? 'No Requests'
-										: page.page === 'swaps-subleases'
-										? 'No Swaps / Subleases'
-										: page.page === 'my-listings'
-										? 'No Listings Added'
-										: null}
-								</p>
-							)}
+							</div>
+						) : null}
+						<div
+							className={`${sideBar.type === 'drawer' ? `w-full ` : 'w-3/4'}  h-full`}
+							onClick={() => {
+								if (sideBar.visible && sideBar.type === 'drawer') {
+									setSideBar({ visible: false, type: 'drawer' })
+								}
+							}}
+						>
+							<div className='flex flex-col min-h-[96vh] pt-24  !h-fit basis-[80%] px-6 space-y-1 overflow-y-scroll'>
+								<p className='text-[#101828] text-[30px] font-[600] pb-8'>{page.title}</p>
+								{(page.page === 'requests' && receivedRequests && receivedRequests?.length > 0) ||
+								(page.page === 'swaps-subleases' && userRequests && userRequests?.length > 0) ||
+								(page.page === 'my-listings' && userListings && userListings?.length > 0) ? (
+									<div className='flex flex-col space-y-4 pb-16 sm:mr-36'>
+										{page.page === 'requests'
+											? receivedRequests?.map((request, index) => <RequestCard type={'received'} request={request} index={index} />)
+											: page.page === 'swaps-subleases'
+											? userRequests?.map((request, index) => <RequestCard type={'sent'} request={request} index={index} />)
+											: page.page === 'my-listings'
+											? userListings?.map((listing, index) => <MyListingCard listing={listing} index={index} navigator={navigator} setModalData={setModalData} />)
+											: null}
+									</div>
+								) : loading ? (
+									<div className='flex flex-col justify-center items-center h-full'>
+										<div className='my-auto align-middle'>
+											<Loader />
+										</div>
+									</div>
+								) : (
+									<p className='text-[#919191] font-[500] text-lg pb-7 pl-2'>
+										{page.page === 'requests'
+											? 'No Requests'
+											: page.page === 'swaps-subleases'
+											? 'No Swaps / Subleases'
+											: page.page === 'my-listings'
+											? 'No Listings Added'
+											: null}
+									</p>
+								)}
+							</div>
 						</div>
 					</div>
-				</div>
+				)}
 
 				<Footer />
 				<Modal

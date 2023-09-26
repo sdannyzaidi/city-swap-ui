@@ -100,7 +100,12 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 	const id = JSON.parse(localStorage.getItem('user'))?.id
 	const location = JSON.parse(localStorage.getItem('location'))
 	const suggestedProperties = useRecoilValue(
-		suggestedListingsSelector({ id, dateRanges: [selectedProperty?.startRange, selectedProperty?.endRange], searchRange: searchDate, location })
+		suggestedListingsSelector({
+			id,
+			dateRanges: selectedProperty ? [selectedProperty?.startRange, selectedProperty?.endRange] : [searchDate],
+			searchRange: searchDate,
+			location,
+		})
 	)
 	const formValues = Form.useWatch(undefined, form)
 	return (
@@ -133,6 +138,8 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 									: listingType === 'sublease'
 									? 'SUBMIT SUB-LEASE REQUEST'
 									: suggestedProperties?.length > 0 || partialListings?.length > 0
+									? 'SUBMIT SWAP REQUEST'
+									: properties?.length > 0
 									? 'SUBMIT SWAP REQUEST'
 									: 'GO TO YOUR LISTINGS',
 							onClick: () => {
@@ -247,16 +254,17 @@ const PropertySelectionModal = ({ selectedProperty, form, visible, setVisible, p
 				) : (
 					<div className='flex flex-col '>
 						<p className='text-center font-bold text-[#333333] text-[24px] py-4'>No Swappable Property Found</p>
-						<p className='text-start font-[400] text-[#666666] text-base py-12 px-12'>
-							This property is not available for sub-lease on the selected dates:
+						<p className='text-start font-[400] text-[#666666] text-base pt-12 pb-6 px-12'>
+							You do not have any property available to swap with&nbsp;<span className='font-bold'>{otherProperty?.property?.title}</span>&nbsp;on the selected
+							dates:
 							<p className='pt-4 text-[#333333] font-semibold'>
 								{` ${dayjs(searchDate?.[0])?.format('MMM DD')} to ${dayjs(searchDate?.[1])?.format('MMM DD, YYYY')} `}
 							</p>
 						</p>
 						{suggestedProperties?.length > 0 && (
 							<>
-								<p className='text-start font-[400] text-[#666666] text-base py-12 px-12'>Other Suggested Properties for Sub-Lease:</p>
-								<div className='flex flex-col space-y-4 w-full'>
+								<p className='text-start font-[400] text-[#666666] text-base py-2 pb-4 px-12'>Other Suggested Properties for Sub-Lease:</p>
+								<div className='flex flex-col space-y-4 w-full px-12'>
 									<Form.Item
 										name={['subleasePropertyId']}
 										key={'subleasePropertyId'}

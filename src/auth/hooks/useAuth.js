@@ -118,7 +118,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 				body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
 			})
 			if (response.status === 200) {
-				response.json().then((data) => {
+				response.json().then(async (data) => {
 					notification['success']({
 						message: 'User created successfully',
 						duration: 5,
@@ -126,6 +126,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 							notification.close()
 						},
 					})
+					await signInWithEmailAndPassword({ email: values.email, password: values.password })
 					setSignupComplete(true)
 					setUserEmail(values.email)
 					setUserId(data._id)

@@ -55,7 +55,7 @@ const App = () => {
 					}
 				/>
 				<Route
-					path='chat/:id?'
+					path='chat/:id?/:goBackListing?'
 					element={
 						<PrivateRoute redirect='/auth/login'>
 							<Chat />

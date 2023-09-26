@@ -29,7 +29,6 @@ const RequestCard = ({ request, type, index }) => {
 	const requestListing = request?.requestedProperty
 	const ownListing = request?.ownProperty
 	const setRequests = useSetRecoilState(requestsAtom)
-	// console.log({ requestListing, ownListing, request })
 	const changeListingStatus = useCallback(
 		(status) => {
 			setLoading(true)
@@ -221,7 +220,7 @@ const RequestCard = ({ request, type, index }) => {
 						</Button>
 						<Button
 							className='btn-secondary flex flex-row items-center !px-2.5'
-							onClick={() => navigator(`/chat/${request?.reqUser?._id}`, { state: { user: request?.reqUser } })}
+							onClick={() => navigator(`/chat/${request?.reqUser?._id}/${true}`, { state: { user: request?.reqUser } })}
 						>
 							<Icon size={0.8} path={mdiChatOutline} />
 						</Button>
