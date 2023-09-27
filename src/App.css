@@ -258,3 +258,7 @@ ul.slick-dots.slick-dots-bottom li button {
 ::-webkit-calendar-picker-indicator {
 	@apply !hidden;
 }
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-active {
+	background-color: white !important;
+}

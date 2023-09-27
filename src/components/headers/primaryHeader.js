@@ -1,7 +1,7 @@
-import { Button, Drawer } from 'antd'
+import { Button, Drawer, Dropdown, Menu } from 'antd'
 import { HeaderLogo } from '@components'
 import ProfileLogo from '../../assets/images/profile.png'
-import { mdiHamburger, mdiLogout, mdiMenu, mdiPlus } from '@mdi/js'
+import { mdiDotsVertical, mdiHamburger, mdiLogout, mdiMenu, mdiPlus } from '@mdi/js'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Icon from '@mdi/react'
 import ResizeObserver from 'rc-resize-observer'
@@ -15,6 +15,56 @@ const PrimaryHeader = (props) => {
 	const [page, setPage] = useState({ title: 'Home', page: '/home/about' })
 	const [visible, setVisible] = useState(false)
 	const [width, setWidth] = useState(1000)
+	const DropdownMenu = (
+		<Menu className='flex flex-col justify-between pb-4 !w-48 !h-full'>
+			<div className='flex flex-col sm:py-4 max-md:py-2 md:px-6 max-md:px-2 space-y-1'>
+				{(loggedInUser
+					? [
+							{ title: 'Home', page: '/home/about' },
+							{ title: 'Profile', page: '/profile' },
+							{ title: 'Messages', page: '/chat' },
+							{ title: 'Requests & Bookings', page: '/requests-bookings' },
+					  ]
+					: [
+							{ title: 'How It Works', page: '/how-it-works' },
+							{ title: 'Pricing', page: '/pricing' },
+							{ title: 'FAQs', page: '/faqs' },
+					  ]
+				).map((item) => (
+					<Menu.Item
+						className={`px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F5F5F5] ${
+							pathname === item.page ? 'text-[#101828]' : ''
+						} rounded-md hover:cursor-pointer`}
+						onClick={() => {
+							setPage(item)
+							navigator(item.page)
+						}}
+					>
+						{item.title}
+					</Menu.Item>
+				))}
+				{loggedInUser ? (
+					<Menu.Item
+						className={`flex flex-row items-center px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F5F5F5] rounded-md hover:cursor-pointer`}
+						onClick={() => {
+							firebase.auth().signOut()
+							localStorage.setItem('user', JSON.stringify(null))
+							localStorage.setItem('token', JSON.stringify(null))
+							navigator('/home/about')
+						}}
+					>
+						<div className='flex flex-row items-center'>
+							<Icon path={mdiLogout} size={0.7} className='text-red-400' />
+							<p size={1} className='text-red-400 pl-2 '>
+								Logout
+							</p>
+						</div>
+					</Menu.Item>
+				) : null}
+			</div>
+		</Menu>
+	)
+
 	return (
 		<div>
 			<ResizeObserver
@@ -70,7 +120,9 @@ const PrimaryHeader = (props) => {
 									</div>
 								) : (
 									<div className='mr-4' onClick={() => setVisible(true)}>
-										<Icon path={mdiMenu} size={1.4} className='text-[#555555]' />
+										<Dropdown overlay={DropdownMenu} trigger={['click']} onClick={(e) => e.stopPropagation()}>
+											<Icon path={mdiDotsVertical} size={1.2} className='text-[#555555]' />
+										</Dropdown>
 									</div>
 								)}
 							</div>
@@ -84,7 +136,9 @@ const PrimaryHeader = (props) => {
 								</Button>
 								{width > 768 ? null : (
 									<div className='mr-4' onClick={() => setVisible(true)}>
-										<Icon path={mdiMenu} size={1.4} className='text-[#555555]' />
+										<Dropdown overlay={DropdownMenu} trigger={['click']} onClick={(e) => e.stopPropagation()}>
+											<Icon path={mdiDotsVertical} size={1.2} className='text-[#555555]' />
+										</Dropdown>
 									</div>
 								)}
 							</div>
@@ -92,70 +146,6 @@ const PrimaryHeader = (props) => {
 					</div>
 				</div>
 			</ResizeObserver>
-			{/* {visible && (
-				<div
-					className={`fixed left-0 bottom-0 top-0 w-full  h-full z-20 bg-[#66666633] opacity-50]`}
-					onClick={() => {
-						if (visible) {
-							setVisible(false)
-						}
-					}}
-				></div>
-			)} */}
-			<Drawer
-				width={250}
-				open={visible}
-				onClose={() => setVisible(false)}
-				closable={false}
-				// 	className={`max-md:flex sm:hidden border-l border-solid border-[#dfe0e2] ${
-				// 		visible ? 'w-[250px] pt-5' : 'w-0'
-				// 	} opacity-100  flex-row items-center shadow-[10px_0_20px_-10px_rgba(0,0,0,0.1)]' : 'w-[0px] opacity-0' bg-white transition-[width,opacity] duration-200 fixed right-0 z-50 bottom-0 h-full`}
-			>
-				<div className='flex flex-col justify-between pb-4  !h-full'>
-					<div className='flex flex-col  sm:pt-12 max-md:pt-4  md:px-6 max-md:px-2 space-y-1'>
-						{(loggedInUser
-							? [
-									{ title: 'Home', page: '/home/about' },
-									{ title: 'Messages', page: '/chat' },
-									{ title: 'Requests & Bookings', page: '/requests-bookings' },
-							  ]
-							: [
-									{ title: 'How it works', page: '/how-it-works' },
-									{ title: 'Pricing', page: '/pricing' },
-									{ title: 'FAQs', page: '/faqs' },
-							  ]
-						).map((item) => (
-							<p
-								className={`px-2 py-2 text-sm font-[500] text-[#344054] ${
-									pathname === item.page ? 'bg-[#F4EBFF] text-[#101828]' : ' hover:bg-[#F9FAFB]'
-								} rounded-md hover:cursor-pointer`}
-								onClick={() => {
-									setPage(item)
-									navigator(item.page)
-								}}
-							>
-								{item.title}
-							</p>
-						))}
-					</div>
-					{loggedInUser ? (
-						<p
-							className={`flex flex-row items-center px-2 py-2 text-sm font-[500] text-[#344054] ${' hover:bg-[#F9FAFB]'} rounded-md hover:cursor-pointer`}
-							onClick={() => {
-								firebase.auth().signOut()
-								localStorage.setItem('user', JSON.stringify(null))
-								localStorage.setItem('token', JSON.stringify(null))
-								navigator('/home/about')
-							}}
-						>
-							<Icon path={mdiLogout} size={1} className='text-red-400' />
-							<p size={1} className='text-red-400 pl-2 '>
-								Logout
-							</p>
-						</p>
-					) : null}
-				</div>
-			</Drawer>
 		</div>
 	)
 }
