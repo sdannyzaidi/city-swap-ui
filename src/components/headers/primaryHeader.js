@@ -7,10 +7,13 @@ import Icon from '@mdi/react'
 import ResizeObserver from 'rc-resize-observer'
 import { useState } from 'react'
 import { firebase } from '../../auth/firebase/config'
+import { useSetRecoilState } from 'recoil'
+import { userAtom } from '@atoms'
 const PrimaryHeader = (props) => {
 	const { setHeaderHeight } = props
 	const { pathname } = useLocation()
 	const navigator = useNavigate()
+	const setUserAtom = useSetRecoilState(userAtom)
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 	const [page, setPage] = useState({ title: 'Home', page: '/home/about' })
 	const [visible, setVisible] = useState(false)
@@ -48,6 +51,7 @@ const PrimaryHeader = (props) => {
 						className={`flex flex-row items-center px-2 py-2 text-sm font-[500] text-[#344054] hover:bg-[#F5F5F5] rounded-md hover:cursor-pointer`}
 						onClick={() => {
 							firebase.auth().signOut()
+							setUserAtom(null)
 							localStorage.setItem('user', JSON.stringify(null))
 							localStorage.setItem('token', JSON.stringify(null))
 							navigator('/home/about')

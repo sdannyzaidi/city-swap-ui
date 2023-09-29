@@ -140,16 +140,23 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 				setLoading(false)
 			}
 		} catch (err) {
+			if (err.code === 'auth/invalid-password') {
+				setAlert({
+					type: 'error',
+					message: 'The password must be a string with at least 6 characters.',
+				})
+			}
 			console.log(err)
 			setLoading(false)
 		}
 	}
 	const logout = () => {
 		if (userAuth) {
-			// firebase.auth.signOut()
-			// localStorage.setItem('user', JSON.stringify(null))
-			// localStorage.setItem('token', JSON.stringify(null))
-			// window.location.href = '/'
+			firebase.auth.signOut()
+			setUserAtom(null)
+			localStorage.setItem('user', JSON.stringify(null))
+			localStorage.setItem('token', JSON.stringify(null))
+			window.location.href = '/'
 		}
 	}
 
