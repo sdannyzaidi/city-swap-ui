@@ -1321,6 +1321,10 @@ video {
   width: 66.666667% !important;
 }
 
+.\!w-48 {
+  width: 12rem !important;
+}
+
 .\!w-96 {
   width: 24rem !important;
 }
@@ -1449,12 +1453,8 @@ video {
   width: 100%;
 }
 
-.\!w-52 {
-  width: 13rem !important;
-}
-
-.\!w-48 {
-  width: 12rem !important;
+.w-\[500px\] {
+  width: 500px;
 }
 
 .min-w-\[150px\] {
@@ -3303,6 +3303,11 @@ ul.slick-dots.slick-dots-bottom li button {
   background-color: #979797a7;
 }
 
+.hover\:bg-\[\#F5F5F5\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-\[\#F9FAFB\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
@@ -3311,26 +3316,6 @@ ul.slick-dots.slick-dots-bottom li button {
 .hover\:bg-\[\#d3c7ea\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(211 199 234 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#EEEEEE\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(238 238 238 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#7b5757\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(123 87 87 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#4a3333\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(74 51 51 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#F5F5F5\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
 }
 
 .hover\:\!text-\[\#9374da\]:hover {
@@ -3798,10 +3783,6 @@ ul.slick-dots.slick-dots-bottom li button {
     width: 100%;
   }
 
-  .sm\:\!w-52 {
-    width: 13rem !important;
-  }
-
   .sm\:basis-1\/2 {
     flex-basis: 50%;
   }
@@ -3870,21 +3851,6 @@ ul.slick-dots.slick-dots-bottom li button {
 
   .sm\:p-3 {
     padding: 0.75rem;
-  }
-
-  .sm\:py-12 {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
-  .sm\:py-6 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-  }
-
-  .sm\:py-8 {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
   }
 
   .sm\:py-4 {
@@ -3982,14 +3948,6 @@ ul.slick-dots.slick-dots-bottom li button {
 
   .md\:w-full {
     width: 100%;
-  }
-
-  .md\:w-52 {
-    width: 13rem;
-  }
-
-  .md\:\!w-52 {
-    width: 13rem !important;
   }
 
   .md\:basis-1\/2 {
