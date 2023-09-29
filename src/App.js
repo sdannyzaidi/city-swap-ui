@@ -19,17 +19,8 @@ import {
 	Contact,
 } from '@/pages/index'
 import { PrivateRoute } from '@auth'
-import { useEffect } from 'react'
-import firebase from 'firebase/compat/app'
 
 const App = () => {
-	const user = JSON.parse(localStorage.getItem('user'))
-	const token = JSON.parse(localStorage.getItem('token'))
-	useEffect(() => {
-		if (user && !token) {
-			const user = firebase.auth().currentUser
-		}
-	}, [])
 	return (
 		<Router>
 			<Routes>

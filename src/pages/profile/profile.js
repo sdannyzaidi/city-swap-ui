@@ -12,12 +12,11 @@ import { useSetRecoilState } from 'recoil'
 import CountryEnum from '../../helpers/countries'
 import useFetchUser from './hooks/useFetchUser'
 
-
 const Profile = () => {
 	const navigator = useNavigate()
 	const user = JSON.parse(localStorage.getItem('user'))
 	const fetchUser = useFetchUser()
-	fetchUser({email: user.email})
+	fetchUser({ email: user.email })
 	const [updateUser, loading] = useUpdateUser()
 	const setUserAtom = useSetRecoilState(userAtom)
 	const [form] = Form.useForm()
@@ -122,7 +121,7 @@ const Profile = () => {
 									options: Object.keys(CountryEnum).map((country) => ({ label: country, value: country })),
 									displayProperty: 'label',
 									valueProperty: 'value',
-									initialValue: loggedInUser?.country
+									initialValue: loggedInUser?.country,
 								},
 							])}
 						</div>
@@ -155,7 +154,7 @@ const Profile = () => {
 								elementClassName: 'text-lg font-[400] text-[#00000064]',
 								key: 'bio',
 								name: ['bio'],
-								initialValue: loggedInUser?.bio
+								initialValue: loggedInUser?.bio,
 							})}
 						</div>
 					</div>
