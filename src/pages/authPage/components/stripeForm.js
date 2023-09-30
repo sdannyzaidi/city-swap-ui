@@ -1,16 +1,7 @@
-import {
-	CardNumberElement,
-	CardCvcElement,
-	CardExpiryElement,
-	useStripe,
-	useElements,
-	PaymentElement,
-	CardElement,
-	AuBankAccountElement,
-} from '@stripe/react-stripe-js'
+import { CardNumberElement, CardCvcElement, CardExpiryElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { Form, Loader } from '@components'
 import { endpoints } from '../../../helpers/enums'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button, Card } from 'antd'
 import { useNavigate } from 'react-router-dom'
 const StripeForm = ({ userId, success, setSuccess }) => {
@@ -27,16 +18,9 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 
 		setLoading(true)
 		const CardNumberElement = elements.getElement('cardNumber')
-		const CardExpiryElement = elements.getElement('cardExpiry')
-		const CardCvcElement = elements.getElement('cardCvc')
 
-		console.log({ CardNumberElement })
 		await stripe
-			.createToken({
-				card: {
-					number: CardNumberElement.value,
-				},
-			})
+			.createToken(CardNumberElement)
 			.then((result) => {
 				if (result.error) {
 					console.log(result.error.message)
@@ -64,6 +48,7 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 					// 		}
 					// 	})
 					// }
+					setSuccess(true)
 					setLoading(false)
 				}
 			})
@@ -73,7 +58,7 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 			})
 	}, [])
 	return (
-		<div className='flex flex-col w-full'>
+		<div className='flex flex-col lg:w-[80%]'>
 			{success ? (
 				<>
 					<Button onClick={() => navigator('/home/about')} className='btn-primary !h-[50px] !w-full mt-8'>
@@ -87,15 +72,27 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 							<Loader />
 						</div>
 					) : (
-						<div className='w-full' id={'card-element'}>
-							<CardNumberElement />
-							<CardExpiryElement />
-							<CardCvcElement />
+						<div className='flex flex-col w-full py-2 mx-auto'>
+							<div>
+								<div className='font-bold text-sm text-[#222222] mb-2'>Card Number:</div>
+								<CardNumberElement className='w-full rounded py-3 px-4 font-medium text-base bg-[#F6F7F9] mb-4' />
+							</div>
+							<div className='flex flex-row justify-between !w-full'>
+								<div className='w-[47%]'>
+									<div className='font-bold text-sm text-[#222222] mb-2'>Exp Date:</div>
+									<CardExpiryElement className='rounded py-3 px-4 font-medium text-base bg-[#F6F7F9]' />
+								</div>
+								<div className='w-[47%]'>
+									<div className='font-bold text-sm text-[#222222] mb-2'>CVC:</div>
+									<CardCvcElement className='rounded py-3 px-4 font-medium text-base bg-[#F6F7F9]' />
+								</div>
+							</div>
 						</div>
 					)}
-					<Button htmlType='submit' loading={loading} className='btn-primary !h-[50px] !w-full mt-8'>
+					<Button htmlType='submit' loading={loading} className='btn-primary !h-[50px] !w-full my-8'>
 						Pay
 					</Button>
+					<div className='text-center text-xs font-normal'>All the payments are powered by Stripe.</div>
 				</Form>
 			)}
 		</div>
