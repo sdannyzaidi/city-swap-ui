@@ -18,18 +18,18 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const { pathname } = useLocation()
 	const [clientSecret, setClientSecret] = useState(null)
 
-	useEffect(() => {
-		if (action === 'signup' && signupComplete) {
-			fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['create-subscription']}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({ email: userEmail }),
-			})
-				.then((response) => response.json())
-				.then((data) => setClientSecret(data.clientSecret))
-				.catch((err) => console.log(err))
-		}
-	}, [signupComplete]) // eslint-disable-line
+	// useEffect(() => {
+	// 	if (action === 'signup' && signupComplete) {
+	// 		fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['create-subscription']}`, {
+	// 			method: 'POST',
+	// 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+	// 			body: JSON.stringify({ email: userEmail }),
+	// 		})
+	// 			.then((response) => response.json())
+	// 			.then((data) => setClientSecret(data.clientSecret))
+	// 			.catch((err) => console.log(err))
+	// 	}
+	// }, [signupComplete]) // eslint-disable-line
 
 	useEffect(() => {
 		if (!loading && userAuth) {
@@ -184,7 +184,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		}
 	})
 
-	return [dispatch, loading, signupComplete, userId, clientSecret]
+	return [dispatch, loading, signupComplete, userId]
 }
 
 export default useAuth
