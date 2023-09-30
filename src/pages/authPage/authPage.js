@@ -14,7 +14,7 @@ const Auth = (props) => {
 	const [form] = Form.useForm()
 	const [success, setSuccess] = useState(false)
 	const [alert, setAlert] = useState({ type: '', message: '' })
-	const [dispatch, loading, signupComplete, userId, clientSecret] = useAuth({
+	const [dispatch, loading, signupComplete, userId] = useAuth({
 		reroute: '/home',
 		userAtom: userAtom,
 		authSelector: authSelector,
@@ -31,7 +31,7 @@ const Auth = (props) => {
 				<img className='w-full h-full object-cover' src={Image} alt='' />
 			</div>
 			<div className=' sm:w-[50%] max-[640px]:w-full h-full flex flex-col justify-center items-center'>
-				{action === 'signup' && signupComplete && clientSecret ? (
+				{action === 'signup' && signupComplete ? (
 					<div className='flex flex-col justify-center items-center mt-16'>
 						<div className='flex flex-col items-center w-[300px] mx-auto'>
 							<div className='w-14 h-14 mx-auto'>
@@ -47,7 +47,7 @@ const Auth = (props) => {
 									: `Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
 							</p>
 						</div>
-						<PaymentInfo success={success} setSuccess={setSuccess} userId={userId} clientSecret={clientSecret} />
+						<PaymentInfo success={success} setSuccess={setSuccess} userId={userId} />
 					</div>
 				) : (
 					<Form
