@@ -184,7 +184,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		}
 	})
 
-	return [dispatch, loading, signupComplete, userId, userEmail]
+	return [dispatch, loading, signupComplete, userEmail]
 }
 
 export default useAuth
