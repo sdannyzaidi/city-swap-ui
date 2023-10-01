@@ -5,6 +5,8 @@ export const endpoints = {
 	find: 'propertyInfo/find/',
 	'user-properties': (id) => `propertyInfo/user/${id}`,
 	'create-subscription': 'stripe/create-subscription',
+	'cancel-subscription': 'stripe/cancel-subscription',
+	'change-default-payment-method': 'stripe/change-default-payment-method',
 	'confirm-transaction': 'stripe/confirm-transaction',
 	'user-requests': (id) => `users/requests/${id}`,
 	'add-review': 'review/add-review',

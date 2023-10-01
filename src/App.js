@@ -19,6 +19,8 @@ import {
 	Contact,
 } from '@/pages/index'
 import { PrivateRoute } from '@auth'
+import CancelSubModal from './pages/profile/cancelSubModal'
+import UpdateSubModal from './pages/profile/updateSubModal'
 
 const App = () => {
 	return (
@@ -60,7 +62,10 @@ const App = () => {
 							<Profile />
 						</PrivateRoute>
 					}
-				/>
+				>
+					<Route path=':id/cancelSubscription' element={<CancelSubModal />} />
+					<Route path=':id/updateSubscription' element={<UpdateSubModal />} />
+				</Route>
 				<Route
 					path='new-listing'
 					element={

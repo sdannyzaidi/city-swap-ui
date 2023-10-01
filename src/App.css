@@ -75,8 +75,8 @@ span.ant-select-selection-item {
 /****************************************** SECONDARY BUTTON ********************************************/
 
 .btn-secondary {
-	@apply h-11 rounded-lg bg-[#F9F5FF] border-2 border-solid border-[#F9F5FF];
-	@apply leading-6 text-[16px] font-[400] text-[#664F94];
+	@apply h-11 max-md:h-8 max-md:px-2 rounded-lg bg-[#F9F5FF] border-2 border-solid border-[#F9F5FF];
+	@apply leading-6 text-[16px] max-md:text-sm sm:font-[500] font-[400] text-[#664F94];
 }
 
 .btn-secondary:hover {
