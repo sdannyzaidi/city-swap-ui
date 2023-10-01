@@ -1,9 +1,8 @@
-import { mdiCash, mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline, mdiSwapHorizontalVariant } from '@mdi/js'
+import { mdiDeleteOutline, mdiMapMarkerOutline, mdiSquareEditOutline, mdiSwapHorizontalVariant } from '@mdi/js'
 import { BedroomSizeEnums, ListingTypeEnums } from '../../newListing/helpers/enums'
 import NoImage from '../../../assets/images/icon-no-image.svg'
 
 import Icon from '@mdi/react'
-import { Button } from 'antd'
 
 const MyListingCard = ({ listing, index, navigator, setModalData }) => {
 	return (

@@ -262,3 +262,28 @@ ul.slick-dots.slick-dots-bottom li button {
 .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-active {
 	background-color: white !important;
 }
+
+.ant-steps .ant-steps-item-process .ant-steps-item-icon >.ant-steps-icon .ant-steps-icon-dot{
+	@apply !bg-[#9B83CB];
+}
+.ant-steps .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
+	@apply !text-[#9B83CB];
+}
+
+.ant-steps .ant-steps-item-finish .ant-steps-item-icon >.ant-steps-icon .ant-steps-icon-dot {
+	@apply !bg-[#EBE6F4];
+}
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
+	@apply !text-[#EBE6F4];
+}
+.ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
+	@apply  !bg-[#EBE6F4];
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+	@apply !bg-[#9B83CB] !border-[#9B83CB] hover:!border-[#9B83CB];
+}
+
+.ant-checkbox-wrapper {
+	@apply !text-[12px];
+}

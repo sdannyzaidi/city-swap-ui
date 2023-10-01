@@ -1,5 +1,5 @@
-import { Footer, Form, PrimaryHeader, RadioButtonGroup } from '@components'
-import { useMemo, useRef, useState } from 'react'
+import { Footer, Form, PrimaryHeader } from '@components'
+import { useRef, useState } from 'react'
 import { Button, notification } from 'antd'
 import PropertyDetails from './components/propertyDetails'
 import LocationDetails from './components/locationDetails'

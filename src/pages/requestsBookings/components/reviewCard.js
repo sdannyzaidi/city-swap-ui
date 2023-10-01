@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react'
 import { endpoints } from '../../../helpers/enums'
 
 const ReviewCard = ({ request }) => {
-	const { requestedProperty, ownProperty } = request
+	const { requestedProperty } = request
 	const [loading, setLoading] = useState(false)
 	// console.log({ request })
 	const handleSubmit = useCallback(

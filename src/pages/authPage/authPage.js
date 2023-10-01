@@ -1,4 +1,5 @@
 import { AlertBanner, Form } from '@components'
+import { firebase } from '../../auth/firebase/config'
 import Image from '../../assets/drive-assets/erol-ahmed-FTy5VSGIfiQ-unsplash (1).jpg'
 import { useParams } from 'react-router-dom'
 import { authFormSchema } from './helpers/authFormSchemas'
@@ -9,11 +10,14 @@ import { AUTH_EVENTS, useAuth } from '@auth'
 import { useEffect, useState } from 'react'
 import PaymentInfo from './components/paymentInfo'
 import AuthIcon from '../../assets/images/Logomark.png'
+import StepsSignup from './components/stepsSignup'
+import { useSetRecoilState } from 'recoil'
 const Auth = (props) => {
 	const { action } = useParams()
 	const [form] = Form.useForm()
 	const [success, setSuccess] = useState(false)
 	const [alert, setAlert] = useState({ type: '', message: '' })
+	const setUserAtom = useSetRecoilState(userAtom)
 	const [dispatch, loading, signupComplete, userEmail] = useAuth({
 		reroute: '/home',
 		userAtom: userAtom,
@@ -30,24 +34,48 @@ const Auth = (props) => {
 			<div className='w-[50%] h-full hidden sm:block rounded-[0_80px_0px_0]'>
 				<img className='w-full h-full object-cover' src={Image} alt='' />
 			</div>
-			<div className=' sm:w-[50%] max-[640px]:w-full h-full flex flex-col justify-center items-center'>
-				{action === 'signup' && signupComplete ? (
+			<div className='w-[50%] overflow-y-scroll max-[1064px]:w-full h-full flex flex-col justify-center items-center'>
+				{action === 'signup' && signupComplete && !success && (
+					<Button
+						className='mr-8 mt-8 self-end btn-primary'
+						onClick={() => {
+							firebase.auth.signOut()
+							localStorage.setItem('user', JSON.stringify(null))
+							localStorage.setItem('token', JSON.stringify(null))
+							setUserAtom(null)
+							navigator('/home/about')
+						}}
+					>
+						<p size={1} className='text-white pl-2 '>
+							LOGOUT
+						</p>
+					</Button>
+				)}
+				{action === 'signup' ? (
 					<div className='flex flex-col justify-center items-center mt-16'>
-						<div className='flex flex-col items-center w-[300px] mx-auto'>
-							<div className='w-14 h-14 mx-auto'>
-								<img className='w-14 h-14 object-contain' src={AuthIcon} alt='' />
-							</div>
+						{signupComplete ? (
+							<>
+								<div className='flex flex-col items-center w-[300px] mx-auto'>
+									<div className='w-14 h-14 mx-auto'>
+										<img className='w-14 h-14 object-contain' src={AuthIcon} alt='' />
+									</div>
 
-							<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-3'} text-center`}>
-								{success ? 'Subscription Successful' : 'Create an account'}
-							</p>
-							<p className={`text-[#6d6e78] text-start font-[400] text-[0.75rem] leading-[1.45rem] ${action === 'login' ? 'pb-3' : 'pb-2'} text-center`}>
-								{success
-									? 'Your subscription is now active! Enjoy your 30-day trial. You can cancel your subscription anytime.'
-									: `Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
-							</p>
-						</div>
-						<PaymentInfo success={success} setSuccess={setSuccess} userEmail={userEmail} />
+									<p className={`text-[#101828] font-[600] text-[30px] leading-[38px] ${action === 'login' ? 'pb-3' : 'pb-3'} text-center`}>
+										{success ? 'Subscription Successful' : 'Create an account'}
+									</p>
+									<p className={`text-[#6d6e78] text-start font-[400] text-[0.75rem] leading-[1.45rem] ${action === 'login' ? 'pb-3' : 'pb-2'} text-center`}>
+										{success
+											? 'Your subscription is now active! Enjoy your 30-day trial. You can cancel your subscription anytime.'
+											: `Please Enter Payment Details to start your 1 month free trial. You will be charged a yearly fee of $204 AUD ( $17 AUD/Month ) after your trial ends.`}
+									</p>
+								</div>
+								<PaymentInfo success={success} setSuccess={setSuccess} userEmail={userEmail} />
+							</>
+						) : (
+							<div>
+								<StepsSignup dispatch={dispatch} dispatchLoading={loading} alert={alert} setAlert={setAlert} />
+							</div>
+						)}
 					</div>
 				) : (
 					<Form

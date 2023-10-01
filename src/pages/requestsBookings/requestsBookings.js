@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { PrimaryHeader, Footer } from '@components'
 import { listingsAtom, requestsAtom } from '@atoms'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import RequestCard from './components/requestCard'
 import MyListingCard from './components/myListingCard'
 import Loader from '../../components/utility/loader'
