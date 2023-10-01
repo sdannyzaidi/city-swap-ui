@@ -2,13 +2,15 @@ import { CardNumberElement, CardCvcElement, CardExpiryElement, useStripe, useEle
 import { Form, Loader } from '@components'
 import { endpoints } from '../../../helpers/enums'
 import { useCallback, useState } from 'react'
-import { Button, Card } from 'antd'
+import { Button, Card, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-const StripeForm = ({ userId, success, setSuccess }) => {
+import { userAtom } from '@atoms'
+import { useSetRecoilState } from 'recoil'
+const StripeForm = ({ success, setSuccess = false, userEmail, action }) => {
 	const navigator = useNavigate()
 	const stripe = useStripe()
 	const elements = useElements()
-
+	const setUserAtom = useSetRecoilState(userAtom)
 	const [loading, setLoading] = useState(false)
 
 	const handleSubmit = useCallback(async (e) => {
@@ -24,36 +26,54 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 			.then((result) => {
 				if (result.error) {
 					console.log(result.error.message)
+					notification.error({
+						message: 'Error',
+						description: `${action === 'update' ? 'Payment method updation has failed.' : 'Unable to subscribe and proceed further.'} Please try again later.`,
+					})
 					setLoading(false)
 				} else {
-					console.log({ result })
-					// if (result.paymentIntent?.status === 'succeeded') {
-					// 	console.log('Successful Payment', result)
-					// 	const { id, amount } = result.paymentIntent
-					// 	fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['confirm-transaction']}`, {
-					// 		method: 'POST',
-					// 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
-					// 		body: JSON.stringify({ paymentId: id, userId: userId, amount: amount.toString() }),
-					// 	}).then((response) => {
-					// 		if (response.status === 200) {
-					// 			response.json().then((data) => {
-					// 				console.log('Successfully sent data Payment', data)
-					// 				setSuccess(true)
-					// 				setLoading(false)
-					// 			})
-					// 		} else {
-					// 			console.log('Successfully sent data Payment', response)
-					// 			setSuccess(false)
-					// 			setLoading(false)
-					// 		}
-					// 	})
-					// }
-					setSuccess(true)
-					setLoading(false)
+					console.log('Successful Payment', result)
+					fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints[action === 'update' ? 'change-default-payment-method' : 'create-subscription']}`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json;charset=utf-8' },
+						body: JSON.stringify({ email: userEmail, token: result?.token, ...(action !== 'update' ? { renew: false } : {}) }),
+					}).then((response) => {
+						if (response.status === 200) {
+							response.json().then((data) => {
+								notification.success({
+									message: `${action === 'update' ? 'Updation' : 'Subscription'} Successful`,
+									description:
+										action === 'update'
+											? 'Your payment method has been updated sucessfully.'
+											: 'Your subscription is now active! Enjoy your 30-day trial. You can cancel your subscription anytime.',
+								})
+								console.log('Successfully sent data Payment', data)
+								setUserAtom({ ...data?.updatedUser })
+								localStorage.setItem('user', JSON.stringify({ ...data?.updatedUser, id: data?.updatedUser?._id }))
+								setSuccess && setSuccess(true)
+								setLoading(false)
+								if (action === 'update') {
+									navigator(-1)
+								}
+							})
+						} else {
+							console.log('Successfully sent data Payment', response)
+							notification.error({
+								message: 'Error',
+								description: `${action === 'update' ? 'Payment method updation has failed.' : 'Unable to subscribe and proceed further.'} Please try again later.`,
+							})
+							setSuccess && setSuccess(false)
+							setLoading(false)
+						}
+					})
 				}
 			})
 			.catch((error) => {
 				console.log('promise', error)
+				notification.error({
+					message: 'Error',
+					description: `${action === 'update' ? 'Payment method updation has failed.' : 'Unable to subscribe and proceed further.'} Please try again later.`,
+				})
 				setLoading(false)
 			})
 	}, [])
@@ -90,7 +110,7 @@ const StripeForm = ({ userId, success, setSuccess }) => {
 						</div>
 					)}
 					<Button htmlType='submit' loading={loading} className='btn-primary !h-[50px] !w-full my-8'>
-						Pay
+						{action === 'update' ? 'Update' : 'Subscribe'}
 					</Button>
 					<div className='text-center text-xs font-normal'>All the payments are powered by Stripe.</div>
 				</Form>

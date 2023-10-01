@@ -345,7 +345,7 @@ export const renderFormItem = (field) => {
 						<div className='p-2 rounded-full bg-[#F2F4F7]'>
 							<Icon path={mdiCloudUploadOutline} size={1} className=' text-[#475467]' />
 						</div>
-						<div className='mt-3'>
+						<div className='mt-3 px-3'>
 							<span className='text-[#9B83CB] font-semibold text-sm'>Click to upload</span>
 							<span className='text-[#475467] text-sm font-normal'> or drag and drop</span>
 						</div>

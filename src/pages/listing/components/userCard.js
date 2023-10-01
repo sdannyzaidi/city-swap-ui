@@ -13,8 +13,6 @@ const UserCard = ({ listing, setVisible }) => {
 
 	const user = listing?.user || listing?.property?.user
 	const loggedInUser = useRecoilValue(userAtom)
-	console.log({ loggedInUser })
-	console.log({ listing })
 	return (
 		<div className='basis-1/3 px-[27px] py-[22px] w-full rounded-lg border border-solid border-[#F2F4F7] mt-12'>
 			<div className='flex flex-col justify-between sm:items-center max-md:items-start'>
