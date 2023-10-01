@@ -11,14 +11,11 @@ import { endpoints } from '../../helpers/enums'
 import { listingsAtom } from '@atoms'
 import { useSetRecoilState } from 'recoil'
 import CountryEnum from '../../helpers/countries'
-import { Picker } from 'antd-mobile'
-import { CalendarEnums } from '../newListing/helpers/enums'
 import { mdiChevronDoubleDown } from '@mdi/js'
 import Icon from '@mdi/react'
 import MobileRangePicker from './components/mobileRangePicker'
 import statesToCities from '../../helpers/statesCities'
 import countryStates from '../../helpers/countiesStates'
-import cityToState from '../../helpers/city_state'
 import { findCities } from '../../helpers/utilFunctions'
 
 const Home = (props) => {
@@ -28,7 +25,6 @@ const Home = (props) => {
 	const [form] = Form.useForm()
 	const setData = useSetRecoilState(listingsAtom)
 	const [loading, setLoading] = useState(false)
-	const [visible, setVisible] = useState(false)
 	const [searchHeaderVisible, setSearchHeaderVisible] = useState(true)
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
 
@@ -137,7 +133,7 @@ const Home = (props) => {
 															showSearch: true,
 															message: 'Please enter an description',
 															options: (
-																CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country] ] ||
+																(CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country]]) ||
 																Object.values(CountryEnum)
 																	.map((country) => country.cities)
 																	.flat()
@@ -263,7 +259,7 @@ const Home = (props) => {
 															showSearch: true,
 															message: 'Please enter an description',
 															options: (
-																CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country] ] ||
+																(CountryEnum[formValues?.country]?.cities && [...CountryEnum[formValues?.country]?.cities, ...countryStates[formValues?.country]]) ||
 																Object.values(CountryEnum)
 																	.map((country) => country.cities)
 																	.flat()

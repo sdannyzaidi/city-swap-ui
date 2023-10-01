@@ -1,15 +1,4 @@
-import {
-	mdiChat,
-	mdiChatOutline,
-	mdiCheck,
-	mdiCheckCircleOutline,
-	mdiClockOutline,
-	mdiCloseCircleOutline,
-	mdiDeleteOutline,
-	mdiMapMarkerOutline,
-	mdiSquareEditOutline,
-	mdiSwapHorizontal,
-} from '@mdi/js'
+import { mdiChatOutline, mdiCheckCircleOutline, mdiClockOutline, mdiCloseCircleOutline, mdiMapMarkerOutline, mdiSwapHorizontal } from '@mdi/js'
 import { BedroomSizeEnums } from '../../newListing/helpers/enums'
 import NoImage from '../../../assets/images/icon-no-image.svg'
 
@@ -82,7 +71,7 @@ const RequestCard = ({ request, type, index }) => {
 					setLoading(false)
 				})
 		},
-		[request._id]
+		[request._id] // eslint-disable-line
 	)
 
 	return (

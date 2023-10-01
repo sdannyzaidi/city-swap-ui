@@ -2,7 +2,7 @@ import { CardNumberElement, CardCvcElement, CardExpiryElement, useStripe, useEle
 import { Form, Loader } from '@components'
 import { endpoints } from '../../../helpers/enums'
 import { useCallback, useState } from 'react'
-import { Button, Card, notification } from 'antd'
+import { Button, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { userAtom } from '@atoms'
 import { useSetRecoilState } from 'recoil'

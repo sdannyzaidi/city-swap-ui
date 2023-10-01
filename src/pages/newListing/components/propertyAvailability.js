@@ -1,7 +1,7 @@
 import { Form } from '@components'
 import MultiRangePicker from './multiRangePicker'
 import { ListingContext } from '../helpers/context'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js'
 import dayjs from 'dayjs'

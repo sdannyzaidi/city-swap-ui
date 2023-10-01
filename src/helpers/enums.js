@@ -9,6 +9,7 @@ export const endpoints = {
 	'change-default-payment-method': 'stripe/change-default-payment-method',
 	'confirm-transaction': 'stripe/confirm-transaction',
 	'user-requests': (id) => `users/requests/${id}`,
+	'generate-otp': 'users/generate-otp',
 	'add-review': 'review/add-review',
 	'update-property': (id) => `propertyInfo/updateProperty/${id}`,
 	'delete-property': (id) => `propertyInfo/${id}`,

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Modal, Upload } from 'antd'
 import { firebase } from '@auth'
 import { Form } from '@components'
@@ -23,7 +23,6 @@ const PropertyPictures = () => {
 	const [previewTitle, setPreviewTitle] = useState('')
 	const { form, setLoading } = useContext(ListingContext)
 	const loggedInUser = JSON.parse(localStorage.getItem('user'))
-	const formWatch = Form.useWatch(undefined, form)
 
 	const DocumentUpload = async ({ file, onProgress, onSuccess, onError }) => {
 		setLoading(true)

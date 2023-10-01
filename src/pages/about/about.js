@@ -1,7 +1,4 @@
 import { useOutletContext } from 'react-router-dom'
-import BG1 from '../../assets/drive-assets/ben-o-bro-wpU4veNGnHg-unsplash.jpg'
-import BG2 from '../../assets/drive-assets/helena-lopes-e3OUQGT9bWU-unsplash.jpg'
-import BG3 from '../../assets/drive-assets/michael-olsen-vNIgKjZbJW0-unsplash.jpg'
 import BG4 from '../../assets/drive-assets/picture.png'
 import BG5 from '../../assets/drive-assets/spacejoy-nEtpvJjnPVo-unsplash.jpg'
 import BG6 from '../../assets/drive-assets/kylie-lugo-t0BavJY0M-U-unsplash.jpg'

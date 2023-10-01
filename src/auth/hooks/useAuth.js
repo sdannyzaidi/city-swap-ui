@@ -1,35 +1,19 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
-
 import { notification } from 'antd'
 import { AUTH_EVENTS } from '../helpers/enums'
-import { endpoints } from '../../helpers/enums'
 import { auth, firebase } from '../firebase/config'
+
 const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	const setUserAtom = useSetRecoilState(userAtom)
 	const userAuth = useRecoilValue(authSelector())
 	const [loading, setLoading] = useState(false)
 	const [signupComplete, setSignupComplete] = useState(false)
-	const [userId, setUserId] = useState('')
 	const [userEmail, setUserEmail] = useState('')
 	const navigate = useNavigate()
 	const { action } = useParams()
 	const { pathname } = useLocation()
-	const [clientSecret, setClientSecret] = useState(null)
-
-	// useEffect(() => {
-	// 	if (action === 'signup' && signupComplete) {
-	// 		fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}${endpoints['create-subscription']}`, {
-	// 			method: 'POST',
-	// 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-	// 			body: JSON.stringify({ email: userEmail }),
-	// 		})
-	// 			.then((response) => response.json())
-	// 			.then((data) => setClientSecret(data.clientSecret))
-	// 			.catch((err) => console.log(err))
-	// 	}
-	// }, [signupComplete]) // eslint-disable-line
 
 	useEffect(() => {
 		if (!loading && userAuth) {
@@ -111,11 +95,20 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 		return 'success'
 	}
 	const signUp = async (values) => {
+		console.log(values)
 		try {
 			const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}users/signUp`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
+				body: JSON.stringify({
+					name: values.name,
+					email: values.email,
+					password: values.password,
+					currentCity: values.currentCity,
+					receiveEmails: values.receiveEmails,
+					destinationCity: values.destinationCity,
+					migratePermanently: values?.migratePermanently,
+				}),
 			})
 			if (response.status === 200) {
 				response.json().then(async (data) => {
@@ -129,7 +122,6 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 					await signInWithEmailAndPassword({ email: values.email, password: values.password })
 					setSignupComplete(true)
 					setUserEmail(values.email)
-					setUserId(data._id)
 					setLoading(false)
 				})
 			} else {

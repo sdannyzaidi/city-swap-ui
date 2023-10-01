@@ -1,6 +1,5 @@
 import React from 'react'
-import { Form, Input, Select, DatePicker, Upload, Divider, Radio, Cascader, Checkbox, Button, Image, Tooltip } from 'antd'
-import { Picker } from 'antd-mobile'
+import { Form, Input, Select, DatePicker, Upload, Divider, Radio, Cascader, Checkbox, Button, Tooltip } from 'antd'
 import { PlusOutlined, CaretDownOutlined, MinusCircleTwoTone } from '@ant-design/icons'
 
 import { firebase } from '@auth'
@@ -156,7 +155,24 @@ export const renderFormItem = (field) => {
 				name={field.name}
 				label={field.label}
 				className={field.itemClassName}
-				rules={[{ required: field.required, message: field.message }]}
+				rules={[
+					{
+						required: field.required,
+						validator: (_, value = '') => {
+							if (value?.toString().length > 0) {
+								if (value?.toString().length < 6) {
+									return Promise.reject(new Error(`Your password length should not be less than 6.`))
+								} else {
+									return Promise.resolve()
+								}
+							} else if (!field.required) {
+								return Promise.resolve(value)
+							} else {
+								return Promise.reject(new Error(field.message))
+							}
+						},
+					},
+				]}
 				tooltip={field.tooltip}
 				initialValue={field.initialValue}
 			>
@@ -435,7 +451,7 @@ export const renderFormItem = (field) => {
 						)}
 					</Radio.Group>
 				) : (
-					<Radio.Group>
+					<Radio.Group className='flex flex-col'>
 						{field.options.map((option) => (
 							<Radio key={option} value={option.key}>
 								{option.long}
@@ -654,6 +670,7 @@ export const renderFormItem = (field) => {
 				valuePropName='checked'
 			>
 				<Checkbox
+					className={field.elementClassName || 'CheckboxField'}
 					onChange={(e) => {
 						if (field.fillData && Object.values(field.fillData).length > 0) {
 							if (e.target.checked) {
