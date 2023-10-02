@@ -106,7 +106,6 @@ const RequestBookings = () => {
 		fetchOtherData()
 	}, [])
 
-	console.log({ headerHeight })
 	return (
 		<ResizeObserver
 			onResize={({ width, height }) => {
