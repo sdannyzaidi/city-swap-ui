@@ -1,7 +1,7 @@
 import { AlertBanner, Form } from '@components'
 import { firebase } from '../../auth/firebase/config'
 import Image from '../../assets/drive-assets/erol-ahmed-FTy5VSGIfiQ-unsplash (1).jpg'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { authFormSchema } from './helpers/authFormSchemas'
 import { Button } from 'antd'
 import { userAtom } from '../../recoil/atoms'
@@ -15,6 +15,7 @@ import { useSetRecoilState } from 'recoil'
 const Auth = (props) => {
 	const { action } = useParams()
 	const [form] = Form.useForm()
+	const navigator = useNavigate()
 	const [success, setSuccess] = useState(false)
 	const [alert, setAlert] = useState({ type: '', message: '' })
 	const setUserAtom = useSetRecoilState(userAtom)
@@ -39,7 +40,7 @@ const Auth = (props) => {
 					<Button
 						className='mr-8 mt-8 self-end btn-primary'
 						onClick={() => {
-							firebase.auth.signOut()
+							firebase.auth().signOut()
 							localStorage.setItem('user', JSON.stringify(null))
 							localStorage.setItem('token', JSON.stringify(null))
 							setUserAtom(null)

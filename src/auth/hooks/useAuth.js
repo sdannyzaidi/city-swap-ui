@@ -6,6 +6,7 @@ import { AUTH_EVENTS } from '../helpers/enums'
 import { auth, firebase } from '../firebase/config'
 
 const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
+	const userData = JSON.parse(localStorage.getItem('user'))
 	const setUserAtom = useSetRecoilState(userAtom)
 	const userAuth = useRecoilValue(authSelector())
 	const [loading, setLoading] = useState(false)
@@ -30,10 +31,23 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 				localStorage.setItem('user', JSON.stringify(null))
 			} else if (userAuth?.authorized === true && pathname.includes('auth') && action === 'login') {
 				setLoading(false)
-				const redirectTo = sessionStorage.getItem('redirectTo')
-				sessionStorage.setItem('redirectTo', JSON.stringify(null))
-				navigate(redirectTo || reroute || '/', { replace: true })
+				console.log('userData', userData)
+				if (userData?.paymentMethodId) {
+					const redirectTo = sessionStorage.getItem('redirectTo')
+					sessionStorage.setItem('redirectTo', JSON.stringify(null))
+					navigate(redirectTo || reroute || '/', { replace: true })
+				} else {
+					setSignupComplete(true)
+					setUserEmail(userData?.email)
+					navigate('/auth/signup', { replace: true })
+				}
+			} else if (userData && !userData?.paymentMethodId && pathname.includes('auth') && action === 'signup') {
+				setSignupComplete(true)
+				setUserEmail(userData?.email)
 			}
+		} else if (userData && !userData?.paymentMethodId && pathname.includes('auth') && action === 'signup') {
+			setSignupComplete(true)
+			setUserEmail(userData?.email)
 		}
 	}, [userAuth, loading]) // eslint-disable-line
 
@@ -144,7 +158,7 @@ const useAuth = ({ reroute, userAtom, authSelector, alert, setAlert }) => {
 	}
 	const logout = () => {
 		if (userAuth) {
-			firebase.auth.signOut()
+			firebase.auth().signOut()
 			setUserAtom(null)
 			localStorage.setItem('user', JSON.stringify(null))
 			localStorage.setItem('token', JSON.stringify(null))

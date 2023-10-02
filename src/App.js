@@ -21,6 +21,7 @@ import {
 import { PrivateRoute } from '@auth'
 import CancelSubModal from './pages/profile/cancelSubModal'
 import UpdateSubModal from './pages/profile/updateSubModal'
+import ValidatedRoute from './auth/components/validateRoute'
 
 const App = () => {
 	return (
@@ -35,7 +36,9 @@ const App = () => {
 					path='requests-bookings/:type?'
 					element={
 						<PrivateRoute redirect='/auth/login'>
-							<RequestsBookings />
+							<ValidatedRoute redirect='/auth/signup'>
+								<RequestsBookings />
+							</ValidatedRoute>
 						</PrivateRoute>
 					}
 				/>
@@ -43,7 +46,9 @@ const App = () => {
 					path='my-listings/:id/:action?'
 					element={
 						<PrivateRoute redirect='/auth/login'>
-							<Listing />
+							<ValidatedRoute redirect='/auth/signup'>
+								<Listing />
+							</ValidatedRoute>
 						</PrivateRoute>
 					}
 				/>
@@ -51,7 +56,9 @@ const App = () => {
 					path='chat/:id?/:goBackListing?'
 					element={
 						<PrivateRoute redirect='/auth/login'>
-							<Chat />
+							<ValidatedRoute redirect='/auth/signup'>
+								<Chat />
+							</ValidatedRoute>
 						</PrivateRoute>
 					}
 				/>
@@ -59,7 +66,9 @@ const App = () => {
 					path='profile'
 					element={
 						<PrivateRoute redirect='/auth/login'>
-							<Profile />
+							<ValidatedRoute redirect='/auth/signup'>
+								<Profile />
+							</ValidatedRoute>
 						</PrivateRoute>
 					}
 				>
@@ -70,7 +79,9 @@ const App = () => {
 					path='new-listing'
 					element={
 						<PrivateRoute redirect='/auth/login'>
-							<NewListing />
+							<ValidatedRoute redirect='/auth/signup'>
+								<NewListing />
+							</ValidatedRoute>
 						</PrivateRoute>
 					}
 				/>
